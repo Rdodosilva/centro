@@ -2,10 +2,10 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# Configuração da página
+# 🎯 Configuração da página (TEM QUE SER A PRIMEIRA LINHA)
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# CSS personalizado para tema escuro e filtro moderno
+# 🎨 CSS personalizado
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -16,33 +16,31 @@ st.markdown("""
             color: white !important;
         }
         /* Estilo do selectbox */
-        div.stSelectbox > div[role="combobox"] {
-            background-color: #000000 !important;
-            border: 2px solid #00FFFF !important; /* borda azul neon */
-            border-radius: 8px;
-            padding: 6px 12px;
-            color: white !important;
-            font-weight: 600;
-            font-size: 16px;
+        div[data-baseweb="select"] > div {
+            background-color: rgba(128, 0, 128, 0.5) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 10px;
         }
-        div.stSelectbox > div[role="combobox"] > div {
+        div[data-baseweb="select"] span {
+            color: black !important;
+            font-weight: bold;
+        }
+        label, .stSelectbox label {
             color: white !important;
+            font-weight: bold;
         }
         div[role="listbox"] {
             background-color: #000000 !important;
             color: white !important;
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: bold;
         }
         div[role="option"]:hover {
             background-color: #00FFFF !important;
             color: black !important;
-            font-weight: 700;
         }
         div[role="option"][aria-selected="true"] {
             background-color: #00FFFF !important;
             color: black !important;
-            font-weight: 700;
         }
         /* Estilo para métricas */
         .stMetric {
@@ -54,48 +52,49 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Carregar dados
+# 📥 Carregar dados
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
 
-# Normalizar meses para filtro
-df["Mes"] = df["Mês"].str.lower()
+# 🗓️ Normalizar meses
+df["Mes"] = df["Mês"].str.lower().str.strip()
 
-# Meses fixos para filtro (só os que você pediu)
-meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
+# 🔍 Definir meses disponíveis (só os que você pediu)
+meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# Título
+# 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# Filtro centralizado
+# 🎛️ Filtro de mês centralizado
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-mes_selecionado = st.selectbox(
-    "",
-    meses_filtro,
-    index=0,
-    format_func=lambda x: x.capitalize()
-)
+filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
+with filtro_col2:
+    mes_selecionado = st.selectbox(
+        "",
+        meses_disponiveis,
+        format_func=lambda x: x.capitalize()
+    )
 
-# Filtra dados só para o mês selecionado e que tenham dados de sacos
+# 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
-# Métricas
+# 📊 Calcular métricas
 total_sacos = int(df_filtrado["Total de Sacos"].sum())
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# Totais gerais para gráfico de pizza
+# 📈 Totais gerais para pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
-# Métricas lado a lado
+# 🎯 Exibir métricas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-# Preparar dados para gráfico de barras
+# 🔧 Dados para gráfico de barras
 df_melt = df_filtrado.melt(
     id_vars="Mes",
     value_vars=["Coleta AM", "Coleta PM"],
@@ -103,12 +102,13 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
+# 🎨 Cores
 cores = {
     "Coleta AM": "#00FFFF",  # Azul neon
     "Coleta PM": "#FFA500"   # Laranja neon
 }
 
-# Gráfico de barras
+# 📊 Gráfico de barras
 fig_bar = px.bar(
     df_melt,
     x="Mes",
@@ -141,7 +141,7 @@ fig_bar.update_layout(
     bargroupgap=0.1
 )
 
-# Gráfico de pizza AM vs PM geral
+# 🥧 Gráfico de pizza
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -168,7 +168,7 @@ fig_pie.update_layout(
     )
 )
 
-# Exibir gráficos lado a lado
+# 📊 Mostrar gráficos lado a lado
 col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)

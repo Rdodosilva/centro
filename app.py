@@ -8,6 +8,22 @@ st.set_page_config(page_title="Dashboard Coleta Centro", page_icon="🚛", layou
 # Carregar os dados
 df = pd.read_excel("Coleta centro2.xlsx")
 
+# Mostrar as colunas do DataFrame para ajudar no debug
+st.write("Colunas originais:", df.columns.tolist())
+
+# Limpar espaços antes e depois dos nomes das colunas
+df.columns = df.columns.str.strip()
+
+# Opcional: renomear colunas para versões sem acento (exemplo)
+# Aqui você pode ajustar para o que quiser conforme os nomes do seu Excel
+renomear = {
+    "Mês": "Mes",
+    # adicione outras se quiser
+}
+df.rename(columns=renomear, inplace=True)
+
+st.write("Colunas após limpeza:", df.columns.tolist())
+
 # Remover linhas onde não há dados nos sacos
 df = df.dropna(subset=["Total de Sacos"])
 
@@ -31,8 +47,8 @@ col1.metric("🧺 Total de Sacos", total_sacos)
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-# Dados para gráfico
-df_melt = df.melt(id_vars="Mês", value_vars=["Coleta AM", "Coleta PM"],
+# Dados para gráfico (usando o nome sem acento)
+df_melt = df.melt(id_vars="Mes", value_vars=["Coleta AM", "Coleta PM"],
                   var_name="Periodo", value_name="Quantidade de Sacos")
 
 # Mapear cores
@@ -44,7 +60,7 @@ cores = {
 # Gráfico interativo
 fig = px.bar(
     df_melt,
-    x="Mês",
+    x="Mes",
     y="Quantidade de Sacos",
     color="Periodo",
     barmode="group",

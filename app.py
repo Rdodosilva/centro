@@ -1,10 +1,10 @@
 import streamlit as st
 import plotly.express as px
-from streamlit_option_menu import option_menu
+import pandas as pd
 
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# CSS geral para tema escuro + fontes brancas
+# 🎨 CSS personalizado completo
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -14,47 +14,62 @@ st.markdown("""
         h1, h2, h3, label, span, div {
             color: white !important;
         }
+        /* RADIO estilizado como dropdown neon */
+        section[data-testid="stRadio"] > div {
+            background-color: rgba(155, 48, 255, 0.3);
+            border: 2px solid #9b30ff;
+            border-radius: 10px;
+            padding: 8px;
+        }
+        label[data-testid="stMarkdownContainer"] {
+            color: white;
+            font-weight: bold;
+        }
+        div[role="radiogroup"] > label {
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid #9b30ff;
+            margin-right: 8px;
+        }
+        div[role="radiogroup"] > label:hover {
+            background-color: #9b30ff;
+            color: black;
+        }
+        div[role="radiogroup"] > label[data-selected="true"] {
+            background-color: #9b30ff;
+            color: black;
+            font-weight: bold;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Dropdown roxo neon (horizontal para exemplo, pode trocar para vertical)
+
+# 🗓️ Meses
 meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-mes_selecionado = option_menu(
-    menu_title=None,
-    options=meses_disponiveis,
-    default_index=0,
-    orientation="horizontal",
-    styles={
-        "container": {"background-color": "black"},
-        "nav-link": {
-            "font-size": "18px",
-            "text-align": "center",
-            "margin": "0px",
-            "--hover-color": "#9b30ff",
-            "color": "white",
-            "border-radius": "10px",
-            "padding": "8px 16px"
-        },
-        "nav-link-selected": {
-            "background-color": "#9b30ff",
-            "color": "white",
-            "font-weight": "bold"
-        },
-    }
+# 🔽 Dropdown estilizado (substituindo selectbox)
+st.markdown("### 📅 Selecione o mês:")
+mes_selecionado = st.radio(
+    "",
+    meses_disponiveis,
+    horizontal=True,
+    index=0,
 )
 
-st.markdown(f"### Mês selecionado: **{mes_selecionado.capitalize()}**")
+st.markdown(f"## Mês selecionado: **{mes_selecionado.capitalize()}**")
 
-# Dados fictícios
+# 🔢 Dados fictícios para exemplo
 total_am_geral = 150
 total_pm_geral = 200
 
+# 🎨 Cores
 cores = {
     "Coleta AM": "#00FFFF",
     "Coleta PM": "#FFA500"
 }
 
+# 🥧 Gráfico de pizza
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -64,11 +79,11 @@ fig_pie = px.pie(
 )
 
 fig_pie.update_traces(
-    textinfo='percent+label',  # só % e label, pra ficar limpo
+    textinfo='percent+label',
     textposition='inside',
     textfont=dict(color='black', size=14),
     pull=[0.05, 0],
-    hovertemplate='%{label}: %{value} sacos (%{percent})<extra></extra>'
+    hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
 )
 
 fig_pie.update_layout(
@@ -83,6 +98,7 @@ fig_pie.update_layout(
     )
 )
 
+# 📊 Mostrar gráfico
 st.plotly_chart(fig_pie, use_container_width=True)
 
-st.markdown("<p style='text-align:center; color:#9b30ff; font-weight:bold;'>*Valores são em sacos (20 kg cada).</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center; color:#9b30ff; font-weight:bold;'>*Valores em kg (cada saco = 20 kg).</p>", unsafe_allow_html=True)

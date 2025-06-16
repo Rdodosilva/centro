@@ -2,28 +2,32 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# ⚙️ Configuração da página
+# Configuração da página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 Estilo visual aprimorado
+# Estilo para tema escuro e filtro preto com texto branco
 st.markdown("""
     <style>
         html, body, .stApp {
             background-color: #000000;
             color: white;
         }
-        h1, h2, h3, h4, h5, h6, p, label, span, div {
+        h1, h2, h3, label, span, div {
             color: white !important;
         }
         .stSelectbox > div {
-            background-color: #111111 !important;
-            border: 1px solid #00FFFF;
+            background-color: #000000 !important;
+            border: 1px solid #FFFFFF;
+            border-radius: 8px;
             padding: 8px;
-            border-radius: 10px;
         }
         .stSelectbox label {
+            color: white !important;
             font-weight: bold;
-            color: #00FFFF !important;
+        }
+        div[role="listbox"] {
+            background-color: #000000 !important;
+            color: white !important;
         }
         .stMetric {
             background-color: #111111;
@@ -34,42 +38,43 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados
+# Carregar dados
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
-df.rename(columns={"Mês": "Mes"}, inplace=True)
-df = df.dropna(subset=["Total de Sacos"])
 
-# 🎯 Filtro: mostrar apenas meses com dados
-meses_disponiveis = sorted(df["Mes"].dropna().unique())
+# Normaliza os meses para minúsculo para casar com filtro fixo
+df["Mes"] = df["Mês"].str.lower()
 
-# 🧠 Filtro centralizado
+# Meses fixos no filtro
+meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
+
+# Mostrar título
+st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta - Centro</h1>", unsafe_allow_html=True)
+
+# Mostrar filtro
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-mes_selecionado = st.selectbox("", meses_disponiveis, index=0)
+mes_selecionado = st.selectbox("", meses_filtro, index=0)
 
-# 🔍 Filtrar dados do mês selecionado
-df_filtrado = df[df["Mes"] == mes_selecionado]
+# Filtra só os dados do mês selecionado, descartando linhas com NaN em "Total de Sacos"
+df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
-# 📊 Totais
+# Métricas
 total_sacos = int(df_filtrado["Total de Sacos"].sum())
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# 📈 Totais gerais para Pizza
+# Totais gerais para gráfico de pizza (AM vs PM)
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
-# 🚛 Título
-st.markdown("<h1 style='text-align: center; font-size: 3em;'>🚛 Coleta - Centro</h1>", unsafe_allow_html=True)
-
-# 🔢 Métricas
+# Métricas visualizadas em 3 colunas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-# 🔧 Dados para gráfico de barras
+# Preparar dados para gráfico de barras
 df_melt = df_filtrado.melt(
     id_vars="Mes",
     value_vars=["Coleta AM", "Coleta PM"],
@@ -77,13 +82,13 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# 🎨 Cores neon
+# Cores neon
 cores = {
     "Coleta AM": "#00FFFF",  # Azul neon
     "Coleta PM": "#FFA500"   # Laranja neon
 }
 
-# 📊 Gráfico de Barras com animação (hover, realce)
+# Gráfico de barras
 fig_bar = px.bar(
     df_melt,
     x="Mes",
@@ -91,8 +96,7 @@ fig_bar = px.bar(
     color="Periodo",
     color_discrete_map=cores,
     barmode="group",
-    title="📦 Quantidade de Sacos por Período",
-    animation_frame=None
+    title="📦 Quantidade de Sacos por Período"
 )
 fig_bar.update_traces(
     hovertemplate='%{y} sacos - %{color}',
@@ -117,7 +121,7 @@ fig_bar.update_layout(
     bargroupgap=0.1
 )
 
-# 🥧 Gráfico de Pizza com animação ao passar o mouse
+# Gráfico de pizza AM vs PM (totais gerais)
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -144,7 +148,7 @@ fig_pie.update_layout(
     )
 )
 
-# 🎯 Mostrar gráficos lado a lado
+# Exibir gráficos lado a lado
 col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)

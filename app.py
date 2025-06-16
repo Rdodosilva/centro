@@ -5,7 +5,7 @@ import plotly.express as px
 # 🎯 Configuração da página (TEM QUE SER A PRIMEIRA LINHA)
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 CSS personalizado com roxo neon
+# 🎨 CSS personalizado com roxo neon e dropdown transparente
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -15,32 +15,34 @@ st.markdown("""
         h1, h2, h3, label, span, div {
             color: white !important;
         }
-        /* Estilo do selectbox */
+        /* Selectbox fechado */
         div[data-baseweb="select"] > div {
             background-color: rgba(155, 48, 255, 0.8) !important;  /* roxo neon translúcido */
             border: 2px solid #9b30ff !important;  /* borda roxo neon */
             border-radius: 10px;
         }
         div[data-baseweb="select"] span {
-            color: white !important;  /* texto branco no select fechado */
+            color: white !important;  /* texto branco */
             font-weight: bold;
         }
         label, .stSelectbox label {
             color: white !important;
             font-weight: bold;
         }
+        /* Dropdown aberto (lista de opções) */
         div[role="listbox"] {
-            background-color: #9b30ff !important;  /* fundo da lista roxo neon */
+            background-color: rgba(155, 48, 255, 0.4) !important;  /* roxo neon mais transparente */
             color: black !important;  /* texto preto para contraste */
             font-weight: bold;
             border-radius: 10px;
+            backdrop-filter: blur(5px); /* leve desfoque para efeito futurista */
         }
         div[role="option"]:hover {
-            background-color: #d580ff !important; /* roxo mais claro no hover */
+            background-color: rgba(155, 48, 255, 0.7) !important; /* roxo neon menos transparente no hover */
             color: black !important;
         }
         div[role="option"][aria-selected="true"] {
-            background-color: #d580ff !important;
+            background-color: rgba(155, 48, 255, 0.7) !important;
             color: black !important;
         }
         /* Estilo para métricas */
@@ -60,17 +62,12 @@ df.columns = df.columns.str.strip()
 # 🗓️ Normalizar meses
 df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
 
-# 🟣 Lista oficial de meses para ordenar e validar
-meses_ordem = [
-    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
-    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
-]
+# 🔹 Lista fixa com meses de interesse
+meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# Filtrar meses com dados válidos (Total de Sacos preenchido)
+# 🟣 Verificar quais meses da lista fixa têm dados válidos (Total de Sacos não vazio)
 meses_com_dados = df.loc[df["Total de Sacos"].notna(), "Mes"].unique()
-
-# Filtrar só meses válidos e ordenar
-meses_disponiveis = [m for m in meses_ordem if m in meses_com_dados]
+meses_disponiveis = [m for m in meses_filtro if m in meses_com_dados]
 
 # 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)

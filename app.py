@@ -1,37 +1,37 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
-# ✅ Configuração da página — TEM QUE SER A PRIMEIRA CHAMADA DO STREAMLIT
+# Configurações de página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# ✅ CSS personalizado
+# CSS customizado para tema escuro e filtro estilizado
 st.markdown("""
 <style>
-/* Fundo geral preto e texto branco */
+/* Fundo e texto gerais */
 body, .block-container {
     background-color: #000000 !important;
     color: #FFFFFF !important;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Métricas */
+/* Métricas: texto branco */
 [data-testid="metric-container"] {
     color: #FFFFFF !important;
 }
 
-/* Título */
+/* Título centralizado e branco */
 h1 {
     color: #FFFFFF !important;
     text-align: center;
     font-weight: 800;
 }
 
-/* Filtro dos meses com fundo roxo neon transparente e texto preto */
+/* Estilo filtro meses */
 div.stSelectbox > div[role="combobox"] {
-    background-color: rgba(128, 0, 128, 0.7) !important;
-    color: black !important;
-    border: 2px solid #8A2BE2 !important;
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #00BFFF !important;  /* azul neon */
     border-radius: 8px !important;
     padding: 6px 12px !important;
     font-weight: 600 !important;
@@ -41,79 +41,96 @@ div.stSelectbox > div[role="combobox"] {
 
 /* Texto dentro do filtro */
 div.stSelectbox > div[role="combobox"] > div {
-    color: black !important;
+    color: #FFFFFF !important;
 }
 
-/* Lista suspensa */
+/* Fundo e texto na lista suspensa */
 div[role="listbox"] {
-    background-color: rgba(128, 0, 128, 0.7) !important;
-    color: black !important;
+    background-color: #000000 !important;
+    color: #FFFFFF !important;
     font-weight: 600 !important;
     font-size: 16px !important;
 }
 
-/* Hover */
+/* Hover azul neon com texto preto */
 div[role="option"]:hover {
-    background-color: #8A2BE2 !important;
-    color: white !important;
+    background-color: #00BFFF !important;
+    color: #000000 !important;
     font-weight: 700 !important;
 }
 
-/* Seleção */
+/* Seleção azul neon com texto preto */
 div[role="option"][aria-selected="true"] {
-    background-color: #8A2BE2 !important;
-    color: white !important;
+    background-color: #00BFFF !important;
+    color: #000000 !important;
     font-weight: 700 !important;
 }
 
-/* Scrollbar */
+/* Legendas do gráfico - texto branco */
+.legendtext, .legendtitle {
+    color: #FFFFFF !important;
+}
+
+/* Tooltip texto branco */
+[role="tooltip"] {
+    color: #FFFFFF !important;
+    background-color: #222222 !important;
+    border: 1px solid #00BFFF !important;
+}
+
+/* Scrollbar para o filtro, se houver */
 div[role="listbox"]::-webkit-scrollbar {
     width: 8px;
 }
 div[role="listbox"]::-webkit-scrollbar-thumb {
-    background-color: #8A2BE2;
+    background-color: #00BFFF;
     border-radius: 4px;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# ✅ Carregar os dados
+# Carregar os dados
 df = pd.read_excel("Coleta centro2.xlsx")
 
-# ✅ Definir a coluna dos meses corretamente
-col_mes = "Mês"
+# Debug: mostrar todas as colunas para conferir nomes exatos
+st.write("Colunas disponíveis no arquivo:", df.columns.tolist())
 
-# ✅ Limpar dados
+# Ajuste o nome 'Mês' aqui conforme o que aparecer no output acima:
+col_mes = "Mês"  # <- substitua pelo nome correto da coluna, exemplo "Mes"
+
+# Remover linhas sem dados em "Total de Sacos"
 df = df.dropna(subset=["Total de Sacos"])
 
-# ✅ Título
+# Título do app
 st.markdown("<h1>Coleta Centro 🚛</h1>", unsafe_allow_html=True)
 
-# ✅ Filtro de meses — apenas os que têm dados
+# Meses fixos e só os que tem dados no DF
 meses_possiveis = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
 meses_com_dados = [mes for mes in meses_possiveis if mes in df[col_mes].dropna().unique()]
 
+# Filtro de meses centralizado e estilizado
 mes_selecionado = st.selectbox(
     "Selecione o mês",
     options=meses_com_dados,
     index=0
 )
 
-# ✅ Filtrar dados pelo mês selecionado
+# Filtrar dados pelo mês selecionado
 df_mes = df[df[col_mes] == mes_selecionado]
 
-# ✅ Métricas
+# Cálculos métricas
 total_sacos = int(df_mes["Total de Sacos"].sum())
-peso_total = total_sacos * 20  # Cada saco = 20kg
+peso_total = total_sacos * 20  # Cada saco 20kg
 total_am = int(df_mes["Coleta AM"].sum())
 total_pm = int(df_mes["Coleta PM"].sum())
 
+# Exibir métricas em 3 colunas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total (kg)", f"{peso_total}")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} / {total_pm}")
 
-# ✅ Dados para gráfico de barras
+# Preparar dados para gráfico de barras
 df_melt = df_mes.melt(id_vars=col_mes, value_vars=["Coleta AM", "Coleta PM"],
                       var_name="Período", value_name="Quantidade de Sacos")
 
@@ -122,7 +139,7 @@ cores = {
     "Coleta PM": "#FFA500",  # Laranja neon
 }
 
-# ✅ Gráfico de barras
+# Gráfico de barras interativo
 fig_bar = px.bar(
     df_melt,
     x=col_mes,
@@ -146,7 +163,7 @@ fig_bar.update_layout(
 
 st.plotly_chart(fig_bar, use_container_width=True)
 
-# ✅ Gráfico de pizza AM vs PM
+# Gráfico de pizza AM vs PM no mês selecionado
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am, total_pm],

@@ -5,7 +5,7 @@ import plotly.express as px
 # 🎯 Configuração da página (TEM QUE SER A PRIMEIRA LINHA)
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 CSS personalizado
+# 🎨 CSS personalizado com roxo neon
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -17,12 +17,12 @@ st.markdown("""
         }
         /* Estilo do selectbox */
         div[data-baseweb="select"] > div {
-            background-color: rgba(128, 0, 128, 0.5) !important;
-            border: 2px solid #00FFFF !important;
+            background-color: rgba(155, 48, 255, 0.8) !important;  /* roxo neon translúcido */
+            border: 2px solid #9b30ff !important;  /* borda roxo neon */
             border-radius: 10px;
         }
         div[data-baseweb="select"] span {
-            color: black !important;
+            color: white !important;  /* texto branco no select fechado */
             font-weight: bold;
         }
         label, .stSelectbox label {
@@ -30,22 +30,23 @@ st.markdown("""
             font-weight: bold;
         }
         div[role="listbox"] {
-            background-color: #000000 !important;
-            color: white !important;
+            background-color: #9b30ff !important;  /* fundo da lista roxo neon */
+            color: black !important;  /* texto preto para contraste */
             font-weight: bold;
+            border-radius: 10px;
         }
         div[role="option"]:hover {
-            background-color: #00FFFF !important;
+            background-color: #d580ff !important; /* roxo mais claro no hover */
             color: black !important;
         }
         div[role="option"][aria-selected="true"] {
-            background-color: #00FFFF !important;
+            background-color: #d580ff !important;
             color: black !important;
         }
         /* Estilo para métricas */
         .stMetric {
             background-color: #111111;
-            border: 1px solid #00FFFF;
+            border: 1px solid #9b30ff;
             border-radius: 12px;
             padding: 10px;
         }
@@ -57,7 +58,7 @@ df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
 
 # 🗓️ Normalizar meses
-df["Mes"] = df["Mês"].str.lower().str.strip()
+df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
 
 # 🟣 Lista oficial de meses para ordenar e validar
 meses_ordem = [
@@ -65,15 +66,11 @@ meses_ordem = [
     "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
 ]
 
-# 🔍 Pegar meses únicos do dataframe, normalizados
-meses_disponiveis = df["Mes"].dropna().unique()
-meses_disponiveis = [m.lower() for m in meses_disponiveis if isinstance(m, str)]
+# Filtrar meses com dados válidos (Total de Sacos preenchido)
+meses_com_dados = df.loc[df["Total de Sacos"].notna(), "Mes"].unique()
 
-# Filtrar só meses válidos para evitar erros
-meses_disponiveis = [m for m in meses_disponiveis if m in meses_ordem]
-
-# Ordenar os meses conforme meses_ordem
-meses_disponiveis = sorted(meses_disponiveis, key=lambda x: meses_ordem.index(x))
+# Filtrar só meses válidos e ordenar
+meses_disponiveis = [m for m in meses_ordem if m in meses_com_dados]
 
 # 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)

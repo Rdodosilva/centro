@@ -2,35 +2,31 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# Configurações de página
+# Configurações de página com tema escuro
 st.set_page_config(page_title="Dashboard Coleta Centro", page_icon="🚛", layout="wide")
 
 # Carregar os dados
 df = pd.read_excel("Coleta centro2.xlsx")
 
-# Mostrar as colunas do DataFrame para ajudar no debug
-st.write("Colunas originais:", df.columns.tolist())
-
-# Limpar espaços antes e depois dos nomes das colunas
+# Limpar nomes de colunas
 df.columns = df.columns.str.strip()
 
-# Opcional: renomear colunas para versões sem acento (exemplo)
-# Aqui você pode ajustar para o que quiser conforme os nomes do seu Excel
-renomear = {
-    "Mês": "Mes",
-    # adicione outras se quiser
-}
-df.rename(columns=renomear, inplace=True)
+# Renomear colunas para evitar acentos (se necessário)
+df.rename(columns={"Mês": "Mes"}, inplace=True)
 
-st.write("Colunas após limpeza:", df.columns.tolist())
-
-# Remover linhas onde não há dados nos sacos
+# Remover linhas sem dados em 'Total de Sacos'
 df = df.dropna(subset=["Total de Sacos"])
 
-# Layout principal
+# --- Não exibir colunas para o usuário (comentado) ---
+# st.write("Colunas originais:", df.columns.tolist())
+# st.write("Colunas após limpeza:", df.columns.tolist())
+
+# Layout principal com título estilizado (branco)
 st.markdown(
     """
-    <h1 style='text-align: center; color: white;'>🚛 Dashboard - Coleta Centro</h1>
+    <h1 style='text-align: center; color: white; font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;'>
+        🚛 Dashboard - Coleta Centro
+    </h1>
     """,
     unsafe_allow_html=True
 )
@@ -47,18 +43,22 @@ col1.metric("🧺 Total de Sacos", total_sacos)
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-# Dados para gráfico (usando o nome sem acento)
-df_melt = df.melt(id_vars="Mes", value_vars=["Coleta AM", "Coleta PM"],
-                  var_name="Periodo", value_name="Quantidade de Sacos")
+# Dados para gráfico de barras
+df_melt = df.melt(
+    id_vars="Mes",
+    value_vars=["Coleta AM", "Coleta PM"],
+    var_name="Periodo",
+    value_name="Quantidade de Sacos"
+)
 
-# Mapear cores
+# Cores neon
 cores = {
-    "Coleta AM": "#00BFFF",  # Azul
-    "Coleta PM": "#FFA500",  # Laranja
+    "Coleta AM": "#00FFFF",  # Neon Azul claro (ciano)
+    "Coleta PM": "#FFA500",  # Neon Laranja
 }
 
-# Gráfico interativo
-fig = px.bar(
+# Gráfico de barras com tema escuro e neon
+fig_bar = px.bar(
     df_melt,
     x="Mes",
     y="Quantidade de Sacos",
@@ -68,19 +68,51 @@ fig = px.bar(
     title="🪣 Coleta de Sacos por Mês e Período"
 )
 
-fig.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
+fig_bar.update_layout(
+    plot_bgcolor="black",
+    paper_bgcolor="black",
     font_color="white",
     title_x=0.5,
     xaxis=dict(
         color='white',
         showgrid=False,
+        tickfont=dict(color='white')
     ),
     yaxis=dict(
         color='white',
         showgrid=False,
+        tickfont=dict(color='white')
+    ),
+    legend=dict(
+        font=dict(color='white')
     )
 )
 
-st.plotly_chart(fig, use_container_width=True)
+# Gráfico de pizza AM vs PM
+fig_pie = px.pie(
+    names=["Coleta AM", "Coleta PM"],
+    values=[total_am, total_pm],
+    color_discrete_sequence=[cores["Coleta AM"], cores["Coleta PM"]],
+    title="🌅 vs 🌇 Coleta AM vs PM"
+)
+
+fig_pie.update_traces(
+    textinfo='percent+label',
+    textfont=dict(color='white', size=14)
+)
+
+fig_pie.update_layout(
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font_color='white',
+    title_x=0.5,
+    legend=dict(
+        font=dict(color='white')
+    )
+)
+
+# Exibir gráficos lado a lado
+col_bar, col_pie = st.columns(2)
+
+col_bar.plotly_chart(fig_bar, use_container_width=True)
+col_pie.plotly_chart(fig_pie, use_container_width=True)

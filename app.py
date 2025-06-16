@@ -1,10 +1,11 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 import plotly.express as px
+from streamlit.components.v1 import html
 
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# CSS atualizado para dropdown roxo neon aberto e textos brancos
+# CSS para tema geral e selectbox fechado (roxo neon)
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -28,24 +29,24 @@ st.markdown("""
             color: white !important;
             font-weight: bold;
         }
-        /* Dropdown aberto */
+        /* Tenta estilizar dropdown aberto */
+        .rc-virtual-list-holder-inner, /* lista virtual scroll */
         div[role="listbox"] {
-            background-color: rgba(155, 48, 255, 0.7) !important;
+            background-color: rgba(155, 48, 255, 0.8) !important;
             color: white !important;
             font-weight: bold;
             border-radius: 10px !important;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 0 8px 3px rgba(155, 48, 255, 0.8);
+            box-shadow: 0 0 12px 4px rgba(155, 48, 255, 0.9) !important;
         }
         div[role="option"] {
             color: white !important;
         }
         div[role="option"]:hover {
-            background-color: rgba(200, 100, 255, 0.9) !important;
-            color: white !important;
+            background-color: rgba(200, 100, 255, 1) !important;
+            color: black !important;
         }
         div[role="option"][aria-selected="true"] {
-            background-color: rgba(255, 100, 255, 0.9) !important;
+            background-color: rgba(255, 100, 255, 1) !important;
             color: black !important;
             font-weight: bold;
         }
@@ -59,87 +60,39 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Carregar dados
-df = pd.read_excel("Coleta centro2.xlsx")
-df.columns = df.columns.str.strip()
+# INJEÇÃO DE JS para forçar o fundo roxo neon no dropdown aberto (fallback)
+html("""
+<script>
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll('div[role="listbox"]').forEach(el => {
+            el.style.backgroundColor = "rgba(155, 48, 255, 0.85)";
+            el.style.color = "white";
+            el.style.borderRadius = "10px";
+            el.style.boxShadow = "0 0 12px 4px rgba(155, 48, 255, 0.9)";
+        });
+        document.querySelectorAll('div[role="option"]').forEach(opt => {
+            opt.style.color = "white";
+        });
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+</script>
+""", height=0)
 
-df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
+# Resto do código: dados e gráficos (exemplo simplificado)
 
-meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
-meses_com_dados = df.loc[df["Total de Sacos"].notna(), "Mes"].unique()
-meses_disponiveis = [m for m in meses_filtro if m in meses_com_dados]
+# Exemplo rápido dados fictícios para teste do dropdown e gráfico pizza
+meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
+mes_selecionado = st.selectbox("Selecione o mês:", meses_disponiveis, format_func=lambda x: x.capitalize())
 
-st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
-
-st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-col1, col2, col3 = st.columns([1,2,1])
-with col2:
-    mes_selecionado = st.selectbox(
-        "",
-        meses_disponiveis,
-        format_func=lambda x: x.capitalize()
-    )
-
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
-
-total_sacos = int(df_filtrado["Total de Sacos"].sum())
-peso_total = total_sacos * 20
-total_am = int(df_filtrado["Coleta AM"].sum())
-total_pm = int(df_filtrado["Coleta PM"].sum())
-
-total_am_geral = int(df["Coleta AM"].sum())
-total_pm_geral = int(df["Coleta PM"].sum())
-
-mcol1, mcol2, mcol3 = st.columns(3)
-mcol1.metric("🧺 Total de Sacos", f"{total_sacos}")
-mcol2.metric("⚖️ Peso Total", f"{peso_total} kg")
-mcol3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
-
-df_melt = df_filtrado.melt(
-    id_vars="Mes",
-    value_vars=["Coleta AM", "Coleta PM"],
-    var_name="Periodo",
-    value_name="Quantidade de Sacos"
-)
+# Dados fictícios
+total_am_geral = 150
+total_pm_geral = 200
 
 cores = {
     "Coleta AM": "#00FFFF",
     "Coleta PM": "#FFA500"
 }
 
-fig_bar = px.bar(
-    df_melt,
-    x="Mes",
-    y="Quantidade de Sacos",
-    color="Periodo",
-    color_discrete_map=cores,
-    barmode="group",
-    title="📦 Quantidade de Sacos por Período"
-)
-fig_bar.update_traces(
-    hovertemplate='%{y} sacos - %{color}',
-    marker_line_color='white',
-    marker_line_width=1.5,
-    opacity=0.9
-)
-fig_bar.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22),
-    title_x=0.5,
-    xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
-    yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
-    legend=dict(
-        title="Período",
-        font=dict(color="white", size=14),
-        bgcolor="#000000"
-    ),
-    bargap=0.2,
-    bargroupgap=0.1
-)
-
-# Aqui mantém a soma em sacos (sem multiplicar por 20) mas acrescenta "kg" no texto ao exibir valores
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -149,8 +102,7 @@ fig_pie = px.pie(
 )
 fig_pie.update_traces(
     textfont=dict(color='white', size=14),
-    # Adiciona "kg" no valor exibido (value) junto com label e percent
-    texttemplate='%{label}: %{percent} (%{value} kg)',
+    textinfo='label+percent+value',
     pull=[0.05, 0],
     marker=dict(line=dict(color='white', width=2)),
     hoverinfo='label+percent+value'
@@ -167,6 +119,7 @@ fig_pie.update_layout(
     )
 )
 
-gcol1, gcol2 = st.columns(2)
-gcol1.plotly_chart(fig_bar, use_container_width=True)
-gcol2.plotly_chart(fig_pie, use_container_width=True)
+st.plotly_chart(fig_pie, use_container_width=True)
+
+# Texto extra para lembrar unidade Kg no total
+st.markdown("<p style='text-align:center; color:#9b30ff; font-weight:bold;'>*Valores são em sacos (20 kg cada).</p>", unsafe_allow_html=True)

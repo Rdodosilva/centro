@@ -2,10 +2,10 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# 🎯 Configuração da página
+# 🎯 Configuração da página (TEM QUE SER A PRIMEIRA LINHA)
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 CSS personalizado atualizado
+# 🎨 CSS personalizado
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -17,9 +17,9 @@ st.markdown("""
         }
         /* Estilo do selectbox */
         div[data-baseweb="select"] > div {
-            background-color: rgba(186, 85, 211, 0.6) !important; /* Roxo neon transparente */
+            background-color: rgba(128, 0, 128, 0.5) !important;
             border: 2px solid #00FFFF !important;
-            border-radius: 12px;
+            border-radius: 10px;
         }
         div[data-baseweb="select"] span {
             color: black !important;
@@ -31,7 +31,7 @@ st.markdown("""
         }
         div[role="listbox"] {
             background-color: #000000 !important;
-            color: black !important;
+            color: white !important;
             font-weight: bold;
         }
         div[role="option"]:hover {
@@ -59,9 +59,21 @@ df.columns = df.columns.str.strip()
 # 🗓️ Normalizar meses
 df["Mes"] = df["Mês"].str.lower().str.strip()
 
-# 🔍 Definir meses disponíveis dinamicamente (com dados preenchidos)
-meses_disponiveis = df[df["Total de Sacos"].notna()]["Mes"].unique().tolist()
-meses_disponiveis = sorted(meses_disponiveis, key=lambda x: ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"].index(x))
+# 🟣 Lista oficial de meses para ordenar e validar
+meses_ordem = [
+    "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+    "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+]
+
+# 🔍 Pegar meses únicos do dataframe, normalizados
+meses_disponiveis = df["Mes"].dropna().unique()
+meses_disponiveis = [m.lower() for m in meses_disponiveis if isinstance(m, str)]
+
+# Filtrar só meses válidos para evitar erros
+meses_disponiveis = [m for m in meses_disponiveis if m in meses_ordem]
+
+# Ordenar os meses conforme meses_ordem
+meses_disponiveis = sorted(meses_disponiveis, key=lambda x: meses_ordem.index(x))
 
 # 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
@@ -85,9 +97,9 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# 📈 Totais gerais para pizza (em peso kg)
-total_am_geral = int(df["Coleta AM"].sum()) * 20
-total_pm_geral = int(df["Coleta PM"].sum()) * 20
+# 📈 Totais gerais para pizza
+total_am_geral = int(df["Coleta AM"].sum())
+total_pm_geral = int(df["Coleta PM"].sum())
 
 # 🎯 Exibir métricas
 col1, col2, col3 = st.columns(3)
@@ -148,7 +160,7 @@ fig_pie = px.pie(
     values=[total_am_geral, total_pm_geral],
     color=["Coleta AM", "Coleta PM"],
     color_discrete_map=cores,
-    title="⚖️ Distribuição Geral AM vs PM (em kg)"
+    title="🔄 Distribuição Geral AM vs PM"
 )
 fig_pie.update_traces(
     textfont=dict(color='white', size=14),

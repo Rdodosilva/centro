@@ -5,7 +5,7 @@ import plotly.express as px
 # Configuração da página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# Estilo para tema escuro e filtro preto com texto branco
+# CSS personalizado para tema escuro e filtro moderno
 st.markdown("""
     <style>
         html, body, .stApp {
@@ -15,21 +15,36 @@ st.markdown("""
         h1, h2, h3, label, span, div {
             color: white !important;
         }
-        .stSelectbox > div {
+        /* Estilo do selectbox */
+        div.stSelectbox > div[role="combobox"] {
             background-color: #000000 !important;
-            border: 1px solid #FFFFFF;
+            border: 2px solid #00FFFF !important; /* borda azul neon */
             border-radius: 8px;
-            padding: 8px;
+            padding: 6px 12px;
             color: white !important;
+            font-weight: 600;
+            font-size: 16px;
         }
-        .stSelectbox label {
+        div.stSelectbox > div[role="combobox"] > div {
             color: white !important;
-            font-weight: bold;
         }
         div[role="listbox"] {
             background-color: #000000 !important;
             color: white !important;
+            font-weight: 600;
+            font-size: 16px;
         }
+        div[role="option"]:hover {
+            background-color: #00FFFF !important;
+            color: black !important;
+            font-weight: 700;
+        }
+        div[role="option"][aria-selected="true"] {
+            background-color: #00FFFF !important;
+            color: black !important;
+            font-weight: 700;
+        }
+        /* Estilo para métricas */
         .stMetric {
             background-color: #111111;
             border: 1px solid #00FFFF;
@@ -43,16 +58,16 @@ st.markdown("""
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
 
-# Normaliza os meses para minúsculo para casar com filtro fixo
+# Normalizar meses para filtro
 df["Mes"] = df["Mês"].str.lower()
 
-# Meses fixos no filtro
+# Meses fixos para filtro (só os que você pediu)
 meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# Mostrar título sem traço
+# Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# Mostrar filtro centralizado
+# Filtro centralizado
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
 mes_selecionado = st.selectbox(
     "",
@@ -61,7 +76,7 @@ mes_selecionado = st.selectbox(
     format_func=lambda x: x.capitalize()
 )
 
-# Filtra só os dados do mês selecionado, descartando linhas com NaN em "Total de Sacos"
+# Filtra dados só para o mês selecionado e que tenham dados de sacos
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
 # Métricas
@@ -70,11 +85,11 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# Totais gerais para gráfico de pizza (AM vs PM)
+# Totais gerais para gráfico de pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
-# Métricas visualizadas em 3 colunas
+# Métricas lado a lado
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
@@ -88,7 +103,6 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# Cores neon
 cores = {
     "Coleta AM": "#00FFFF",  # Azul neon
     "Coleta PM": "#FFA500"   # Laranja neon
@@ -127,7 +141,7 @@ fig_bar.update_layout(
     bargroupgap=0.1
 )
 
-# Gráfico de pizza AM vs PM (totais gerais)
+# Gráfico de pizza AM vs PM geral
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],

@@ -167,6 +167,69 @@ fig_pie.update_layout(
         bgcolor="#000000"
     )
 )
+import pandas as pd
+import streamlit as st
+import plotly.express as px
+
+# ✅ Configuração da página
+st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
+
+# ✅ CSS personalizado para tema escuro e filtro roxo neon
+st.markdown("""
+    <style>
+        html, body, .stApp {
+            background-color: #000000;
+            color: white;
+        }
+        h1, h2, h3, label, span, div {
+            color: white !important;
+        }
+        /* 🔥 Estilo do selectbox */
+        div[data-baseweb="select"] > div {
+            background-color: rgba(128, 0, 128, 0.5) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+        div[data-baseweb="select"] span {
+            color: black !important;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        div[role="listbox"] {
+            background-color: rgba(0, 0, 0, 0.95) !important;
+            color: white !important;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        div[role="option"]:hover {
+            background-color: #00FFFF !important;
+            color: black !important;
+        }
+        div[role="option"][aria-selected="true"] {
+            background-color: #00FFFF !important;
+            color: black !important;
+        }
+        /* 🔥 Estilo para métricas */
+        .stMetric {
+            background-color: #111111;
+            border: 1px solid #00FFFF;
+            border-radius: 12px;
+            padding: 10px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# ✅ Carregar dados
+df = pd.read_excel("Coleta centro2.xlsx")
+df.columns = df.columns.str.strip()
+
+# ✅ Normalizar coluna de mês
+df["Mes"] = df["Mês"].str.lower().str.strip()
+
+# ✅ Obter meses que realmente possuem dados
+meses_disponiveis_
+
 
 # Exibir gráficos lado a lado
 col4, col5 = st.columns(2)

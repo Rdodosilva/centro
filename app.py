@@ -92,6 +92,12 @@ div[role="listbox"]::-webkit-scrollbar-thumb {
 # Carregar os dados
 df = pd.read_excel("Coleta centro2.xlsx")
 
+# Debug: mostrar todas as colunas para conferir nomes exatos
+st.write("Colunas disponíveis no arquivo:", df.columns.tolist())
+
+# Ajuste o nome 'Mês' aqui conforme o que aparecer no output acima:
+col_mes = "Mês"  # <- substitua pelo nome correto da coluna, exemplo "Mes"
+
 # Remover linhas sem dados em "Total de Sacos"
 df = df.dropna(subset=["Total de Sacos"])
 
@@ -100,7 +106,7 @@ st.markdown("<h1>Coleta Centro 🚛</h1>", unsafe_allow_html=True)
 
 # Meses fixos e só os que tem dados no DF
 meses_possiveis = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
-meses_com_dados = [mes for mes in meses_possiveis if mes in df["Mês"].dropna().unique()]
+meses_com_dados = [mes for mes in meses_possiveis if mes in df[col_mes].dropna().unique()]
 
 # Filtro de meses centralizado e estilizado
 mes_selecionado = st.selectbox(
@@ -110,7 +116,7 @@ mes_selecionado = st.selectbox(
 )
 
 # Filtrar dados pelo mês selecionado
-df_mes = df[df["Mês"] == mes_selecionado]
+df_mes = df[df[col_mes] == mes_selecionado]
 
 # Cálculos métricas
 total_sacos = int(df_mes["Total de Sacos"].sum())
@@ -125,7 +131,7 @@ col2.metric("⚖️ Peso Total (kg)", f"{peso_total}")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} / {total_pm}")
 
 # Preparar dados para gráfico de barras
-df_melt = df_mes.melt(id_vars="Mês", value_vars=["Coleta AM", "Coleta PM"],
+df_melt = df_mes.melt(id_vars=col_mes, value_vars=["Coleta AM", "Coleta PM"],
                       var_name="Período", value_name="Quantidade de Sacos")
 
 cores = {
@@ -136,7 +142,7 @@ cores = {
 # Gráfico de barras interativo
 fig_bar = px.bar(
     df_melt,
-    x="Mês",
+    x=col_mes,
     y="Quantidade de Sacos",
     color="Período",
     barmode="group",

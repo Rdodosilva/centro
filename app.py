@@ -30,7 +30,7 @@ total_pm = int(df["Coleta PM"].sum())
 col1, col2, col3 = st.columns(3)
 
 col1.metric("🧺 Total de Sacos", total_sacos)
-col2.metric(⚖️ Peso Total", f"{peso_total} kg")
+col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
 # Dados para gráfico
@@ -48,17 +48,4 @@ fig = px.bar(
     df_melt,
     x="Mês",
     y="Quantidade de Sacos",
-    color="Período",
-    barmode="group",
-    color_discrete_map=cores,
-    title="🪣 Coleta de Sacos por Mês e Período"
-)
-
-fig.update_layout(
-    plot_bgcolor="rgba(0,0,0,0)",
-    paper_bgcolor="rgba(0,0,0,0)",
-    font_color="white",
-    title_x=0.5
-)
-
-st.plotly_chart(fig, use_container_width=True)
+    color="Perío

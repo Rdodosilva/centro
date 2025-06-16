@@ -20,6 +20,7 @@ st.markdown("""
             border: 1px solid #FFFFFF;
             border-radius: 8px;
             padding: 8px;
+            color: white !important;
         }
         .stSelectbox label {
             color: white !important;
@@ -48,12 +49,17 @@ df["Mes"] = df["Mês"].str.lower()
 # Meses fixos no filtro
 meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# Mostrar título
-st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta - Centro</h1>", unsafe_allow_html=True)
+# Mostrar título sem traço
+st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# Mostrar filtro
+# Mostrar filtro centralizado
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-mes_selecionado = st.selectbox("", meses_filtro, index=0)
+mes_selecionado = st.selectbox(
+    "",
+    meses_filtro,
+    index=0,
+    format_func=lambda x: x.capitalize()
+)
 
 # Filtra só os dados do mês selecionado, descartando linhas com NaN em "Total de Sacos"
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]

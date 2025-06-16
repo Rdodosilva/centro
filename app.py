@@ -2,72 +2,77 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 
-# Configuração da página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# CSS personalizado para tema escuro e filtro moderno
+# CSS total para fundo preto puro e texto branco puro, filtro totalmente preto com letras brancas
 st.markdown("""
-    <style>
-        html, body, .stApp {
-            background-color: #000000;
-            color: white;
-        }
-        h1, h2, h3, label, span, div {
-            color: white !important;
-        }
-        /* Estilo do selectbox */
-        div.stSelectbox > div[role="combobox"] {
-            background-color: #000000 !important;
-            border: 2px solid #00FFFF !important; /* borda azul neon */
-            border-radius: 8px;
-            padding: 6px 12px;
-            color: white !important;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        div.stSelectbox > div[role="combobox"] > div {
-            color: white !important;
-        }
-        div[role="listbox"] {
-            background-color: #000000 !important;
-            color: white !important;
-            font-weight: 600;
-            font-size: 16px;
-        }
-        div[role="option"]:hover {
-            background-color: #00FFFF !important;
-            color: black !important;
-            font-weight: 700;
-        }
-        div[role="option"][aria-selected="true"] {
-            background-color: #00FFFF !important;
-            color: black !important;
-            font-weight: 700;
-        }
-        /* Estilo para métricas */
-        .stMetric {
-            background-color: #111111;
-            border: 1px solid #00FFFF;
-            border-radius: 12px;
-            padding: 10px;
-        }
-    </style>
+<style>
+    /* Fundo geral preto sólido */
+    html, body, .stApp {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+    }
+    /* Textos e títulos brancos puros */
+    h1, h2, h3, label, span, div, p {
+        color: #FFFFFF !important;
+    }
+    /* Estilo do selectbox (filtro) */
+    div.stSelectbox > div[role="combobox"] {
+        background-color: #000000 !important;
+        border: 2px solid #00FFFF !important; /* azul neon */
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+    }
+    div.stSelectbox > div[role="combobox"] > div {
+        color: #FFFFFF !important;
+    }
+    div[role="listbox"] {
+        background-color: #000000 !important;
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+    }
+    div[role="option"]:hover {
+        background-color: #00FFFF !important;
+        color: #000000 !important;
+        font-weight: 900 !important;
+    }
+    div[role="option"][aria-selected="true"] {
+        background-color: #00FFFF !important;
+        color: #000000 !important;
+        font-weight: 900 !important;
+    }
+    /* Métricas fundo escuro com borda azul neon */
+    div[data-testid="metric-container"] {
+        background-color: #111111 !important;
+        border: 2px solid #00FFFF !important;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        color: #FFFFFF !important;
+    }
+    /* Ajusta cor de textos dentro das métricas */
+    div[data-testid="metric-container"] > div > div {
+        color: #FFFFFF !important;
+        font-weight: 700 !important;
+    }
+</style>
 """, unsafe_allow_html=True)
 
-# Carregar dados
+# Carregar os dados
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
-
-# Normalizar meses para filtro
 df["Mes"] = df["Mês"].str.lower()
 
-# Meses fixos para filtro (só os que você pediu)
+# Meses fixos para filtro
 meses_filtro = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# Título
+# Título principal
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# Filtro centralizado
+# Filtro centralizado e estilizado
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
 mes_selecionado = st.selectbox(
     "",
@@ -76,7 +81,7 @@ mes_selecionado = st.selectbox(
     format_func=lambda x: x.capitalize()
 )
 
-# Filtra dados só para o mês selecionado e que tenham dados de sacos
+# Filtra dados do mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
 # Métricas
@@ -85,11 +90,11 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# Totais gerais para gráfico de pizza
+# Totais gerais para gráfico pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
-# Métricas lado a lado
+# Métricas alinhadas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
@@ -104,8 +109,8 @@ df_melt = df_filtrado.melt(
 )
 
 cores = {
-    "Coleta AM": "#00FFFF",  # Azul neon
-    "Coleta PM": "#FFA500"   # Laranja neon
+    "Coleta AM": "#00FFFF",  # azul neon
+    "Coleta PM": "#FFA500"   # laranja neon
 }
 
 # Gráfico de barras
@@ -127,14 +132,14 @@ fig_bar.update_traces(
 fig_bar.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
-    font_color="white",
+    font_color="#FFFFFF",
     title_font=dict(size=22),
     title_x=0.5,
-    xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
-    yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
+    xaxis=dict(title="Mês", color="#FFFFFF", showgrid=False, tickfont=dict(color="#FFFFFF")),
+    yaxis=dict(title="Quantidade de Sacos", color="#FFFFFF", showgrid=False, tickfont=dict(color="#FFFFFF")),
     legend=dict(
         title="Período",
-        font=dict(color="white", size=14),
+        font=dict(color="#FFFFFF", size=14),
         bgcolor="#000000"
     ),
     bargap=0.2,
@@ -150,25 +155,25 @@ fig_pie = px.pie(
     title="🔄 Distribuição Geral AM vs PM"
 )
 fig_pie.update_traces(
-    textfont=dict(color='white', size=14),
+    textfont=dict(color='#FFFFFF', size=14),
     textinfo='label+percent+value',
     pull=[0.05, 0],
-    marker=dict(line=dict(color='white', width=2)),
+    marker=dict(line=dict(color='#FFFFFF', width=2)),
     hoverinfo='label+percent+value'
 )
 fig_pie.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
-    font_color="white",
+    font_color="#FFFFFF",
     title_font=dict(size=22),
     title_x=0.5,
     legend=dict(
-        font=dict(color="white", size=14),
+        font=dict(color="#FFFFFF", size=14),
         bgcolor="#000000"
     )
 )
 
-# Exibir gráficos lado a lado
+# Mostrar gráficos lado a lado
 col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)

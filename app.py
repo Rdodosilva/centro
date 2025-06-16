@@ -30,17 +30,17 @@ st.markdown("""
             font-weight: bold;
         }
         /* Dropdown aberto */
-        div[class*="menu"] {
+        div[role="listbox"] {
             background-color: rgba(155, 48, 255, 0.4) !important;
             color: white !important;
             font-weight: bold;
             border-radius: 10px !important;
             backdrop-filter: blur(8px);
         }
-        div[class*="option"] {
+        div[role="option"] {
             color: white !important;
         }
-        div[class*="option"]:hover, div[class*="option"][aria-selected="true"] {
+        div[role="option"]:hover, div[role="option"][aria-selected="true"] {
             background-color: rgba(200, 100, 255, 0.6) !important;
             color: white !important;
         }
@@ -90,9 +90,9 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# Totais gerais (todos meses) para pizza
-total_am_geral = int(df["Coleta AM"].sum())
-total_pm_geral = int(df["Coleta PM"].sum())
+# Totais gerais (todos meses) para pizza — multiplicando pela unidade 20kg
+total_am_kg = int(df["Coleta AM"].sum() * 20)
+total_pm_kg = int(df["Coleta PM"].sum() * 20)
 
 # Exibir métricas
 mcol1, mcol2, mcol3 = st.columns(3)
@@ -147,13 +147,13 @@ fig_bar.update_layout(
     bargroupgap=0.1
 )
 
-# Gráfico de pizza com total geral AM vs PM
+# Gráfico de pizza com total geral AM vs PM em kg
 fig_pie = px.pie(
-    names=["Coleta AM", "Coleta PM"],
-    values=[total_am_geral, total_pm_geral],
+    names=["Coleta AM (kg)", "Coleta PM (kg)"],
+    values=[total_am_kg, total_pm_kg],
     color=["Coleta AM", "Coleta PM"],
     color_discrete_map=cores,
-    title="🔄 Distribuição Geral AM vs PM"
+    title="🔄 Distribuição Geral AM vs PM (Peso em kg)"
 )
 fig_pie.update_traces(
     textfont=dict(color='white', size=14),

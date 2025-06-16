@@ -5,30 +5,26 @@ import plotly.express as px
 # ⚙️ Configuração da página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 Estilo visual com fundo preto real e elementos com contraste forte
+# 🎨 Estilo visual aprimorado
 st.markdown("""
     <style>
         html, body, .stApp {
             background-color: #000000;
             color: white;
         }
-
         h1, h2, h3, h4, h5, h6, p, label, span, div {
             color: white !important;
         }
-
         .stSelectbox > div {
             background-color: #111111 !important;
-            border: 1px solid #333;
+            border: 1px solid #00FFFF;
             padding: 8px;
-            border-radius: 8px;
+            border-radius: 10px;
         }
-
         .stSelectbox label {
             font-weight: bold;
             color: #00FFFF !important;
         }
-
         .stMetric {
             background-color: #111111;
             border: 1px solid #00FFFF;
@@ -38,33 +34,36 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar os dados
+# 📥 Carregar dados
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
 df.rename(columns={"Mês": "Mes"}, inplace=True)
 df = df.dropna(subset=["Total de Sacos"])
 
-# 🎯 Obter meses válidos
-meses_com_dados = sorted(df["Mes"].dropna().unique())
-mes_selecionado = st.selectbox("📅 Selecione o mês:", meses_com_dados)
+# 🎯 Filtro: mostrar apenas meses com dados
+meses_disponiveis = sorted(df["Mes"].dropna().unique())
 
-# 🔎 Filtrar dados do mês
+# 🧠 Filtro centralizado
+st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
+mes_selecionado = st.selectbox("", meses_disponiveis, index=0)
+
+# 🔍 Filtrar dados do mês selecionado
 df_filtrado = df[df["Mes"] == mes_selecionado]
 
-# 📊 Totais para métricas
+# 📊 Totais
 total_sacos = int(df_filtrado["Total de Sacos"].sum())
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# 📈 Totais gerais para pizza
+# 📈 Totais gerais para Pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
 # 🚛 Título
 st.markdown("<h1 style='text-align: center; font-size: 3em;'>🚛 Coleta - Centro</h1>", unsafe_allow_html=True)
 
-# 🔢 Métricas com destaque visual
+# 🔢 Métricas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
@@ -78,13 +77,13 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# 🎨 Cores personalizadas neon
+# 🎨 Cores neon
 cores = {
-    "Coleta AM": "#00FFFF",  # Neon azul
-    "Coleta PM": "#FFA500"   # Neon laranja
+    "Coleta AM": "#00FFFF",  # Azul neon
+    "Coleta PM": "#FFA500"   # Laranja neon
 }
 
-# 📊 Gráfico de Barras
+# 📊 Gráfico de Barras com animação (hover, realce)
 fig_bar = px.bar(
     df_melt,
     x="Mes",
@@ -92,7 +91,14 @@ fig_bar = px.bar(
     color="Periodo",
     color_discrete_map=cores,
     barmode="group",
-    title="📦 Quantidade de Sacos por Período"
+    title="📦 Quantidade de Sacos por Período",
+    animation_frame=None
+)
+fig_bar.update_traces(
+    hovertemplate='%{y} sacos - %{color}',
+    marker_line_color='white',
+    marker_line_width=1.5,
+    opacity=0.9
 )
 fig_bar.update_layout(
     plot_bgcolor="#000000",
@@ -106,10 +112,12 @@ fig_bar.update_layout(
         title="Período",
         font=dict(color="white", size=14),
         bgcolor="#000000"
-    )
+    ),
+    bargap=0.2,
+    bargroupgap=0.1
 )
 
-# 🥧 Gráfico de Pizza (total geral AM vs PM)
+# 🥧 Gráfico de Pizza com animação ao passar o mouse
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -120,7 +128,9 @@ fig_pie = px.pie(
 fig_pie.update_traces(
     textfont=dict(color='white', size=14),
     textinfo='label+percent+value',
-    pull=[0.05, 0]
+    pull=[0.05, 0],
+    marker=dict(line=dict(color='white', width=2)),
+    hoverinfo='label+percent+value'
 )
 fig_pie.update_layout(
     plot_bgcolor="#000000",
@@ -134,7 +144,7 @@ fig_pie.update_layout(
     )
 )
 
-# 📊 Mostrar gráficos lado a lado
+# 🎯 Mostrar gráficos lado a lado
 col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)

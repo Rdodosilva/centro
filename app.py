@@ -11,8 +11,6 @@ df = pd.read_excel("Coleta centro2.xlsx")
 # Remover linhas onde não há dados nos sacos
 df = df.dropna(subset=["Total de Sacos"])
 
-# Sidebar removida (sem filtros e sem exibição de colunas)
-
 # Layout principal
 st.markdown(
     """
@@ -35,7 +33,7 @@ col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
 # Dados para gráfico
 df_melt = df.melt(id_vars="Mês", value_vars=["Coleta AM", "Coleta PM"],
-                  var_name="Período", value_name="Quantidade de Sacos")
+                  var_name="Periodo", value_name="Quantidade de Sacos")
 
 # Mapear cores
 cores = {
@@ -48,4 +46,25 @@ fig = px.bar(
     df_melt,
     x="Mês",
     y="Quantidade de Sacos",
-    color="Perío
+    color="Periodo",
+    barmode="group",
+    color_discrete_map=cores,
+    title="🪣 Coleta de Sacos por Mês e Período"
+)
+
+fig.update_layout(
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font_color="white",
+    title_x=0.5,
+    xaxis=dict(
+        color='white',
+        showgrid=False,
+    ),
+    yaxis=dict(
+        color='white',
+        showgrid=False,
+    )
+)
+
+st.plotly_chart(fig, use_container_width=True)

@@ -1,175 +1,88 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
-# 🎯 Configuração da página
-st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
-
-# 🎨 CSS personalizado
+# --- Estilo Futurista com CSS ---
 st.markdown("""
     <style>
-        html, body, .stApp {
-            background-color: #000000;
-            color: white;
-        }
-        h1, h2, h3, label, span, div {
-            color: white !important;
-        }
-        /* 🎨 Radio estilizado como dropdown neon */
-        section[data-testid="stRadio"] > div {
-            background-color: rgba(155, 48, 255, 0.15);
-            border: 2px solid #9b30ff;
-            border-radius: 10px;
-            padding: 8px;
-        }
-        label[data-testid="stMarkdownContainer"] {
-            color: white;
-            font-weight: bold;
-        }
-        div[role="radiogroup"] > label {
-            background-color: rgba(0,0,0,0.6);
-            padding: 5px 10px;
-            border-radius: 8px;
-            border: 1px solid #9b30ff;
-            margin-right: 8px;
-        }
-        div[role="radiogroup"] > label:hover {
-            background-color: #9b30ff;
-            color: black;
-        }
-        div[role="radiogroup"] > label[data-selected="true"] {
-            background-color: #9b30ff;
-            color: black;
-            font-weight: bold;
-        }
-        /* 🎯 Estilo para métricas */
-        .stMetric {
-            background-color: #111111;
-            border: 1px solid #00FFFF;
-            border-radius: 12px;
-            padding: 10px;
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+    html, body, .stApp {
+        background-color: #000000;
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+    }
+    .stMetric {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 10px;
+    }
+    div[data-testid="stMetricDelta"] {
+        color: white;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados
-df = pd.read_excel("Coleta centro2.xlsx")
-df.columns = df.columns.str.strip()
+# --- Função para carregar e limpar os dados ---
+@st.cache_data
+def carregar_dados():
+    df = pd.read_excel("Coleta centro2.xlsx")
+    df.columns = df.columns.str.strip()
+    df["Mes"] = df["Mês"].str.lower().str.strip()
+    return df
 
-# 🗓️ Normalizar meses
-df["Mes"] = df["Mês"].str.lower().str.strip()
+# --- Carregando dados ---
+df = carregar_dados()
+meses_disponiveis = df["Mes"].unique()
 
-# 🔍 Definir meses disponíveis
-meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
+# --- Sidebar com filtros ---
+st.sidebar.markdown("### 🔎 Filtros")
+mes_selecionado = st.sidebar.selectbox("Selecione o mês", sorted(meses_disponiveis))
+turno_selecionado = st.sidebar.selectbox("Selecione o turno", ["Todos", "Coleta AM", "Coleta PM"])
 
-# 🏷️ Título
-st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
+# --- Filtragem de dados ---
+df_filtrado = df[df["Mes"] == mes_selecionado]
+if turno_selecionado != "Todos":
+    df_filtrado = df_filtrado[df_filtrado["Periodo"] == turno_selecionado]
 
-# 🎛️ Filtro de mês (dropdown radio estilizado)
-st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
-with filtro_col2:
-    mes_selecionado = st.radio(
-        "",
-        meses_disponiveis,
-        horizontal=True,
-        index=0,
-    )
+# --- Título principal ---
+st.markdown(f"<h2 style='text-align:center;'>📊 Dashboard de Coleta – <u>{mes_selecionado.capitalize()}</u></h2>", unsafe_allow_html=True)
+st.markdown("")
 
-# 📑 Filtrar dados para o mês selecionado
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
+# --- Métricas ---
+total_sacos = df_filtrado["Total"].sum()
+total_am = df_filtrado[df_filtrado["Periodo"] == "Coleta AM"]["Total"].sum()
+total_pm = df_filtrado[df_filtrado["Periodo"] == "Coleta PM"]["Total"].sum()
 
-# 📊 Calcular métricas
-total_sacos = int(df_filtrado["Total de Sacos"].sum())
-peso_total = total_sacos * 20
-total_am = int(df_filtrado["Coleta AM"].sum())
-total_pm = int(df_filtrado["Coleta PM"].sum())
-
-# 📈 Totais gerais para pizza
-total_am_geral = int(df["Coleta AM"].sum())
-total_pm_geral = int(df["Coleta PM"].sum())
-
-# 🎯 Exibir métricas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
-col2.metric("⚖️ Peso Total", f"{peso_total} kg")
-col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
+col2.metric("🌅 Turno AM", f"{total_am}")
+col3.metric("🌇 Turno PM", f"{total_pm}")
 
-# 🔧 Dados para gráfico de barras
-df_melt = df_filtrado.melt(
-    id_vars="Mes",
-    value_vars=["Coleta AM", "Coleta PM"],
-    var_name="Periodo",
-    value_name="Quantidade de Sacos"
-)
+# --- Gráfico de Barras ---
+fig_bar = px.bar(df_filtrado, x="Data", y="Total", color="Periodo",
+                 title="Coleta por Dia",
+                 labels={"Total": "Total de Sacos", "Data": "Data"},
+                 template="plotly_dark")
+fig_bar.update_layout(transition_duration=500)
+st.plotly_chart(fig_bar, use_container_width=True)
 
-# 🎨 Cores
-cores = {
-    "Coleta AM": "#00FFFF",  # Azul neon
-    "Coleta PM": "#FFA500"   # Laranja neon
-}
+# --- Gráfico de Pizza ---
+fig_pie = px.pie(df_filtrado, values="Total", names="Periodo", hole=0.5,
+                 title="Distribuição por Turno", template="plotly_dark")
+fig_pie.update_layout(transition_duration=500)
+st.plotly_chart(fig_pie, use_container_width=True)
 
-# 📊 Gráfico de barras
-fig_bar = px.bar(
-    df_melt,
-    x="Mes",
-    y="Quantidade de Sacos",
-    color="Periodo",
-    color_discrete_map=cores,
-    barmode="group",
-    title="📦 Quantidade de Sacos por Período"
-)
-fig_bar.update_traces(
-    hovertemplate='%{y} sacos - %{color}',
-    marker_line_color='white',
-    marker_line_width=1.5,
-    opacity=0.9
-)
-fig_bar.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22),
-    title_x=0.5,
-    xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
-    yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
-    legend=dict(
-        title="Período",
-        font=dict(color="white", size=14),
-        bgcolor="#000000"
-    ),
-    bargap=0.2,
-    bargroupgap=0.1
-)
+# --- Exibir dados detalhados ---
+with st.expander("📋 Ver dados detalhados"):
+    st.dataframe(df_filtrado.style.set_properties(**{
+        'background-color': 'black',
+        'color': 'white',
+        'border-color': 'white'
+    }))
 
-# 🥧 Gráfico de pizza
-fig_pie = px.pie(
-    names=["Coleta AM", "Coleta PM"],
-    values=[total_am_geral, total_pm_geral],
-    color=["Coleta AM", "Coleta PM"],
-    color_discrete_map=cores,
-    title="🔄 Distribuição Geral AM vs PM"
-)
-fig_pie.update_traces(
-    textinfo='label+percent+value',
-    pull=[0.05, 0],
-    marker=dict(line=dict(color='white', width=2)),
-    textfont=dict(color='white', size=14),
-    hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
-)
-fig_pie.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22),
-    title_x=0.5,
-    legend=dict(
-        font=dict(color="white", size=14),
-        bgcolor="#000000"
-    )
-)
-
-# 📊 Mostrar gráficos lado a lado
-col4, col5 = st.columns(2)
-col4.plotly_chart(fig_bar, use_container_width=True)
-col5.plotly_chart(fig_pie, use_container_width=True)
+# --- Rodapé ---
+st.markdown("---")
+st.markdown("<p style='text-align:center; font-size:12px;'>Desenvolvido com ❤️ por Rodrigo | Streamlit + Plotly</p>", unsafe_allow_html=True)

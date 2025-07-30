@@ -2,128 +2,148 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
-# Configurações da página
-st.set_page_config(page_title="Dashboard de Coleta AM/PM", layout="wide")
+st.set_page_config(
+    page_title="Dashboard de Coleta",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    page_icon="♻️"
+)
 
-# Estilo CSS customizado (dark mode com elementos futuristas)
-st.markdown("""
+# Estilo personalizado
+st.markdown(
+    """
     <style>
-        html, body, [class*="css"]  {
+        body {
             background-color: #000000;
             color: white;
         }
-        .title {
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
+        .main > div {
+            padding: 1rem;
         }
-        .subtitle {
-            font-size: 20px;
-            color: white;
+        .css-1v0mbdj, .css-12ttj6m {
+            color: white !important;
         }
-        .upload-box {
-            border: 2px dashed #7f5af0;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            background-color: #111;
+        .stApp {
+            background-color: #000000;
         }
-        .stButton>button {
-            color: white;
-            background-color: #7f5af0;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
+        .st-bc {
+            background-color: #000000;
         }
-        .stRadio > div {
-            flex-direction: row;
-            justify-content: center;
+        .block-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .stRadio > label {
+            color: white !important;
         }
         .stRadio div[role="radiogroup"] > label {
-            border: 2px solid #7f5af0;
-            border-radius: 8px;
-            padding: 6px 14px;
-            margin: 5px;
             background-color: transparent;
-            color: white;
-            cursor: pointer;
+            border: 1px solid #6A0DAD;
+            color: white !important;
+            border-radius: 5px;
+            padding: 6px 12px;
         }
         .stRadio div[role="radiogroup"] > label[data-selected="true"] {
-            background-color: #7f5af0;
-            color: white;
+            background-color: #6A0DAD;
+            color: white !important;
         }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# Título
-st.markdown("♻️ <span class='title'>Dashboard de Coleta - Turnos AM/PM</span>", unsafe_allow_html=True)
-st.markdown("<span class='subtitle'>📂 Faça o upload da planilha de coleta (.xlsx)</span>", unsafe_allow_html=True)
+st.markdown("### ♻️ Dashboard de Coleta - Turnos AM/PM")
 
-# Upload do arquivo
-arquivo = st.file_uploader("Selecione o arquivo", type="xlsx")
+uploaded_file = st.file_uploader("Faça o upload da planilha de coleta (.xlsx)", type=["xlsx"])
 
-if arquivo is not None:
+if uploaded_file:
     try:
-        df = pd.read_excel(arquivo)
+        df = pd.read_excel(uploaded_file)
 
-        # Verifica se todas as colunas necessárias estão presentes
-        colunas_esperadas = ['Mês', 'Coleta AM', 'Coleta PM', 'Total de Sacos']
-        if all(col in df.columns for col in colunas_esperadas):
-            df['Mês'] = df['Mês'].astype(str)
+        # Verificar se as colunas estão corretas
+        colunas_esperadas = ["Mês", "Coleta AM", "Coleta PM", "Total de Sacos"]
+        if not all(col in df.columns for col in colunas_esperadas):
+            st.error("A planilha deve conter as colunas: Mês, Coleta AM, Coleta PM e Total de Sacos.")
+        else:
+            # Filtros de mês
+            meses = df["Mês"].unique()
+            mes_selecionado = st.radio("Selecione o mês", meses, horizontal=True)
 
-            meses = sorted(df['Mês'].unique())
-            mes_selecionado = st.radio("📅 Selecione o mês:", meses, horizontal=True)
+            df_filtrado = df[df["Mês"] == mes_selecionado]
 
-            df_filtrado = df[df['Mês'] == mes_selecionado]
-
-            # Cartões de totais
-            total_am = df_filtrado['Coleta AM'].sum()
-            total_pm = df_filtrado['Coleta PM'].sum()
-            total_geral = df_filtrado['Total de Sacos'].sum()
+            # Cartões de resumo
+            total_am = df_filtrado["Coleta AM"].sum()
+            total_pm = df_filtrado["Coleta PM"].sum()
+            total_geral = df_filtrado["Total de Sacos"].sum()
 
             col1, col2, col3 = st.columns(3)
-            col1.metric("🕗 Coleta AM", f"{total_am} sacos")
-            col2.metric("🌙 Coleta PM", f"{total_pm} sacos")
-            col3.metric("📦 Total Geral", f"{total_geral} sacos")
+            col1.metric("Total AM", int(total_am))
+            col2.metric("Total PM", int(total_pm))
+            col3.metric("Total Geral", int(total_geral))
 
-            # Gráfico de barras
-            fig = go.Figure()
-            fig.add_trace(go.Bar(x=df_filtrado['Mês'], y=df_filtrado['Coleta AM'], name='Coleta AM', marker_color='#7f5af0'))
-            fig.add_trace(go.Bar(x=df_filtrado['Mês'], y=df_filtrado['Coleta PM'], name='Coleta PM', marker_color='#2cb67d'))
-
-            fig.update_layout(
-                barmode='group',
-                plot_bgcolor='#000',
-                paper_bgcolor='#000',
+            # Gráfico de barras por turno
+            fig_turnos = go.Figure()
+            fig_turnos.add_trace(go.Bar(
+                x=df_filtrado["Mês"],
+                y=df_filtrado["Coleta AM"],
+                name='Coleta AM',
+                marker_color='#636EFA'
+            ))
+            fig_turnos.add_trace(go.Bar(
+                x=df_filtrado["Mês"],
+                y=df_filtrado["Coleta PM"],
+                name='Coleta PM',
+                marker_color='#EF553B'
+            ))
+            fig_turnos.update_layout(
+                title='Distribuição AM x PM',
+                title_font_color='white',
+                xaxis_title='Mês',
+                yaxis_title='Quantidade',
+                plot_bgcolor='black',
+                paper_bgcolor='black',
                 font=dict(color='white'),
-                title='Comparativo de Turnos - AM vs PM',
-                title_font=dict(size=20),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                barmode='group'
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig_turnos, use_container_width=True)
 
-            # Gráfico de linhas (tendência por mês)
-            df_total_por_mes = df.groupby('Mês')[['Coleta AM', 'Coleta PM']].sum().reset_index()
+            # Gráfico de linhas de tendência
+            df_grouped = df.groupby("Mês")[["Coleta AM", "Coleta PM", "Total de Sacos"]].sum().reset_index()
 
-            fig2 = go.Figure()
-            fig2.add_trace(go.Scatter(x=df_total_por_mes['Mês'], y=df_total_por_mes['Coleta AM'],
-                                      mode='lines+markers', name='Coleta AM', line=dict(color='#7f5af0')))
-            fig2.add_trace(go.Scatter(x=df_total_por_mes['Mês'], y=df_total_por_mes['Coleta PM'],
-                                      mode='lines+markers', name='Coleta PM', line=dict(color='#2cb67d')))
-
-            fig2.update_layout(
-                title='Tendência de Coleta AM/PM por Mês',
-                plot_bgcolor='#000',
-                paper_bgcolor='#000',
+            fig_linhas = go.Figure()
+            fig_linhas.add_trace(go.Scatter(
+                x=df_grouped["Mês"],
+                y=df_grouped["Coleta AM"],
+                name='Coleta AM',
+                mode='lines+markers',
+                line=dict(color='#00CC96')
+            ))
+            fig_linhas.add_trace(go.Scatter(
+                x=df_grouped["Mês"],
+                y=df_grouped["Coleta PM"],
+                name='Coleta PM',
+                mode='lines+markers',
+                line=dict(color='#AB63FA')
+            ))
+            fig_linhas.add_trace(go.Scatter(
+                x=df_grouped["Mês"],
+                y=df_grouped["Total de Sacos"],
+                name='Total',
+                mode='lines+markers',
+                line=dict(color='white')
+            ))
+            fig_linhas.update_layout(
+                title='Tendência de Coleta por Mês',
+                title_font_color='white',
+                xaxis_title='Mês',
+                yaxis_title='Quantidade de Sacos',
+                plot_bgcolor='black',
+                paper_bgcolor='black',
                 font=dict(color='white')
             )
-            st.plotly_chart(fig2, use_container_width=True)
-
-        else:
-            st.error("⚠️ A planilha deve conter as colunas: Mês, Coleta AM, Coleta PM e Total de Sacos.")
+            st.plotly_chart(fig_linhas, use_container_width=True)
 
     except Exception as e:
-        st.error(f"Erro ao ler o arquivo: {e}")
+        st.error(f"Ocorreu um erro ao processar o arquivo: {e}")
 else:
-    st.info("⏳ Aguarde o upload de uma planilha válida para visualizar o dashboard.")
-
+    st.info("Aguardando o upload de uma planilha válida para visualizar o dashboard.")

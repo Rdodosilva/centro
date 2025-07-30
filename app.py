@@ -25,7 +25,7 @@ df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
 
 # --- Tratamento dos nomes de colunas ---
-# Supondo que temos colunas: 'Mês', 'Turno' e 'Qtd Sacos'
+# Supondo que temos colunas: 'Mês', 'Coleta AM', 'Coleta PM' e 'Qtd Sacos'
 colunas_esperadas = ['Mês', 'Coleta', 'Qtd Sacos']
 for col in colunas_esperadas:
     if col not in df.columns:

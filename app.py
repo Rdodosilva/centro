@@ -1,115 +1,128 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
 
 # Configurações da página
-st.set_page_config(layout="wide", page_title="Dashboard Coleta AM/PM", page_icon="🧹")
+st.set_page_config(page_title="Dashboard de Coleta AM/PM", layout="wide")
 
-# Estilo CSS personalizado
+# Estilo CSS customizado (dark mode com elementos futuristas)
 st.markdown("""
     <style>
-    body {
-        background-color: #000000;
-        color: white;
-    }
-    .stApp {
-        background-color: #000000;
-        color: white;
-    }
-    .css-1v3fvcr, .css-10trblm, .stMarkdown, .css-1d391kg {
-        color: white !important;
-    }
-    .css-1r6slb0 {
-        background-color: #000000;
-    }
-    .css-1aumxhk, .css-1dp5vir {
-        color: white !important;
-    }
+        html, body, [class*="css"]  {
+            background-color: #000000;
+            color: white;
+        }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+        }
+        .subtitle {
+            font-size: 20px;
+            color: white;
+        }
+        .upload-box {
+            border: 2px dashed #7f5af0;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            background-color: #111;
+        }
+        .stButton>button {
+            color: white;
+            background-color: #7f5af0;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+        }
+        .stRadio > div {
+            flex-direction: row;
+            justify-content: center;
+        }
+        .stRadio div[role="radiogroup"] > label {
+            border: 2px solid #7f5af0;
+            border-radius: 8px;
+            padding: 6px 14px;
+            margin: 5px;
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+        }
+        .stRadio div[role="radiogroup"] > label[data-selected="true"] {
+            background-color: #7f5af0;
+            color: white;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# Título principal
-st.markdown("## ♻️ Dashboard de Coleta - Turnos AM/PM")
-st.markdown("### Faça o upload da planilha de coleta (.xlsx)")
+# Título
+st.markdown("♻️ <span class='title'>Dashboard de Coleta - Turnos AM/PM</span>", unsafe_allow_html=True)
+st.markdown("<span class='subtitle'>📂 Faça o upload da planilha de coleta (.xlsx)</span>", unsafe_allow_html=True)
 
-# Upload da planilha
-uploaded_file = st.file_uploader("Selecione o arquivo", type=["xlsx"])
+# Upload do arquivo
+arquivo = st.file_uploader("Selecione o arquivo", type="xlsx")
 
-if uploaded_file:
-    df = pd.read_excel(uploaded_file)
+if arquivo is not None:
+    try:
+        df = pd.read_excel(arquivo)
 
-    # Validação de colunas obrigatórias
-    colunas_obrigatorias = ['TURNO', 'MÊS', 'BAIRRO', 'TOTAL COLETADO (kg)', 'DIA']
-    for col in colunas_obrigatorias:
-        if col not in df.columns:
-            st.error(f"Coluna obrigatória ausente: {col}")
-            st.stop()
+        # Verifica se todas as colunas necessárias estão presentes
+        colunas_esperadas = ['Mês', 'Coleta AM', 'Coleta PM', 'Total de Sacos']
+        if all(col in df.columns for col in colunas_esperadas):
+            df['Mês'] = df['Mês'].astype(str)
 
-    # Filtros
-    col1, col2 = st.columns(2)
+            meses = sorted(df['Mês'].unique())
+            mes_selecionado = st.radio("📅 Selecione o mês:", meses, horizontal=True)
 
-    with col1:
-        meses = sorted(df['MÊS'].dropna().unique())
-        mes = st.radio("📅 Selecione o mês:", meses, horizontal=True)
+            df_filtrado = df[df['Mês'] == mes_selecionado]
 
-    with col2:
-        turnos = df['TURNO'].dropna().unique()
-        turno = st.radio("🕓 Selecione o turno:", turnos, horizontal=True)
+            # Cartões de totais
+            total_am = df_filtrado['Coleta AM'].sum()
+            total_pm = df_filtrado['Coleta PM'].sum()
+            total_geral = df_filtrado['Total de Sacos'].sum()
 
-    # Filtro aplicado
-    df_filtrado = df[(df['MÊS'] == mes) & (df['TURNO'] == turno)]
+            col1, col2, col3 = st.columns(3)
+            col1.metric("🕗 Coleta AM", f"{total_am} sacos")
+            col2.metric("🌙 Coleta PM", f"{total_pm} sacos")
+            col3.metric("📦 Total Geral", f"{total_geral} sacos")
 
-    if df_filtrado.empty:
-        st.warning("⚠️ Nenhum dado encontrado para os filtros selecionados.")
-        st.stop()
+            # Gráfico de barras
+            fig = go.Figure()
+            fig.add_trace(go.Bar(x=df_filtrado['Mês'], y=df_filtrado['Coleta AM'], name='Coleta AM', marker_color='#7f5af0'))
+            fig.add_trace(go.Bar(x=df_filtrado['Mês'], y=df_filtrado['Coleta PM'], name='Coleta PM', marker_color='#2cb67d'))
 
-    # Cartões principais
-    total_kg = df_filtrado["TOTAL COLETADO (kg)"].sum()
-    media_kg_dia = df_filtrado.groupby("DIA")["TOTAL COLETADO (kg)"].sum().mean()
+            fig.update_layout(
+                barmode='group',
+                plot_bgcolor='#000',
+                paper_bgcolor='#000',
+                font=dict(color='white'),
+                title='Comparativo de Turnos - AM vs PM',
+                title_font=dict(size=20),
+                legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+            )
+            st.plotly_chart(fig, use_container_width=True)
 
-    c1, c2 = st.columns(2)
-    c1.metric("🔢 Total Coletado (kg)", f"{total_kg:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
-    c2.metric("📊 Média por Dia (kg)", f"{media_kg_dia:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+            # Gráfico de linhas (tendência por mês)
+            df_total_por_mes = df.groupby('Mês')[['Coleta AM', 'Coleta PM']].sum().reset_index()
 
-    st.markdown("---")
+            fig2 = go.Figure()
+            fig2.add_trace(go.Scatter(x=df_total_por_mes['Mês'], y=df_total_por_mes['Coleta AM'],
+                                      mode='lines+markers', name='Coleta AM', line=dict(color='#7f5af0')))
+            fig2.add_trace(go.Scatter(x=df_total_por_mes['Mês'], y=df_total_por_mes['Coleta PM'],
+                                      mode='lines+markers', name='Coleta PM', line=dict(color='#2cb67d')))
 
-    # Gráfico de linha (total por dia)
-    linha = px.line(
-        df_filtrado,
-        x="DIA",
-        y="TOTAL COLETADO (kg)",
-        title=f"Evolução Diária da Coleta - {turno}",
-        markers=True,
-        template="plotly_dark",
-        color_discrete_sequence=["#A020F0"]
-    )
-    linha.update_layout(title_font_color='white', font_color='white')
-    st.plotly_chart(linha, use_container_width=True)
+            fig2.update_layout(
+                title='Tendência de Coleta AM/PM por Mês',
+                plot_bgcolor='#000',
+                paper_bgcolor='#000',
+                font=dict(color='white')
+            )
+            st.plotly_chart(fig2, use_container_width=True)
 
-    # Gráfico de barras (por bairro)
-    barras = px.bar(
-        df_filtrado.groupby("BAIRRO")["TOTAL COLETADO (kg)"].sum().reset_index().sort_values(by="TOTAL COLETADO (kg)", ascending=False),
-        x="TOTAL COLETADO (kg)",
-        y="BAIRRO",
-        orientation="h",
-        title="Total Coletado por Bairro",
-        template="plotly_dark",
-        color_discrete_sequence=["#8000FF"]
-    )
-    barras.update_layout(title_font_color='white', font_color='white', yaxis=dict(autorange="reversed"))
-    st.plotly_chart(barras, use_container_width=True)
+        else:
+            st.error("⚠️ A planilha deve conter as colunas: Mês, Coleta AM, Coleta PM e Total de Sacos.")
 
-    # Gráfico de pizza (por bairro)
-    pizza = px.pie(
-        df_filtrado,
-        values="TOTAL COLETADO (kg)",
-        names="BAIRRO",
-        title="Distribuição da Coleta por Bairro",
-        template="plotly_dark",
-        color_discrete_sequence=px.colors.sequential.Purples
-    )
-    pizza.update_layout(title_font_color='white', font_color='white')
-    st.plotly_chart(pizza, use_container_width=True)
-
+    except Exception as e:
+        st.error(f"Erro ao ler o arquivo: {e}")
 else:
-    st.info("📥 Aguarde o upload de uma planilha válida para visualizar o dashboard.")
+    st.info("⏳ Aguarde o upload de uma planilha válida para visualizar o dashboard.")

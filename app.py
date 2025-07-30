@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import os
 
 st.set_page_config(page_title="Dashboard Coleta", layout="wide")
 
@@ -9,22 +8,12 @@ st.markdown("<h1 style='color: white;'>📊 Dashboard Futurista - Coleta AM/PM</
 
 # 🧠 Carregamento dos dados
 @st.cache_data
-def carregar_dados(caminho_arquivo):
-    df = pd.read_excel(caminho_arquivo)
+def carregar_dados():
+    df = pd.read_excel("dados_coleta.xlsx")
     df['Mês'] = pd.Categorical(df['Mês'], categories=df['Mês'], ordered=True)
     return df
 
-# 📁 Upload alternativo caso o arquivo não esteja presente
-arquivo_padrao = "dados_coleta.xlsx"
-if os.path.exists(arquivo_padrao):
-    df = carregar_dados(arquivo_padrao)
-else:
-    st.warning("⚠️ Arquivo 'dados_coleta.xlsx' não encontrado. Faça o upload abaixo:")
-    uploaded_file = st.file_uploader("Upload do arquivo Excel com os dados", type=["xlsx"])
-    if uploaded_file:
-        df = carregar_dados(uploaded_file)
-    else:
-        st.stop()
+df = carregar_dados()
 
 # 🎯 Filtros
 meses = df['Mês'].unique()
@@ -32,7 +21,7 @@ filtro_mes = st.radio("Selecione o mês:", meses, horizontal=True)
 
 df_filtrado = df[df['Mês'] == filtro_mes]
 
-# 🎨 Estilo
+# 🎨 Estilo dos botões
 st.markdown("""<style>
     .stRadio > div {
         flex-direction: row;
@@ -48,7 +37,7 @@ with col2:
 with col3:
     st.metric("Total de Sacos", int(df_filtrado['Total de Sacos'].values[0]))
 
-# 📊 Gráfico de barras animado
+# 📊 Gráfico de barras
 fig_bar = px.bar(
     df,
     x="Mês",
@@ -71,7 +60,7 @@ fig_pizza = px.pie(
 )
 st.plotly_chart(fig_pizza, use_container_width=True)
 
-# 📈 Gráfico de linha de evolução total
+# 📈 Gráfico de linha
 fig_linha = px.line(
     df,
     x="Mês",

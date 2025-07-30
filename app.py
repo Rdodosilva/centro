@@ -2,72 +2,79 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# --- Layout da página ---
-st.set_page_config(layout="wide", page_title="Dashboard Coleta Centro", initial_sidebar_state="collapsed")
+# CONFIGURAÇÃO DO APP
+st.set_page_config(
+    page_title="Coleta de Sacos - Centro",
+    layout="wide",
+    page_icon="🗑️"
+)
 
-# --- Estilo personalizado ---
-st.markdown("""
+st.markdown(
+    """
     <style>
-        body, .stApp {
-            background-color: #000000;
+        body {
+            background-color: black;
             color: white;
+        }
+        .css-1d391kg {
+            background-color: #0f0f0f !important;
         }
         .stRadio > div {
             flex-direction: row;
-            gap: 15px;
-        }
-        .stRadio label {
-            background-color: transparent;
-            border: 1px solid #8000ff;
-            padding: 0.3em 1em;
-            border-radius: 0.5em;
-            color: white;
-            cursor: pointer;
-        }
-        .stRadio input:checked + label {
-            background-color: #8000ff;
         }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# --- Carregar dados ---
+st.title("📊 Evolução da Quantidade de Sacos por Mês")
+st.markdown("Este painel apresenta a evolução mensal do total de sacos coletados (AM + PM) no centro da cidade.")
+
+# FUNÇÃO PARA CARREGAR E TRATAR DADOS
 @st.cache_data
 def carregar_dados():
     df = pd.read_excel("Coleta centro2.xlsx")
-    df["Mês"] = pd.Categorical(df["Mês"], ordered=True, categories=df["Mês"].unique())
+
+    # Normaliza os nomes das colunas
+    df.columns = df.columns.str.strip().str.replace('\xa0', ' ').str.replace('\n', '').str.lower()
+
+    # Renomeia colunas para padronização
+    df = df.rename(columns={
+        'mês': 'Mes',
+        'coleta am': 'Coleta_AM',
+        'coleta pm': 'Coleta_PM',
+        'total de sacos': 'Total_Sacos'
+    })
+
+    # Garante que 'Mes' esteja em ordem correta
+    df['Mes'] = pd.Categorical(df['Mes'], categories=df['Mes'].unique(), ordered=True)
+
     return df
 
+# CARREGA OS DADOS
 df = carregar_dados()
 
-# --- Filtro de mês ---
-meses = df["Mês"].unique().tolist()
-mes_selecionado = st.radio("Selecione o mês:", meses, horizontal=True, label_visibility="collapsed")
+# EXIBE OS DADOS EM TABELA EXPANSÍVEL
+with st.expander("📄 Ver dados"):
+    st.dataframe(df, use_container_width=True)
 
-# --- Dados filtrados ---
-df_filtrado = df[df["Mês"] == mes_selecionado]
-
-# --- Cartões com totais ---
-col1, col2, col3 = st.columns(3)
-col1.metric("Coleta AM", int(df_filtrado["Coleta AM"].values[0]))
-col2.metric("Coleta PM", int(df_filtrado["Coleta PM"].values[0]))
-col3.metric("Total de Sacos", int(df_filtrado["Total de Sacos"].values[0]))
-
-# --- Gráfico de linha com evolução ---
+# GRÁFICO DE LINHA INTERATIVO
 fig = px.line(
     df,
-    x="Mês",
-    y="Total de Sacos",
+    x="Mes",
+    y="Total_Sacos",
     markers=True,
-    title="Evolução da Coleta de Sacos por Mês",
+    title="Evolução da Quantidade de Sacos Coletados",
+    labels={"Mes": "Mês", "Total_Sacos": "Total de Sacos"},
     template="plotly_dark"
 )
-fig.update_traces(line=dict(color="#8000ff", width=3))
+
+fig.update_traces(line_color="cyan", marker=dict(size=10, color='white'))
 fig.update_layout(
-    paper_bgcolor="black",
-    plot_bgcolor="black",
-    font=dict(color="white"),
-    title_font_size=20,
-    hoverlabel=dict(bgcolor="black", font_size=14)
+    font=dict(color='white'),
+    plot_bgcolor='black',
+    paper_bgcolor='black'
 )
 
+# EXIBE O GRÁFICO
 st.plotly_chart(fig, use_container_width=True)

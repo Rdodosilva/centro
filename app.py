@@ -1,84 +1,91 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import datetime
 
-# URL do GitHub (RAW)
-url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
-df = pd.read_excel(url)
-
-# Formatação de datas
-df["DATA"] = pd.to_datetime(df["DATA"], errors="coerce")
-df = df.dropna(subset=["DATA"])
-df["MÊS"] = df["DATA"].dt.strftime("%m/%Y")
-
-# Filtros únicos
-df_meses = df["MÊS"].unique()
-df_meses.sort()
-
-# Estilo
-st.set_page_config(layout="wide", page_title="Dashboard Coleta Centro")
-
-# CSS customizado para visual futurista dark
-st.markdown("""
-    <style>
+# ===== Estilo futurista com fundo preto e texto branco =====
+st.set_page_config(layout="wide")
+with open("style.css", "w") as f:
+    f.write("""
         body {
             background-color: #000000;
             color: white;
         }
-        .metric {
+        .css-1d391kg {
             color: white;
         }
-        .block-container {
-            padding-top: 2rem;
+        .css-1cpxqw2, .stRadio > div {
+            background-color: transparent;
+            color: white;
         }
-        .css-1v0mbdj p {
-            color: white !important;
+        .st-bw {
+            border-color: #8A2BE2 !important;
         }
-        .css-10trblm, .css-1d391kg {
-            color: white !important;
+        .st-emotion-cache-1kyxreq:hover {
+            border: 2px solid #8A2BE2 !important;
         }
-    </style>
-""", unsafe_allow_html=True)
+    """)
+st.markdown('<style>' + open("style.css").read() + '</style>', unsafe_allow_html=True)
 
-# Filtros
-st.markdown("## Coleta Centro - Painel Futurista")
-mes_escolhido = st.radio("Selecione o mês:", df_meses, horizontal=True, key="mes",
-                          label_visibility="collapsed")
+# ===== Carregar os dados do GitHub =====
+url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
+df = pd.read_excel(url)
+
+# ===== Ajustar colunas e tipos =====
+df.columns = df.columns.str.strip()  # Remover espaços extras nos nomes
+df["MÊS"] = df["MÊS"].astype(str).str.upper()
+df["TURNO"] = df["TURNO"].astype(str).str.upper()
+
+# ===== Filtros de MÊS com botões roxos =====
+meses_disponiveis = sorted(df["MÊS"].unique())
+mes_escolhido = st.radio("Selecione o mês:", meses_disponiveis, horizontal=True)
+
 df_filtrado = df[df["MÊS"] == mes_escolhido]
 
-# Métricas
-col1, col2, col3 = st.columns(3)
+# ===== Títulos =====
+st.markdown(f"<h2 style='color:white;'>📊 Dashboard de Coleta - {mes_escolhido}</h2>", unsafe_allow_html=True)
 
-col1.metric("🚮 Total Sacos AM", int(df_filtrado["QTD_SACOS_AM"].sum()))
-col2.metric("🌙 Total Sacos PM", int(df_filtrado["QTD_SACOS_PM"].sum()))
-col3.metric("📦 Total Geral", int(df_filtrado["QTD_SACOS_AM"].sum() + df_filtrado["QTD_SACOS_PM"].sum()))
+# ===== Cards Totais =====
+col1, col2 = st.columns(2)
+with col1:
+    total_am = int(df_filtrado[df_filtrado["TURNO"] == "AM"]["TOTAL"].sum())
+    st.markdown(f"<h3 style='color:white;'>☀️ Total AM: {total_am}</h3>", unsafe_allow_html=True)
+with col2:
+    total_pm = int(df_filtrado[df_filtrado["TURNO"] == "PM"]["TOTAL"].sum())
+    st.markdown(f"<h3 style='color:white;'>🌙 Total PM: {total_pm}</h3>", unsafe_allow_html=True)
 
-# Gráfico de barras AM vs PM
-st.markdown("### Distribuição Geral AM vs PM", unsafe_allow_html=True)
-fig1 = px.bar(
-    df_filtrado.melt(id_vars=["DATA"], value_vars=["QTD_SACOS_AM", "QTD_SACOS_PM"],
-                     var_name="Turno", value_name="Quantidade"),
-    x="DATA", y="Quantidade", color="Turno",
-    color_discrete_map={"QTD_SACOS_AM": "#8e44ad", "QTD_SACOS_PM": "#9b59b6"},
-    template="plotly_dark"
+# ===== Gráfico de barras: Total por Rota =====
+fig_bar = px.bar(
+    df_filtrado,
+    x="ROTA",
+    y="TOTAL",
+    color="TURNO",
+    title="Total por Rota",
+    template="plotly_dark",
+    color_discrete_sequence=["#8A2BE2", "#00CED1"]
 )
-fig1.update_layout(xaxis_title="Data", yaxis_title="Quantidade de Sacos",
-                   legend_title="Turno",
-                   font=dict(color="white"))
-st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig_bar, use_container_width=True)
 
-# Evolução por mês
-st.markdown("### Evolução da Quantidade de Sacos por Mês")
-df_grouped = df.groupby("MÊS").agg({"QTD_SACOS_AM": "sum", "QTD_SACOS_PM": "sum"}).reset_index()
-df_grouped["TOTAL"] = df_grouped["QTD_SACOS_AM"] + df_grouped["QTD_SACOS_PM"]
-fig2 = px.line(df_grouped, x="MÊS", y="TOTAL", markers=True,
-               labels={"TOTAL": "Quantidade Total", "MÊS": "Mês"},
-               template="plotly_dark")
-fig2.update_traces(line=dict(color="#bb86fc"))
-fig2.update_layout(font=dict(color="white"))
-st.plotly_chart(fig2, use_container_width=True)
+# ===== Gráfico de pizza: Proporção AM vs PM =====
+turno_totais = df_filtrado.groupby("TURNO")["TOTAL"].sum().reset_index()
+fig_pizza = px.pie(
+    turno_totais,
+    names="TURNO",
+    values="TOTAL",
+    title="Proporção de Coleta por Turno",
+    template="plotly_dark",
+    color_discrete_sequence=["#8A2BE2", "#00CED1"]
+)
+st.plotly_chart(fig_pizza, use_container_width=True)
 
-# Mensagem final
-st.markdown("---")
-st.markdown("Criado por **@Rdodosilva** | Visual Futurista - Streamlit + Plotly", unsafe_allow_html=True)
+# ===== Gráfico de linhas: Evolução por Rota =====
+fig_linha = px.line(
+    df_filtrado.sort_values("ROTA"),
+    x="ROTA",
+    y="TOTAL",
+    color="TURNO",
+    title="Evolução da Coleta por Rota",
+    markers=True,
+    template="plotly_dark",
+    color_discrete_sequence=["#8A2BE2", "#00CED1"]
+)
+st.plotly_chart(fig_linha, use_container_width=True)

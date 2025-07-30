@@ -1,98 +1,70 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
+import plotly.express as px
 
-st.set_page_config(layout="wide")
+# ---- CONFIGURAÇÃO DA PÁGINA ----
+st.set_page_config(layout="wide", page_title="Dashboard de Coleta - Centro", page_icon="📊")
+
+# ---- ESTILO PERSONALIZADO ----
 st.markdown("""
     <style>
-        body { background-color: #000000; color: white; }
-        .metric-card {
-            border: 2px solid #8a2be2;
-            border-radius: 12px;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .metric-card h2 {
+        body {
+            background-color: #000000;
             color: white;
         }
-        .radio-button-group label {
-            background-color: transparent !important;
-            border: 2px solid #8a2be2;
-            color: white;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .radio-button-group input:checked + label {
-            background-color: #8a2be2 !important;
+        .css-1v0mbdj p, .css-1v0mbdj h1, .css-1v0mbdj h2, .css-1v0mbdj h3 {
             color: white !important;
+        }
+        .stMetric {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1rem;
+            box-shadow: 0 0 15px #6a00ff33;
+            transition: 0.3s;
+        }
+        .stMetric:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 25px #6a00ffaa;
+        }
+        .css-1n76uvr, .stRadio > div {
+            border: 2px solid #6a00ff;
+            border-radius: 10px;
+            padding: 0.5rem;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Carregar dados
+# ---- LEITURA DE DADOS ----
 url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
 df = pd.read_excel(url)
 
-# Limpar e padronizar nomes de colunas
-df.columns = df.columns.str.strip().str.lower()
+# ---- GARANTIR QUE NOMES DAS COLUNAS ESTÃO CORRETOS ----
+df.columns = df.columns.str.strip()  # Remove espaços
+colunas_esperadas = ['Mês', 'Coleta Am', 'Coleta PM', 'Total de Sacos']
+if not all(col in df.columns for col in colunas_esperadas):
+    st.error("Erro: A planilha não possui as colunas esperadas.")
+    st.stop()
 
-# Garantir que coluna mês está como string para filtro
-df['mês'] = df['mês'].astype(str).str.upper()
+# ---- FILTRO DE MÊS ----
+meses = df['Mês'].dropna().unique()
+mes_selecionado = st.radio("Selecione o mês", sorted(meses), horizontal=True)
 
-# Filtros
-meses = df['mês'].unique().tolist()
-mes_selecionado = st.radio("Selecione o mês:", meses, horizontal=True, key="mes_radio")
+df_filtrado = df[df['Mês'] == mes_selecionado]
 
-# Filtrar dados
-df_filtrado = df[df['mês'] == mes_selecionado]
+# ---- CÁLCULOS ----
+total_am = int(df_filtrado['Coleta Am'].sum())
+total_pm = int(df_filtrado['Coleta PM'].sum())
+total_sacos = int(df_filtrado['Total de Sacos'].sum())
 
-# Calcular métricas
-total_am = int(df_filtrado['coleta am'].sum())
-total_pm = int(df_filtrado['coleta pm'].sum())
-total_geral = int(df_filtrado['total de sacos'].sum())
-
-# Layout com 3 colunas
+# ---- LAYOUT DE MÉTRICAS ----
 col1, col2, col3 = st.columns(3)
+col1.metric("Coleta AM", f"{total_am} sacos")
+col2.metric("Coleta PM", f"{total_pm} sacos")
+col3.metric("Total de Sacos", f"{total_sacos} sacos")
 
-with col1:
-    st.markdown(f"""
-        <div class="metric-card">
-            <h2>Coleta AM</h2>
-            <h1>{total_am} sacos</h1>
-        </div>
-    """, unsafe_allow_html=True)
+# ---- GRÁFICO DE LINHA ----
+fig = px.line(df, x='Mês', y=['Coleta Am', 'Coleta PM'], markers=True,
+              title="Coleta AM vs PM por Mês", template='plotly_dark')
+fig.update_layout(title_font_color="white", legend_title_text="Turno", font=dict(color="white"))
 
-with col2:
-    st.markdown(f"""
-        <div class="metric-card">
-            <h2>Coleta PM</h2>
-            <h1>{total_pm} sacos</h1>
-        </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown(f"""
-        <div class="metric-card">
-            <h2>Total de Sacos</h2>
-            <h1>{total_geral} sacos</h1>
-        </div>
-    """, unsafe_allow_html=True)
-
-# Gráfico interativo (linhas)
-fig = go.Figure()
-fig.add_trace(go.Scatter(x=df_filtrado['mês'], y=df_filtrado['coleta am'], mode='lines+markers', name='Coleta AM'))
-fig.add_trace(go.Scatter(x=df_filtrado['mês'], y=df_filtrado['coleta pm'], mode='lines+markers', name='Coleta PM'))
-fig.update_layout(
-    plot_bgcolor='black',
-    paper_bgcolor='black',
-    font=dict(color='white'),
-    title="Comparativo de Coletas",
-    xaxis_title="Mês",
-    yaxis_title="Quantidade de Sacos",
-    hovermode="x unified"
-)
 st.plotly_chart(fig, use_container_width=True)

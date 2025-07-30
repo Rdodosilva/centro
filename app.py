@@ -2,6 +2,49 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+@st.cache_data
+def carregar_dados():
+    df = pd.read_excel("Coleta centro2.xlsx")
+
+    # Corrigir nomes de colunas
+    df.columns = df.columns.str.strip().str.replace('\xa0', ' ').str.replace('\n', '').str.lower()
+    
+    # Mostrar nomes de colunas lidos
+    st.write("Colunas detectadas:", df.columns.tolist())
+
+    # Renomear para padronizar
+    df = df.rename(columns={
+        'mês': 'Mes',
+        'coleta am': 'Coleta_AM',
+        'coleta pm': 'Coleta_PM',
+        'total de sacos': 'Total_Sacos'
+    })
+
+    # Garantir que a coluna Mês está como categórica ordenada
+    df['Mes'] = pd.Categorical(df['Mes'], ordered=True, categories=df['Mes'].unique())
+
+    return df
+
+df = carregar_dados()
+
+# Gráfico de evolução da quantidade de sacos por mês
+fig = px.line(df, x='Mes', y='Total_Sacos', markers=True,
+              title='Evolução da Quantidade de Sacos por Mês',
+              labels={'Mes': 'Mês', 'Total_Sacos': 'Total de Sacos'},
+              template='plotly_dark')
+
+fig.update_traces(line_color='cyan')
+fig.update_layout(
+    font=dict(color='white'),
+    paper_bgcolor='black',
+    plot_bgcolor='black'
+)
+
+st.plotly_chart(fig, use_container_width=True)
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
 # CONFIGURAÇÃO DO APP
 st.set_page_config(
     page_title="Coleta de Sacos - Centro",

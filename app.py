@@ -2,90 +2,114 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# ===== Estilo futurista com fundo preto e texto branco =====
-st.set_page_config(layout="wide")
-with open("style.css", "w") as f:
-    f.write("""
-        body {
-            background-color: #000000;
-            color: white;
-        }
-        .css-1d391kg {
-            color: white;
-        }
-        .css-1cpxqw2, .stRadio > div {
-            background-color: transparent;
-            color: white;
-        }
-        .st-bw {
-            border-color: #8A2BE2 !important;
-        }
-        .st-emotion-cache-1kyxreq:hover {
-            border: 2px solid #8A2BE2 !important;
-        }
-    """)
-st.markdown('<style>' + open("style.css").read() + '</style>', unsafe_allow_html=True)
-
-# ===== Carregar os dados do GitHub =====
+# URL corrigida da planilha
 url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
 df = pd.read_excel(url)
 
-# ===== Ajustar colunas e tipos =====
-df.columns = df.columns.str.strip()  # Remover espaços extras nos nomes
-df["MÊS"] = df["MÊS"].astype(str).str.upper()
+# Tratamento de dados
+df["PERÍODO"] = df["PERÍODO"].astype(str).str.upper()
 df["TURNO"] = df["TURNO"].astype(str).str.upper()
 
-# ===== Filtros de MÊS com botões roxos =====
-meses_disponiveis = sorted(df["MÊS"].unique())
-mes_escolhido = st.radio("Selecione o mês:", meses_disponiveis, horizontal=True)
+# Tema escuro com CSS customizado
+st.set_page_config(layout="wide", page_title="Dashboard Coleta Centro")
 
-df_filtrado = df[df["MÊS"] == mes_escolhido]
+with open("style.css", "w") as f:
+    f.write("""
+    <style>
+        body, .stApp {
+            background-color: #000000;
+            color: white;
+        }
+        .css-1cpxqw2, .stSelectbox, .stRadio, .stMarkdown, .css-1d391kg, .stNumberInput {
+            color: white !important;
+        }
+        div[data-testid="metric-container"] {
+            background-color: #111111;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0px 0px 8px #5d00ff;
+            transition: transform 0.3s ease;
+        }
+        div[data-testid="metric-container"]:hover {
+            transform: scale(1.02);
+            box-shadow: 0px 0px 15px #7d00ff;
+        }
+        div[data-testid="stHorizontalBlock"] > div {
+            padding: 0.5rem;
+        }
+        .stRadio > div {
+            flex-direction: row;
+        }
+        label[data-baseweb="radio"] {
+            border: 2px solid #5d00ff;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            margin: 0.2rem;
+            color: white;
+        }
+        label[data-baseweb="radio"]:hover {
+            background-color: #5d00ff22;
+        }
+        label[data-baseweb="radio"][aria-checked="true"] {
+            background-color: #5d00ff;
+            color: white;
+        }
+    </style>
+    """)
 
-# ===== Títulos =====
-st.markdown(f"<h2 style='color:white;'>📊 Dashboard de Coleta - {mes_escolhido}</h2>", unsafe_allow_html=True)
+with open("style.css", "r") as f:
+    st.markdown(f.read(), unsafe_allow_html=True)
 
-# ===== Cards Totais =====
-col1, col2 = st.columns(2)
+# Filtros
+meses = df["PERÍODO"].unique().tolist()
+meses.sort()
+mes_selecionado = st.radio("Selecione o mês:", meses, horizontal=True)
+
+df_filtrado = df[df["PERÍODO"] == mes_selecionado]
+
+# KPIs
+qtd_total = int(df_filtrado["QTD"].sum())
+qtd_am = int(df_filtrado[df_filtrado["TURNO"] == "AM"]["QTD"].sum())
+qtd_pm = int(df_filtrado[df_filtrado["TURNO"] == "PM"]["QTD"].sum())
+
+# Cards (sem linhas)
+col1, col2, col3 = st.columns(3)
 with col1:
-    total_am = int(df_filtrado[df_filtrado["TURNO"] == "AM"]["TOTAL"].sum())
-    st.markdown(f"<h3 style='color:white;'>☀️ Total AM: {total_am}</h3>", unsafe_allow_html=True)
+    st.metric(label="Total Coletas", value=f"{qtd_total}")
 with col2:
-    total_pm = int(df_filtrado[df_filtrado["TURNO"] == "PM"]["TOTAL"].sum())
-    st.markdown(f"<h3 style='color:white;'>🌙 Total PM: {total_pm}</h3>", unsafe_allow_html=True)
+    st.metric(label="Turno AM", value=f"{qtd_am}")
+with col3:
+    st.metric(label="Turno PM", value=f"{qtd_pm}")
 
-# ===== Gráfico de barras: Total por Rota =====
+# Gráfico de barras
 fig_bar = px.bar(
     df_filtrado,
-    x="ROTA",
-    y="TOTAL",
+    x="HORÁRIO",
+    y="QTD",
     color="TURNO",
-    title="Total por Rota",
-    template="plotly_dark",
-    color_discrete_sequence=["#8A2BE2", "#00CED1"]
+    title="Coletas por Horário",
+    color_discrete_sequence=["#6a0dad", "#00bfff"]
+)
+fig_bar.update_layout(
+    plot_bgcolor="#000000",
+    paper_bgcolor="#000000",
+    font_color="white"
 )
 st.plotly_chart(fig_bar, use_container_width=True)
 
-# ===== Gráfico de pizza: Proporção AM vs PM =====
-turno_totais = df_filtrado.groupby("TURNO")["TOTAL"].sum().reset_index()
-fig_pizza = px.pie(
-    turno_totais,
-    names="TURNO",
-    values="TOTAL",
-    title="Proporção de Coleta por Turno",
-    template="plotly_dark",
-    color_discrete_sequence=["#8A2BE2", "#00CED1"]
-)
-st.plotly_chart(fig_pizza, use_container_width=True)
-
-# ===== Gráfico de linhas: Evolução por Rota =====
-fig_linha = px.line(
-    df_filtrado.sort_values("ROTA"),
-    x="ROTA",
-    y="TOTAL",
+# Gráfico de linhas
+fig_line = px.line(
+    df_filtrado,
+    x="HORÁRIO",
+    y="QTD",
     color="TURNO",
-    title="Evolução da Coleta por Rota",
     markers=True,
-    template="plotly_dark",
-    color_discrete_sequence=["#8A2BE2", "#00CED1"]
+    title="Evolução das Coletas",
+    color_discrete_sequence=["#ff66cc", "#66ccff"]
 )
-st.plotly_chart(fig_linha, use_container_width=True)
+fig_line.update_layout(
+    plot_bgcolor="#000000",
+    paper_bgcolor="#000000",
+    font_color="white"
+)
+st.plotly_chart(fig_line, use_container_width=True)

@@ -15,6 +15,7 @@ st.markdown("""
         h1, h2, h3, label, span, div {
             color: white !important;
         }
+        /* 🎨 Radio estilizado como dropdown neon */
         section[data-testid="stRadio"] > div {
             background-color: rgba(155, 48, 255, 0.15);
             border: 2px solid #9b30ff;
@@ -41,8 +42,10 @@ st.markdown("""
             color: black;
             font-weight: bold;
         }
+        /* 🎯 Estilo para métricas */
         .stMetric {
             background-color: #111111;
+            border: 1px solid #00FFFF;
             border-radius: 12px;
             padding: 10px;
         }
@@ -56,13 +59,13 @@ df.columns = df.columns.str.strip()
 # 🗓️ Normalizar meses
 df["Mes"] = df["Mês"].str.lower().str.strip()
 
-# 🔍 Meses disponíveis
+# 🔍 Definir meses disponíveis
 meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
 # 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# 🎛️ Filtro
+# 🎛️ Filtro de mês (dropdown radio estilizado)
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
 filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
 with filtro_col2:
@@ -73,18 +76,20 @@ with filtro_col2:
         index=0,
     )
 
-# 📑 Filtro aplicado
+# 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
-# 📊 Métricas
+# 📊 Calcular métricas
 total_sacos = int(df_filtrado["Total de Sacos"].sum())
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
+
+# 📈 Totais gerais para pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
-# 🎯 Métricas
+# 🎯 Exibir métricas
 col1, col2, col3 = st.columns(3)
 col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
@@ -100,8 +105,8 @@ df_melt = df_filtrado.melt(
 
 # 🎨 Cores
 cores = {
-    "Coleta AM": "#00FFFF",
-    "Coleta PM": "#FFA500"
+    "Coleta AM": "#00FFFF",  # Azul neon
+    "Coleta PM": "#FFA500"   # Laranja neon
 }
 
 # 📊 Gráfico de barras
@@ -123,17 +128,21 @@ fig_bar.update_traces(
 fig_bar.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
-    font=dict(color="white"),
+    font_color="white",
     title_font=dict(size=22),
     title_x=0.5,
     xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
     yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
-    legend=dict(title="Período", font=dict(color="white"), bgcolor="#000000"),
+    legend=dict(
+        title="Período",
+        font=dict(color="white", size=14),
+        bgcolor="#000000"
+    ),
     bargap=0.2,
     bargroupgap=0.1
 )
 
-# 🥧 Pizza
+# 🥧 Gráfico de pizza
 fig_pie = px.pie(
     names=["Coleta AM", "Coleta PM"],
     values=[total_am_geral, total_pm_geral],
@@ -145,16 +154,19 @@ fig_pie.update_traces(
     textinfo='label+percent+value',
     pull=[0.05, 0],
     marker=dict(line=dict(color='white', width=2)),
-    textfont=dict(color='white'),
+    textfont=dict(color='white', size=14),
     hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
 )
 fig_pie.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
-    font=dict(color="white"),
+    font_color="white",
     title_font=dict(size=22),
     title_x=0.5,
-    legend=dict(font=dict(color="white"), bgcolor="#000000")
+    legend=dict(
+        font=dict(color="white", size=14),
+        bgcolor="#000000"
+    )
 )
 
 # 📊 Mostrar gráficos lado a lado
@@ -162,9 +174,10 @@ col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)
 
-# 📈 Linha
+# 📈 NOVO: Gráfico de linha com evolução mensal
 df_linha = df[df["Total de Sacos"].notna()]
 df_linha["Mes"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+
 fig_linha = px.line(
     df_linha.sort_values("Mes"),
     x="Mes",
@@ -176,12 +189,12 @@ fig_linha.update_traces(line_color="#9b30ff", marker=dict(color='white', size=8)
 fig_linha.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
-    font=dict(color="white"),
+    font_color="white",
     title_font=dict(size=22),
     title_x=0.5,
-    xaxis=dict(color="white", showgrid=False, tickfont=dict(color="white")),
-    yaxis=dict(color="white", showgrid=False, tickfont=dict(color="white"))
+    xaxis=dict(color="white", showgrid=False),
+    yaxis=dict(color="white", showgrid=False)
 )
 
-# 📉 Exibir gráfico
+# 📉 Mostrar gráfico de linha abaixo
 st.plotly_chart(fig_linha, use_container_width=True)

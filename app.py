@@ -1,180 +1,84 @@
-import pandas as pd
 import streamlit as st
+import pandas as pd
 import plotly.express as px
+import datetime
 
-# 🎯 Configuração da página
-st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
+st.set_page_config(layout="wide", page_title="Dashboard Coleta", page_icon="♻️")
 
-# 🎨 CSS personalizado
+# CSS customizado
 st.markdown("""
     <style>
-        html, body, .stApp {
+        body {
             background-color: #000000;
             color: white;
         }
-        h1, h2, h3, label, span, div {
-            color: white !important;
+        .css-18e3th9 {
+            background-color: #000000;
         }
-        section[data-testid="stRadio"] > div {
-            background-color: rgba(155, 48, 255, 0.15);
-            border: 2px solid #9b30ff;
+        .css-1d391kg {
+            background-color: #000000;
+        }
+        .metric-container {
+            transition: transform 0.3s ease;
+        }
+        .metric-container:hover {
+            transform: scale(1.05);
+        }
+        .stRadio > div {
+            background-color: transparent;
+            border: 1px solid #8a2be2;
             border-radius: 10px;
-            padding: 8px;
-        }
-        label[data-testid="stMarkdownContainer"] {
-            color: white;
-            font-weight: bold;
-        }
-        div[role="radiogroup"] > label {
-            background-color: rgba(0,0,0,0.6);
-            padding: 5px 10px;
-            border-radius: 8px;
-            border: 1px solid #9b30ff;
-            margin-right: 8px;
-        }
-        div[role="radiogroup"] > label:hover {
-            background-color: #9b30ff;
-            color: black;
-        }
-        div[role="radiogroup"] > label[data-selected="true"] {
-            background-color: #9b30ff;
-            color: black;
-            font-weight: bold;
-        }
-        .stMetric {
-            background-color: #111111;
-            border: 1px solid #00FFFF;
-            border-radius: 12px;
             padding: 10px;
+        }
+        .stRadio label {
+            color: white !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados
-df = pd.read_excel("Coleta centro2.xlsx")
-df.columns = df.columns.str.strip()
-df["Mes"] = df["Mês"].str.lower().str.strip()
+# Carregar os dados do GitHub (formato .xlsx)
+url = "https://raw.githubusercontent.com/Rdodosilva/dados/main/coleta_am_pm.xlsx"
+df = pd.read_excel(url)
 
-# 🔍 Definir meses disponíveis
-meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
+# Garantir que colunas estejam corretas
+df.columns = [col.strip() for col in df.columns]
 
-# 🏷️ Título
-st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
+# Converter a coluna de data
+df['Data'] = pd.to_datetime(df['Data'])
 
-# 🎛️ Filtro de mês
-st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
-filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
-with filtro_col2:
-    mes_selecionado = st.radio("", meses_disponiveis, horizontal=True, index=0)
+# Filtros
+meses = df['Data'].dt.strftime('%B').unique()
+mes_selecionado = st.radio("Selecione o mês", meses, horizontal=True)
 
-# 📑 Filtrar dados
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
+df_filtrado = df[df['Data'].dt.strftime('%B') == mes_selecionado]
 
-# 📊 Métricas
-total_sacos = int(df_filtrado["Total de Sacos"].sum())
-peso_total = total_sacos * 20
-total_am = int(df_filtrado["Coleta AM"].sum())
-total_pm = int(df_filtrado["Coleta PM"].sum())
-
-total_am_geral = int(df["Coleta AM"].sum())
-total_pm_geral = int(df["Coleta PM"].sum())
-
-# 🎯 Exibir métricas
+# Layout - Cards com animação
 col1, col2, col3 = st.columns(3)
-col1.metric("🧺 Total de Sacos", f"{total_sacos}")
-col2.metric("⚖️ Peso Total", f"{peso_total} kg")
-col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
+with col1:
+    st.metric("Quantidade de Sacos", int(df_filtrado['Quantidade de Sacos'].sum()))
+with col2:
+    st.metric("Turno AM", int(df_filtrado[df_filtrado['Turno'] == 'AM']['Quantidade de Sacos'].sum()))
+with col3:
+    st.metric("Turno PM", int(df_filtrado[df_filtrado['Turno'] == 'PM']['Quantidade de Sacos'].sum()))
 
-# 🔧 Gráfico de barras
-df_melt = df_filtrado.melt(id_vars="Mes", value_vars=["Coleta AM", "Coleta PM"], var_name="Periodo", value_name="Quantidade de Sacos")
-cores = {"Coleta AM": "#00FFFF", "Coleta PM": "#FFA500"}
+st.markdown("---")
 
-fig_bar = px.bar(
-    df_melt,
-    x="Mes",
-    y="Quantidade de Sacos",
-    color="Periodo",
-    color_discrete_map=cores,
-    barmode="group",
-title="📦 Quantidade de Sacos por Período"
-)
-fig_bar.update_traces(
-    hovertemplate='%{y} sacos - %{color}',
-    marker_line_color='white',
-    marker_line_width=1.5,
-    opacity=0.9
-)
-fig_bar.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22, color="white"),
-    title_x=0.5,
-    xaxis=dict(title="Mês", color="white", tickfont=dict(color="white")),
-    yaxis=dict(title="Quantidade de Sacos", color="white", tickfont=dict(color="white")),
-    legend=dict(
-        title=dict(text="Período", font=dict(color="white")),
-        font=dict(color="white"),
-        bgcolor="#000000"
-    ),
-    bargap=0.2,
-    bargroupgap=0.1
-)
+# Distribuição geral AM vs PM
+st.subheader("Distribuição Geral AM vs PM")
+fig_turno = px.pie(df_filtrado, names='Turno', values='Quantidade de Sacos', color_discrete_sequence=px.colors.sequential.Purples)
+fig_turno.update_layout(paper_bgcolor='black', font_color='white')
+st.plotly_chart(fig_turno, use_container_width=True)
 
-# 🥧 Gráfico de pizza
-fig_pie = px.pie(
-    names=["Coleta AM", "Coleta PM"],
-    values=[total_am_geral, total_pm_geral],
-    color=["Coleta AM", "Coleta PM"],
-    color_discrete_map=cores,
-    title="🔄 Distribuição Geral AM vs PM"
-)
-fig_pie.update_traces(
-    textinfo='label+percent+value',
-    pull=[0.05, 0],
-    marker=dict(line=dict(color='white', width=2)),
-    textfont=dict(color='white'),
-    hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
-)
-fig_pie.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22, color="white"),
-    title_x=0.5,
-    legend=dict(
-        font=dict(color="white"),
-        bgcolor="#000000"
-    )
-)
-
-# 📊 Mostrar gráficos lado a lado
-col4, col5 = st.columns(2)
-col4.plotly_chart(fig_bar, use_container_width=True)
-col5.plotly_chart(fig_pie, use_container_width=True)
-
-# 📈 Gráfico de linha
-df_linha = df[df["Total de Sacos"].notna()]
-df_linha["Mes"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
-
-fig_linha = px.line(
-    df_linha.sort_values("Mes"),
-    x="Mes",
-    y="Total de Sacos",
-    markers=True,
-    title="📈 Evolução da Quantidade de Sacos Coletados por Mês"
-)
-fig_linha.update_traces(line_color="#9b30ff", marker=dict(color='white', size=8))
-fig_linha.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font_color="white",
-    title_font=dict(size=22, color="white"),
-    title_x=0.5,
-    xaxis=dict(color="white", tickfont=dict(color="white")),
-    yaxis=dict(color="white", tickfont=dict(color="white")),
-    legend=dict(font=dict(color="white"))
-)
-
-# 📉 Mostrar gráfico de linha
+# Evolução mensal
+st.subheader("Evolução da Quantidade de Sacos por Mês")
+df_mes = df.copy()
+df_mes['Mês'] = df_mes['Data'].dt.strftime('%B')
+df_grouped = df_mes.groupby(['Mês', 'Turno'])['Quantidade de Sacos'].sum().reset_index()
+fig_linha = px.line(df_grouped, x='Mês', y='Quantidade de Sacos', color='Turno', markers=True, line_shape='spline')
+fig_linha.update_layout(paper_bgcolor='black', font_color='white', plot_bgcolor='black')
+fig_linha.update_traces(line=dict(width=3), marker=dict(size=8))
 st.plotly_chart(fig_linha, use_container_width=True)
+
+# Rodapé
+st.markdown("<hr style='border-color: #8a2be2;'>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:center;'>♻️ <b>Dashboard de Coleta | Atualizado automaticamente via GitHub</b></div>", unsafe_allow_html=True)

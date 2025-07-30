@@ -15,7 +15,6 @@ st.markdown("""
         h1, h2, h3, label, span, div {
             color: white !important;
         }
-        /* 🎨 Radio estilizado como dropdown neon */
         section[data-testid="stRadio"] > div {
             background-color: rgba(155, 48, 255, 0.15);
             border: 2px solid #9b30ff;
@@ -42,7 +41,6 @@ st.markdown("""
             color: black;
             font-weight: bold;
         }
-        /* 🎯 Estilo para métricas */
         .stMetric {
             background-color: #111111;
             border: 1px solid #00FFFF;
@@ -55,8 +53,6 @@ st.markdown("""
 # 📥 Carregar dados
 df = pd.read_excel("Coleta centro2.xlsx")
 df.columns = df.columns.str.strip()
-
-# 🗓️ Normalizar meses
 df["Mes"] = df["Mês"].str.lower().str.strip()
 
 # 🔍 Definir meses disponíveis
@@ -65,27 +61,21 @@ meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
 # 🏷️ Título
 st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# 🎛️ Filtro de mês (dropdown radio estilizado)
+# 🎛️ Filtro de mês
 st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
 filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
 with filtro_col2:
-    mes_selecionado = st.radio(
-        "",
-        meses_disponiveis,
-        horizontal=True,
-        index=0,
-    )
+    mes_selecionado = st.radio("", meses_disponiveis, horizontal=True, index=0)
 
-# 📑 Filtrar dados para o mês selecionado
+# 📑 Filtrar dados
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
-# 📊 Calcular métricas
+# 📊 Métricas
 total_sacos = int(df_filtrado["Total de Sacos"].sum())
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum())
 total_pm = int(df_filtrado["Coleta PM"].sum())
 
-# 📈 Totais gerais para pizza
 total_am_geral = int(df["Coleta AM"].sum())
 total_pm_geral = int(df["Coleta PM"].sum())
 
@@ -95,21 +85,10 @@ col1.metric("🧺 Total de Sacos", f"{total_sacos}")
 col2.metric("⚖️ Peso Total", f"{peso_total} kg")
 col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-# 🔧 Dados para gráfico de barras
-df_melt = df_filtrado.melt(
-    id_vars="Mes",
-    value_vars=["Coleta AM", "Coleta PM"],
-    var_name="Periodo",
-    value_name="Quantidade de Sacos"
-)
+# 🔧 Gráfico de barras
+df_melt = df_filtrado.melt(id_vars="Mes", value_vars=["Coleta AM", "Coleta PM"], var_name="Periodo", value_name="Quantidade de Sacos")
+cores = {"Coleta AM": "#00FFFF", "Coleta PM": "#FFA500"}
 
-# 🎨 Cores
-cores = {
-    "Coleta AM": "#00FFFF",  # Azul neon
-    "Coleta PM": "#FFA500"   # Laranja neon
-}
-
-# 📊 Gráfico de barras
 fig_bar = px.bar(
     df_melt,
     x="Mes",
@@ -129,13 +108,13 @@ fig_bar.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
     font_color="white",
-    title_font=dict(size=22),
+    title_font=dict(size=22, color="white"),
     title_x=0.5,
-    xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
-    yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
+    xaxis=dict(title="Mês", color="white", tickfont=dict(color="white")),
+    yaxis=dict(title="Quantidade de Sacos", color="white", tickfont=dict(color="white")),
     legend=dict(
-        title="Período",
-        font=dict(color="white", size=14),
+        title=dict(text="Período", font=dict(color="white")),
+        font=dict(color="white"),
         bgcolor="#000000"
     ),
     bargap=0.2,
@@ -154,17 +133,17 @@ fig_pie.update_traces(
     textinfo='label+percent+value',
     pull=[0.05, 0],
     marker=dict(line=dict(color='white', width=2)),
-    textfont=dict(color='white', size=14),
+    textfont=dict(color='white'),
     hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
 )
 fig_pie.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
     font_color="white",
-    title_font=dict(size=22),
+    title_font=dict(size=22, color="white"),
     title_x=0.5,
     legend=dict(
-        font=dict(color="white", size=14),
+        font=dict(color="white"),
         bgcolor="#000000"
     )
 )
@@ -174,7 +153,7 @@ col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)
 
-# 📈 NOVO: Gráfico de linha com evolução mensal
+# 📈 Gráfico de linha
 df_linha = df[df["Total de Sacos"].notna()]
 df_linha["Mes"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
 
@@ -190,11 +169,12 @@ fig_linha.update_layout(
     plot_bgcolor="#000000",
     paper_bgcolor="#000000",
     font_color="white",
-    title_font=dict(size=22),
+    title_font=dict(size=22, color="white"),
     title_x=0.5,
-    xaxis=dict(color="white", showgrid=False),
-    yaxis=dict(color="white", showgrid=False)
+    xaxis=dict(color="white", tickfont=dict(color="white")),
+    yaxis=dict(color="white", tickfont=dict(color="white")),
+    legend=dict(font=dict(color="white"))
 )
 
-# 📉 Mostrar gráfico de linha abaixo
+# 📉 Mostrar gráfico de linha
 st.plotly_chart(fig_linha, use_container_width=True)

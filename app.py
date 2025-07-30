@@ -126,3 +126,4 @@ if arquivo is not None:
         st.error(f"Erro ao ler o arquivo: {e}")
 else:
     st.info("⏳ Aguarde o upload de uma planilha válida para visualizar o dashboard.")
+

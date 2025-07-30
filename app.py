@@ -96,7 +96,7 @@ fig_bar = px.bar(
     color="Periodo",
     color_discrete_map=cores,
     barmode="group",
-    title="📦 Quantidade de Sacos por Período"
+title="📦 Quantidade de Sacos por Período"
 )
 fig_bar.update_traces(
     hovertemplate='%{y} sacos - %{color}',

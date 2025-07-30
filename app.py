@@ -1,70 +1,80 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import plotly.graph_objects as go
+import time
 
-# ---- CONFIGURAÇÃO DA PÁGINA ----
-st.set_page_config(layout="wide", page_title="Dashboard de Coleta - Centro", page_icon="📊")
-
-# ---- ESTILO PERSONALIZADO ----
+# ---- CONFIGURAÇÃO DE ESTILO ----
+st.set_page_config(layout="wide")
 st.markdown("""
     <style>
-        body {
-            background-color: #000000;
-            color: white;
-        }
-        .css-1v0mbdj p, .css-1v0mbdj h1, .css-1v0mbdj h2, .css-1v0mbdj h3 {
-            color: white !important;
-        }
-        .stMetric {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1rem;
-            box-shadow: 0 0 15px #6a00ff33;
-            transition: 0.3s;
-        }
-        .stMetric:hover {
-            transform: scale(1.03);
-            box-shadow: 0 0 25px #6a00ffaa;
-        }
-        .css-1n76uvr, .stRadio > div {
-            border: 2px solid #6a00ff;
+        body { background-color: #000000; color: white; }
+        .metric-box {
+            border: 2px solid #8000ff;
             border-radius: 10px;
-            padding: 0.5rem;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+            background-color: #111111;
         }
+        .metric-box h1 { color: white; }
+        .radio-group label { color: white !important; }
     </style>
 """, unsafe_allow_html=True)
 
-# ---- LEITURA DE DADOS ----
+# ---- LEITURA DA PLANILHA ----
 url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
 df = pd.read_excel(url)
 
-# ---- GARANTIR QUE NOMES DAS COLUNAS ESTÃO CORRETOS ----
-df.columns = df.columns.str.strip()  # Remove espaços
-colunas_esperadas = ['Mês', 'Coleta Am', 'Coleta PM', 'Total de Sacos']
-if not all(col in df.columns for col in colunas_esperadas):
-    st.error("Erro: A planilha não possui as colunas esperadas.")
-    st.stop()
+# ---- VERIFICAÇÃO DAS COLUNAS (caso precise debug) ----
+# st.write("Colunas:", df.columns.tolist())
 
-# ---- FILTRO DE MÊS ----
-meses = df['Mês'].dropna().unique()
-mes_selecionado = st.radio("Selecione o mês", sorted(meses), horizontal=True)
+# ---- FILTRO POR MÊS ----
+meses = df["Mês"].unique()
+mes_selecionado = st.radio("Selecione o mês:", options=meses, horizontal=True)
 
-df_filtrado = df[df['Mês'] == mes_selecionado]
+df_filtrado = df[df["Mês"] == mes_selecionado]
 
-# ---- CÁLCULOS ----
-total_am = int(df_filtrado['Coleta Am'].sum())
-total_pm = int(df_filtrado['Coleta PM'].sum())
-total_sacos = int(df_filtrado['Total de Sacos'].sum())
+# ---- MÉTRICAS COM ANIMAÇÃO ----
+def metric_box(titulo, valor, key):
+    with st.container():
+        with st.spinner(f"Carregando {titulo}..."):
+            time.sleep(0.5)
+            st.markdown(f"""
+                <div class="metric-box">
+                    <h4>{titulo}</h4>
+                    <h1>{valor}</h1>
+                </div>
+            """, unsafe_allow_html=True)
 
-# ---- LAYOUT DE MÉTRICAS ----
 col1, col2, col3 = st.columns(3)
-col1.metric("Coleta AM", f"{total_am} sacos")
-col2.metric("Coleta PM", f"{total_pm} sacos")
-col3.metric("Total de Sacos", f"{total_sacos} sacos")
 
-# ---- GRÁFICO DE LINHA ----
-fig = px.line(df, x='Mês', y=['Coleta Am', 'Coleta PM'], markers=True,
-              title="Coleta AM vs PM por Mês", template='plotly_dark')
-fig.update_layout(title_font_color="white", legend_title_text="Turno", font=dict(color="white"))
+with col1:
+    total_am = int(df_filtrado["Coleta Am"].sum())
+    metric_box("Coleta AM", f"{total_am} sacos", "am")
 
+with col2:
+    total_pm = int(df_filtrado["Coleta PM"].sum())
+    metric_box("Coleta PM", f"{total_pm} sacos", "pm")
+
+with col3:
+    total_geral = int(df_filtrado["Total de Sacos"].sum())
+    metric_box("Total de Sacos", f"{total_geral} sacos", "total")
+
+# ---- GRÁFICO DE LINHA INTERATIVO ----
+fig = go.Figure()
+fig.add_trace(go.Scatter(
+    x=df_filtrado["Mês"],
+    y=df_filtrado["Total de Sacos"],
+    mode='lines+markers',
+    line=dict(color='#8000ff', width=3),
+    marker=dict(size=8),
+    name='Total de Sacos'
+))
+fig.update_layout(
+    title='Total de Sacos por Mês',
+    plot_bgcolor='black',
+    paper_bgcolor='black',
+    font=dict(color='white'),
+    hovermode='x unified'
+)
 st.plotly_chart(fig, use_container_width=True)

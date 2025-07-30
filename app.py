@@ -3,82 +3,82 @@ import pandas as pd
 import plotly.express as px
 import datetime
 
-st.set_page_config(layout="wide", page_title="Dashboard Coleta", page_icon="♻️")
+# URL do GitHub (RAW)
+url = "https://github.com/Rdodosilva/centro/raw/refs/heads/main/Coleta%20centro2.xlsx"
+df = pd.read_excel(url)
 
-# CSS customizado
+# Formatação de datas
+df["DATA"] = pd.to_datetime(df["DATA"], errors="coerce")
+df = df.dropna(subset=["DATA"])
+df["MÊS"] = df["DATA"].dt.strftime("%m/%Y")
+
+# Filtros únicos
+df_meses = df["MÊS"].unique()
+df_meses.sort()
+
+# Estilo
+st.set_page_config(layout="wide", page_title="Dashboard Coleta Centro")
+
+# CSS customizado para visual futurista dark
 st.markdown("""
     <style>
         body {
             background-color: #000000;
             color: white;
         }
-        .css-18e3th9 {
-            background-color: #000000;
+        .metric {
+            color: white;
         }
-        .css-1d391kg {
-            background-color: #000000;
+        .block-container {
+            padding-top: 2rem;
         }
-        .metric-container {
-            transition: transform 0.3s ease;
+        .css-1v0mbdj p {
+            color: white !important;
         }
-        .metric-container:hover {
-            transform: scale(1.05);
-        }
-        .stRadio > div {
-            background-color: transparent;
-            border: 1px solid #8a2be2;
-            border-radius: 10px;
-            padding: 10px;
-        }
-        .stRadio label {
+        .css-10trblm, .css-1d391kg {
             color: white !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Carregar os dados do GitHub (formato .xlsx)
-url = "https://raw.githubusercontent.com/Rdodosilva/dados/main/coleta_am_pm.xlsx"
-df = pd.read_excel(url)
-
-# Garantir que colunas estejam corretas
-df.columns = [col.strip() for col in df.columns]
-
-# Converter a coluna de data
-df['Data'] = pd.to_datetime(df['Data'])
-
 # Filtros
-meses = df['Data'].dt.strftime('%B').unique()
-mes_selecionado = st.radio("Selecione o mês", meses, horizontal=True)
+st.markdown("## Coleta Centro - Painel Futurista")
+mes_escolhido = st.radio("Selecione o mês:", df_meses, horizontal=True, key="mes",
+                          label_visibility="collapsed")
+df_filtrado = df[df["MÊS"] == mes_escolhido]
 
-df_filtrado = df[df['Data'].dt.strftime('%B') == mes_selecionado]
-
-# Layout - Cards com animação
+# Métricas
 col1, col2, col3 = st.columns(3)
-with col1:
-    st.metric("Quantidade de Sacos", int(df_filtrado['Quantidade de Sacos'].sum()))
-with col2:
-    st.metric("Turno AM", int(df_filtrado[df_filtrado['Turno'] == 'AM']['Quantidade de Sacos'].sum()))
-with col3:
-    st.metric("Turno PM", int(df_filtrado[df_filtrado['Turno'] == 'PM']['Quantidade de Sacos'].sum()))
 
+col1.metric("🚮 Total Sacos AM", int(df_filtrado["QTD_SACOS_AM"].sum()))
+col2.metric("🌙 Total Sacos PM", int(df_filtrado["QTD_SACOS_PM"].sum()))
+col3.metric("📦 Total Geral", int(df_filtrado["QTD_SACOS_AM"].sum() + df_filtrado["QTD_SACOS_PM"].sum()))
+
+# Gráfico de barras AM vs PM
+st.markdown("### Distribuição Geral AM vs PM", unsafe_allow_html=True)
+fig1 = px.bar(
+    df_filtrado.melt(id_vars=["DATA"], value_vars=["QTD_SACOS_AM", "QTD_SACOS_PM"],
+                     var_name="Turno", value_name="Quantidade"),
+    x="DATA", y="Quantidade", color="Turno",
+    color_discrete_map={"QTD_SACOS_AM": "#8e44ad", "QTD_SACOS_PM": "#9b59b6"},
+    template="plotly_dark"
+)
+fig1.update_layout(xaxis_title="Data", yaxis_title="Quantidade de Sacos",
+                   legend_title="Turno",
+                   font=dict(color="white"))
+st.plotly_chart(fig1, use_container_width=True)
+
+# Evolução por mês
+st.markdown("### Evolução da Quantidade de Sacos por Mês")
+df_grouped = df.groupby("MÊS").agg({"QTD_SACOS_AM": "sum", "QTD_SACOS_PM": "sum"}).reset_index()
+df_grouped["TOTAL"] = df_grouped["QTD_SACOS_AM"] + df_grouped["QTD_SACOS_PM"]
+fig2 = px.line(df_grouped, x="MÊS", y="TOTAL", markers=True,
+               labels={"TOTAL": "Quantidade Total", "MÊS": "Mês"},
+               template="plotly_dark")
+fig2.update_traces(line=dict(color="#bb86fc"))
+fig2.update_layout(font=dict(color="white"))
+st.plotly_chart(fig2, use_container_width=True)
+
+# Mensagem final
 st.markdown("---")
-
-# Distribuição geral AM vs PM
-st.subheader("Distribuição Geral AM vs PM")
-fig_turno = px.pie(df_filtrado, names='Turno', values='Quantidade de Sacos', color_discrete_sequence=px.colors.sequential.Purples)
-fig_turno.update_layout(paper_bgcolor='black', font_color='white')
-st.plotly_chart(fig_turno, use_container_width=True)
-
-# Evolução mensal
-st.subheader("Evolução da Quantidade de Sacos por Mês")
-df_mes = df.copy()
-df_mes['Mês'] = df_mes['Data'].dt.strftime('%B')
-df_grouped = df_mes.groupby(['Mês', 'Turno'])['Quantidade de Sacos'].sum().reset_index()
-fig_linha = px.line(df_grouped, x='Mês', y='Quantidade de Sacos', color='Turno', markers=True, line_shape='spline')
-fig_linha.update_layout(paper_bgcolor='black', font_color='white', plot_bgcolor='black')
-fig_linha.update_traces(line=dict(width=3), marker=dict(size=8))
-st.plotly_chart(fig_linha, use_container_width=True)
-
-# Rodapé
-st.markdown("<hr style='border-color: #8a2be2;'>", unsafe_allow_html=True)
-st.markdown("<div style='text-align:center;'>♻️ <b>Dashboard de Coleta | Atualizado automaticamente via GitHub</b></div>", unsafe_allow_html=True)
+st.markdown("Criado por **@Rdodosilva** | Visual Futurista - Streamlit + Plotly", unsafe_allow_html=True)

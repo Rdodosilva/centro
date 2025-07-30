@@ -5,18 +5,22 @@ import plotly.express as px
 # 🎯 Configuração da página
 st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# 🎨 CSS personalizado
+# 🔧 CSS para forçar fundo preto total e texto branco absoluto
 st.markdown("""
     <style>
         html, body, .stApp {
-            background-color: #000000;
-            color: white !important;
+            background-color: #000000 !important;
+            color: #FFFFFF !important;
         }
         h1, h2, h3, h4, h5, h6,
-        label, span, div, p, .css-1v3fvcr, .stText, .stMarkdown {
-            color: white !important;
+        label, span, div, p, a, li, ul, ol, input, select, textarea,
+        .css-1v3fvcr, .stText, .stMarkdown, .css-1kyxreq, .css-10trblm,
+        .css-1cpxqw2, .css-qrbaxs, .css-ffhzg2, .st-b3, .st-cx, .st-co,
+        .st-cr, .st-da, .st-db, .st-dc {
+            color: #FFFFFF !important;
         }
-        /* 🎨 Radio estilizado como dropdown neon */
+
+        /* 🎨 Radio buttons estilizados */
         section[data-testid="stRadio"] > div {
             background-color: rgba(155, 48, 255, 0.15);
             border: 2px solid #9b30ff;
@@ -24,7 +28,7 @@ st.markdown("""
             padding: 8px;
         }
         label[data-testid="stMarkdownContainer"] {
-            color: white;
+            color: #FFFFFF !important;
             font-weight: bold;
         }
         div[role="radiogroup"] > label {
@@ -33,24 +37,25 @@ st.markdown("""
             border-radius: 8px;
             border: 1px solid #9b30ff;
             margin-right: 8px;
-            color: white !important;
+            color: #FFFFFF !important;
         }
         div[role="radiogroup"] > label:hover {
             background-color: #9b30ff;
-            color: black !important;
+            color: #000000 !important;
         }
         div[role="radiogroup"] > label[data-selected="true"] {
             background-color: #9b30ff;
-            color: black !important;
+            color: #000000 !important;
             font-weight: bold;
         }
-        /* 🎯 Estilo para métricas */
+
+        /* 🎯 Métricas estilizadas */
         .stMetric {
             background-color: #111111;
             border: 1px solid #00FFFF;
             border-radius: 12px;
             padding: 10px;
-            color: white !important;
+            color: #FFFFFF !important;
         }
     </style>
 """, unsafe_allow_html=True)

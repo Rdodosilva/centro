@@ -1,106 +1,175 @@
-import streamlit as st
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
-# CONFIGURAÇÃO DO DASHBOARD
-st.set_page_config(page_title="Coleta Centro - Painel", layout="wide", page_icon="🗑️")
+# 🎯 Configuração da página
+st.set_page_config(page_title="Coleta Centro", page_icon="🚛", layout="wide")
 
-# ESTILO FUTURISTA ESCURO
+# 🎨 CSS personalizado
 st.markdown("""
     <style>
-        body {
+        html, body, .stApp {
             background-color: #000000;
             color: white;
         }
-        .stApp {
-            background-color: #000000;
+        h1, h2, h3, label, span, div {
+            color: white !important;
         }
-        .titulo {
+        /* 🎨 Radio estilizado como dropdown neon */
+        section[data-testid="stRadio"] > div {
+            background-color: rgba(155, 48, 255, 0.15);
+            border: 2px solid #9b30ff;
+            border-radius: 10px;
+            padding: 8px;
+        }
+        label[data-testid="stMarkdownContainer"] {
             color: white;
-            font-size: 2em;
             font-weight: bold;
         }
-        .valor {
-            font-size: 2em;
+        div[role="radiogroup"] > label {
+            background-color: rgba(0,0,0,0.6);
+            padding: 5px 10px;
+            border-radius: 8px;
+            border: 1px solid #9b30ff;
+            margin-right: 8px;
+        }
+        div[role="radiogroup"] > label:hover {
+            background-color: #9b30ff;
+            color: black;
+        }
+        div[role="radiogroup"] > label[data-selected="true"] {
+            background-color: #9b30ff;
+            color: black;
             font-weight: bold;
-            color: deepskyblue;
         }
-        .stRadio > div {
-            flex-direction: row;
-        }
-        .css-1n76uvr {
-            color: white;
+        /* 🎯 Estilo para métricas */
+        .stMetric {
+            background-color: #111111;
+            border: 1px solid #00FFFF;
+            border-radius: 12px;
+            padding: 10px;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# TÍTULO
-st.markdown("<div class='titulo'>📊 Dashboard de Coleta - Centro</div>", unsafe_allow_html=True)
+# 📥 Carregar dados
+df = pd.read_excel("Coleta centro2.xlsx")
+df.columns = df.columns.str.strip()
 
-# CARREGAR PLANILHA
-@st.cache_data
-def carregar_dados():
-    df = pd.read_excel("Coleta centro2.xlsx")
-    df.columns = df.columns.str.strip().str.replace('\xa0', ' ').str.replace('\n', '').str.lower()
-    df = df.rename(columns={
-        'mês': 'Mes',
-        'coleta am': 'Coleta_AM',
-        'coleta pm': 'Coleta_PM',
-        'total de sacos': 'Total_Sacos'
-    })
-    df['Mes'] = pd.Categorical(df['Mes'], categories=df['Mes'].unique(), ordered=True)
-    return df
+# 🗓️ Normalizar meses
+df["Mes"] = df["Mês"].str.lower().str.strip()
 
-df = carregar_dados()
+# 🔍 Definir meses disponíveis
+meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
 
-# FILTRO DE MÊS COM ESTILO ROXO
-meses = df['Mes'].unique().tolist()
-mes_selecionado = st.radio("🗓️ Selecione o Mês:", meses, horizontal=True)
-df_filtrado = df[df['Mes'] == mes_selecionado]
+# 🏷️ Título
+st.markdown("<h1 style='text-align:center; font-size: 3em;'>🚛 Coleta Centro</h1>", unsafe_allow_html=True)
 
-# VALORES TOTAIS
-total_am = int(df_filtrado['Coleta_AM'].sum())
-total_pm = int(df_filtrado['Coleta_PM'].sum())
-total_geral = int(df_filtrado['Total_Sacos'].sum())
+# 🎛️ Filtro de mês (dropdown radio estilizado)
+st.markdown("<h2 style='text-align:center;'>📅 Selecione o mês:</h2>", unsafe_allow_html=True)
+filtro_col1, filtro_col2, filtro_col3 = st.columns([1, 2, 1])
+with filtro_col2:
+    mes_selecionado = st.radio(
+        "",
+        meses_disponiveis,
+        horizontal=True,
+        index=0,
+    )
 
+# 📑 Filtrar dados para o mês selecionado
+df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
+
+# 📊 Calcular métricas
+total_sacos = int(df_filtrado["Total de Sacos"].sum())
+peso_total = total_sacos * 20
+total_am = int(df_filtrado["Coleta AM"].sum())
+total_pm = int(df_filtrado["Coleta PM"].sum())
+
+# 📈 Totais gerais para pizza
+total_am_geral = int(df["Coleta AM"].sum())
+total_pm_geral = int(df["Coleta PM"].sum())
+
+# 🎯 Exibir métricas
 col1, col2, col3 = st.columns(3)
-col1.markdown("### 🌅 Coleta AM")
-col1.markdown(f"<div class='valor'>{total_am}</div>", unsafe_allow_html=True)
+col1.metric("🧺 Total de Sacos", f"{total_sacos}")
+col2.metric("⚖️ Peso Total", f"{peso_total} kg")
+col3.metric("🌅 AM / 🌇 PM", f"{total_am} AM / {total_pm} PM")
 
-col2.markdown("### 🌇 Coleta PM")
-col2.markdown(f"<div class='valor'>{total_pm}</div>", unsafe_allow_html=True)
-
-col3.markdown("### 🗑️ Total de Sacos")
-col3.markdown(f"<div class='valor'>{total_geral}</div>", unsafe_allow_html=True)
-
-st.markdown("---")
-
-# GRÁFICO DE BARRAS - COLETA AM
-fig_am = px.bar(
-    df, x='Coleta_AM', y='Mes', orientation='h', title='Coleta AM por Mês',
-    labels={'Coleta_AM': 'Quantidade', 'Mes': 'Mês'}, template='plotly_dark'
+# 🔧 Dados para gráfico de barras
+df_melt = df_filtrado.melt(
+    id_vars="Mes",
+    value_vars=["Coleta AM", "Coleta PM"],
+    var_name="Periodo",
+    value_name="Quantidade de Sacos"
 )
-fig_am.update_traces(marker_color='mediumpurple')
-st.plotly_chart(fig_am, use_container_width=True)
 
-# GRÁFICO DE BARRAS - COLETA PM
-fig_pm = px.bar(
-    df, x='Coleta_PM', y='Mes', orientation='h', title='Coleta PM por Mês',
-    labels={'Coleta_PM': 'Quantidade', 'Mes': 'Mês'}, template='plotly_dark'
+# 🎨 Cores
+cores = {
+    "Coleta AM": "#00FFFF",  # Azul neon
+    "Coleta PM": "#FFA500"   # Laranja neon
+}
+
+# 📊 Gráfico de barras
+fig_bar = px.bar(
+    df_melt,
+    x="Mes",
+    y="Quantidade de Sacos",
+    color="Periodo",
+    color_discrete_map=cores,
+    barmode="group",
+    title="📦 Quantidade de Sacos por Período"
 )
-fig_pm.update_traces(marker_color='orchid')
-st.plotly_chart(fig_pm, use_container_width=True)
-
-# NOVO GRÁFICO DE LINHA - EVOLUÇÃO DOS SACOS
-fig_linha = px.line(
-    df, x="Mes", y="Total_Sacos", markers=True,
-    title="📈 Evolução da Quantidade de Sacos Coletados",
-    labels={"Mes": "Mês", "Total_Sacos": "Total de Sacos"}, template="plotly_dark"
+fig_bar.update_traces(
+    hovertemplate='%{y} sacos - %{color}',
+    marker_line_color='white',
+    marker_line_width=1.5,
+    opacity=0.9
 )
-fig_linha.update_traces(line_color="deepskyblue", marker=dict(size=10, color='white'))
-fig_linha.update_layout(font=dict(color='white', size=14), plot_bgcolor='black', paper_bgcolor='black')
-st.plotly_chart(fig_linha, use_container_width=True)
+fig_bar.update_layout(
+    plot_bgcolor="#000000",
+    paper_bgcolor="#000000",
+    font_color="white",
+    title_font=dict(size=22),
+    title_x=0.5,
+    xaxis=dict(title="Mês", color="white", showgrid=False, tickfont=dict(color="white")),
+    yaxis=dict(title="Quantidade de Sacos", color="white", showgrid=False, tickfont=dict(color="white")),
+    legend=dict(
+        title="Período",
+        font=dict(color="white", size=14),
+        bgcolor="#000000"
+    ),
+    bargap=0.2,
+    bargroupgap=0.1
+)
 
-# EXIBIR DADOS (OPCIONAL)
-with st.expander("📄 Ver dados da planilha"):
-    st.dataframe(df, use_container_width=True)
+# 🥧 Gráfico de pizza
+fig_pie = px.pie(
+    names=["Coleta AM", "Coleta PM"],
+    values=[total_am_geral, total_pm_geral],
+    color=["Coleta AM", "Coleta PM"],
+    color_discrete_map=cores,
+    title="🔄 Distribuição Geral AM vs PM"
+)
+fig_pie.update_traces(
+    textinfo='label+percent+value',
+    pull=[0.05, 0],
+    marker=dict(line=dict(color='white', width=2)),
+    textfont=dict(color='white', size=14),
+    hovertemplate='%{label}: %{value} kg (%{percent})<extra></extra>'
+)
+fig_pie.update_layout(
+    plot_bgcolor="#000000",
+    paper_bgcolor="#000000",
+    font_color="white",
+    title_font=dict(size=22),
+    title_x=0.5,
+    legend=dict(
+        font=dict(color="white", size=14),
+        bgcolor="#000000"
+    )
+)
+
+# 📊 Mostrar gráficos lado a lado
+col4, col5 = st.columns(2)
+col4.plotly_chart(fig_bar, use_container_width=True)
+col5.plotly_chart(fig_pie, use_container_width=True)

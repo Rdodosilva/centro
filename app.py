@@ -173,3 +173,28 @@ fig_pie.update_layout(
 col4, col5 = st.columns(2)
 col4.plotly_chart(fig_bar, use_container_width=True)
 col5.plotly_chart(fig_pie, use_container_width=True)
+
+# 📈 NOVO: Gráfico de linha com evolução mensal
+df_linha = df[df["Total de Sacos"].notna()]
+df_linha["Mes"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+
+fig_linha = px.line(
+    df_linha.sort_values("Mes"),
+    x="Mes",
+    y="Total de Sacos",
+    markers=True,
+    title="📈 Evolução da Quantidade de Sacos Coletados por Mês"
+)
+fig_linha.update_traces(line_color="#9b30ff", marker=dict(color='white', size=8))
+fig_linha.update_layout(
+    plot_bgcolor="#000000",
+    paper_bgcolor="#000000",
+    font_color="white",
+    title_font=dict(size=22),
+    title_x=0.5,
+    xaxis=dict(color="white", showgrid=False),
+    yaxis=dict(color="white", showgrid=False)
+)
+
+# 📉 Mostrar gráfico de linha abaixo
+st.plotly_chart(fig_linha, use_container_width=True)

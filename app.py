@@ -26,7 +26,7 @@ df.columns = df.columns.str.strip()
 
 # --- Tratamento dos nomes de colunas ---
 # Supondo que temos colunas: 'Mês', 'Turno' e 'Qtd Sacos'
-colunas_esperadas = ['Mês', 'Turno', 'Qtd Sacos']
+colunas_esperadas = ['Mês', 'Coleta', 'Qtd Sacos']
 for col in colunas_esperadas:
     if col not in df.columns:
         st.error(f"❌ Coluna esperada não encontrada: '{col}'")

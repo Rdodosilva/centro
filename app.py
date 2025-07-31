@@ -70,21 +70,41 @@ st.markdown("""
         }
         
         /* Style the menu dropdown */
-        .css-1rs6os, .css-17lntkn {
+        .css-1rs6os, .css-17lntkn, [data-testid="stPopover"] {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23) !important;
             border: 2px solid #00FFFF !important;
             border-radius: 10px !important;
             color: white !important;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.3) !important;
         }
         
         /* Style dropdown items */
-        .css-1rs6os button, .css-17lntkn button {
+        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button {
             color: white !important;
             background: transparent !important;
+            font-weight: bold !important;
+            padding: 8px 12px !important;
         }
         
-        .css-1rs6os button:hover, .css-17lntkn button:hover {
-            background: rgba(0, 255, 255, 0.2) !important;
+        .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
+            background: rgba(0, 255, 255, 0.3) !important;
+            color: black !important;
+            border-radius: 6px !important;
+        }
+        
+        /* Style menu text and links */
+        .css-1rs6os a, .css-17lntkn a, [data-testid="stPopover"] a {
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        .css-1rs6os span, .css-17lntkn span, [data-testid="stPopover"] span {
+            color: white !important;
+        }
+        
+        /* Force white text in popover content */
+        [data-testid="stPopover"] * {
+            color: white !important;
         }
         
         /* Remove white space at top */

@@ -69,13 +69,13 @@ st.markdown("""
             backdrop-filter: blur(10px);
         }
         
-        /* Style the menu dropdown - Force dark background */
+        /* Style the menu dropdown - Clean dark background */
         .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
             background: #2c2c54 !important;
-            border: 2px solid #00FFFF !important;
-            border-radius: 10px !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            border-radius: 8px !important;
             color: white !important;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.3) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
         
         /* Force dark background on all menu containers */
@@ -84,17 +84,19 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Style dropdown items with white text */
+        /* Style dropdown items with white text and hover effect */
         .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
         .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
             color: white !important;
-            background: #2c2c54 !important;
-            font-weight: bold !important;
-            padding: 8px 12px !important;
+            background: transparent !important;
+            font-weight: normal !important;
+            padding: 10px 15px !important;
+            border-radius: 6px !important;
+            transition: all 0.2s ease !important;
         }
         
         .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
-            background: rgba(0, 255, 255, 0.3) !important;
+            background: #00FFFF !important;
             color: black !important;
             border-radius: 6px !important;
         }
@@ -102,7 +104,7 @@ st.markdown("""
         /* Force white text on all menu elements */
         .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
             color: white !important;
-            background: #2c2c54 !important;
+            background: transparent !important;
         }
         
         /* Override any white backgrounds in dropdowns */
@@ -112,8 +114,14 @@ st.markdown("""
         }
         
         div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
-            background: #2c2c54 !important;
+            background: transparent !important;
             color: white !important;
+        }
+        
+        /* Hover effect for menu items */
+        div[role="menu"] button:hover, div[role="listbox"] button:hover {
+            background: #00FFFF !important;
+            color: black !important;
         }
         
         /* Remove white space at top */

@@ -144,46 +144,58 @@ st.markdown("""
             border-radius: inherit;
         }
         
-        /* Radio button styling - exact as shown in image */
+        /* Radio button styling - restore original with improvements */
         section[data-testid="stRadio"] > div {
-            background: transparent !important;
-            border: none !important;
-            padding: 0px !important;
+            background: rgba(155, 48, 255, 0.15) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 10px !important;
+            padding: 8px !important;
         }
         
-        /* Radio button labels - blue outline style */
+        /* Radio button labels - show names with blue outline */
         div[role="radiogroup"] > label {
-            background: transparent !important;
-            padding: 8px 20px !important;
+            background: rgba(0,0,0,0.6) !important;
+            padding: 8px 15px !important;
             border-radius: 20px !important;
             border: 2px solid #00FFFF !important;
-            margin: 5px 0 !important;
+            margin: 5px !important;
             transition: all 0.3s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: normal !important;
-            display: block !important;
-            text-align: center !important;
+            display: inline-block !important;
         }
         
-        /* Radio button hover effect */
+        /* Radio button hover effect - blue fill */
         div[role="radiogroup"] > label:hover {
             background: #00FFFF !important;
             color: black !important;
             border: 2px solid #00FFFF !important;
+            transform: translateY(-1px) !important;
         }
         
-        /* Radio button selected state - filled blue */
+        /* Radio button selected state - red border with red circle */
         div[role="radiogroup"] > label[data-selected="true"] {
             background: #00FFFF !important;
             color: black !important;
             font-weight: bold !important;
-            border: 2px solid #00FFFF !important;
+            border: 2px solid #FF4444 !important;
+            box-shadow: 0 0 10px rgba(255,68,68,0.4) !important;
         }
         
-        /* Hide radio circles completely */
+        /* Show radio circles and make selected one red */
         div[role="radiogroup"] > label > div {
-            display: none !important;
+            display: block !important;
+            border-color: white !important;
+        }
+        
+        div[role="radiogroup"] > label:hover > div {
+            border-color: black !important;
+        }
+        
+        div[role="radiogroup"] > label[data-selected="true"] > div {
+            border-color: #FF4444 !important;
+            background-color: #FF4444 !important;
         }
         
         /* Checkbox styling */

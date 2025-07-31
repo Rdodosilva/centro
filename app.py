@@ -436,9 +436,7 @@ with col3:
 
 with col4:
     # Calcular crescimento para adicionar outro coletor
-    media_crescimento = variacao if variacao > 0 else 5  # Crescimento médio estimado
     necessidade_novo_coletor = "SIM" if total_sacos > 2000 else "AVALIAR" if total_sacos > 1500 else "NÃO"
-    cor_necessidade = "#FF4444" if necessidade_novo_coletor == "SIM" else "#FFAA00" if necessidade_novo_coletor == "AVALIAR" else "#00FF88"
     
     st.metric(
         "🚛 Novo Coletor", 

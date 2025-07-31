@@ -69,19 +69,26 @@ st.markdown("""
             backdrop-filter: blur(10px);
         }
         
-        /* Style the menu dropdown */
-        .css-1rs6os, .css-17lntkn, [data-testid="stPopover"] {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23) !important;
+        /* Style the menu dropdown - Force dark background */
+        .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
+            background: #2c2c54 !important;
             border: 2px solid #00FFFF !important;
             border-radius: 10px !important;
             color: white !important;
             box-shadow: 0 8px 32px rgba(0,255,255,0.3) !important;
         }
         
-        /* Style dropdown items */
-        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button {
+        /* Force dark background on all menu containers */
+        .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
+            background: #2c2c54 !important;
             color: white !important;
-            background: transparent !important;
+        }
+        
+        /* Style dropdown items with white text */
+        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
+        .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
+            color: white !important;
+            background: #2c2c54 !important;
             font-weight: bold !important;
             padding: 8px 12px !important;
         }
@@ -92,18 +99,20 @@ st.markdown("""
             border-radius: 6px !important;
         }
         
-        /* Style menu text and links */
-        .css-1rs6os a, .css-17lntkn a, [data-testid="stPopover"] a {
+        /* Force white text on all menu elements */
+        .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
             color: white !important;
-            text-decoration: none !important;
+            background: #2c2c54 !important;
         }
         
-        .css-1rs6os span, .css-17lntkn span, [data-testid="stPopover"] span {
+        /* Override any white backgrounds in dropdowns */
+        div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
+            background: #2c2c54 !important;
             color: white !important;
         }
         
-        /* Force white text in popover content */
-        [data-testid="stPopover"] * {
+        div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
+            background: #2c2c54 !important;
             color: white !important;
         }
         

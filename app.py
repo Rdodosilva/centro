@@ -144,53 +144,46 @@ st.markdown("""
             border-radius: inherit;
         }
         
-        /* Radio button styling - restore original with improvements */
+        /* Radio button styling - exact as your first image */
         section[data-testid="stRadio"] > div {
-            background: rgba(155, 48, 255, 0.15) !important;
-            border: 2px solid #00FFFF !important;
-            border-radius: 10px !important;
-            padding: 8px !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 0px !important;
         }
         
-        /* Radio button labels - show names with blue outline */
+        /* Radio button labels - dark background with blue border */
         div[role="radiogroup"] > label {
-            background: rgba(0,0,0,0.6) !important;
-            padding: 8px 15px !important;
-            border-radius: 20px !important;
+            background: #1a1a2e !important;
+            padding: 10px 15px !important;
+            border-radius: 15px !important;
             border: 2px solid #00FFFF !important;
-            margin: 5px !important;
+            margin: 5px 0 !important;
             transition: all 0.3s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: normal !important;
-            display: inline-block !important;
+            display: block !important;
         }
         
-        /* Radio button hover effect - blue fill */
+        /* Radio button hover effect - blue border */
         div[role="radiogroup"] > label:hover {
-            background: #00FFFF !important;
-            color: black !important;
+            background: #1a1a2e !important;
+            color: white !important;
             border: 2px solid #00FFFF !important;
-            transform: translateY(-1px) !important;
         }
         
-        /* Radio button selected state - red border with red circle */
+        /* Radio button selected state - RED border */
         div[role="radiogroup"] > label[data-selected="true"] {
-            background: #00FFFF !important;
-            color: black !important;
+            background: #1a1a2e !important;
+            color: white !important;
             font-weight: bold !important;
             border: 2px solid #FF4444 !important;
-            box-shadow: 0 0 10px rgba(255,68,68,0.4) !important;
         }
         
-        /* Show radio circles and make selected one red */
+        /* Radio circles - white normally, red when selected */
         div[role="radiogroup"] > label > div {
-            display: block !important;
             border-color: white !important;
-        }
-        
-        div[role="radiogroup"] > label:hover > div {
-            border-color: black !important;
+            background-color: transparent !important;
         }
         
         div[role="radiogroup"] > label[data-selected="true"] > div {

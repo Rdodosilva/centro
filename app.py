@@ -22,101 +22,30 @@ st.markdown("""
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
             font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
         }
         
-        /* Remove white borders and padding */
-        .main .block-container {
-            padding-top: 0rem;
-            padding-bottom: 0rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            max-width: none;
+        .main-header {
+            background: linear-gradient(90deg, #00FFFF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+            text-shadow: 0 0 30px rgba(0,255,255,0.5);
         }
         
-        /* Remove default streamlit padding */
-        .main {
-            padding: 0;
+        .subtitle {
+            text-align: center;
+            color: #00FFFF;
+            font-size: 1.2em;
+            margin-bottom: 2em;
+            opacity: 0.8;
         }
         
-        /* Hide streamlit header but keep sidebar toggle */
-        header[data-testid="stHeader"] {
-            height: 2.875rem;
-            background: transparent;
-        }
-        
-        /* Show sidebar toggle button - force visibility */
-        .css-14xtw13 {
-            display: block !important;
-            visibility: visible !important;
-        }
-        
-        /* Style sidebar toggle button */
-        .css-14xtw13 > button {
-            background: rgba(26, 26, 46, 0.9) !important;
-            border: 1px solid rgba(255,255,255,0.3) !important;
-            border-radius: 6px !important;
-            color: white !important;
-            padding: 6px 8px !important;
-        }
-        
-        /* Alternative selector for sidebar button */
-        button[data-testid="baseButton-header"] {
-            display: block !important;
-            visibility: visible !important;
-            background: rgba(26, 26, 46, 0.9) !important;
-            border: 1px solid rgba(255,255,255,0.3) !important;
-            border-radius: 6px !important;
-            color: white !important;
-        }
-        
-        /* Make sure sidebar toggle icon is white */
-        .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
-            fill: white !important;
-            color: white !important;
-        }
-        
-        /* Hide other header elements but keep functionality */
-        header[data-testid="stHeader"] > div {
-            background: transparent;
-        }
-        
-        /* Force full background */
-        .stApp {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
-        }
-        
-        /* Sidebar styling - clean theme */
+        /* Sidebar styling */
         .css-1d391kg {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        }
-        
-        .sidebar .sidebar-content {
-            color: white !important;
-        }
-        
-        /* Sidebar text color - clean and simple */
-        .css-1v0mbdj {
-            color: white !important;
-        }
-        
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-        }
-        
-        section[data-testid="stSidebar"] > div > div > div > div {
-            color: white !important;
-        }
-        
-        /* Sidebar headers styling */
-        section[data-testid="stSidebar"] h2, 
-        section[data-testid="stSidebar"] h3 {
-            color: white !important;
-            font-weight: normal !important;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 8px;
-            margin-bottom: 16px;
         }
         
         /* Métricas aprimoradas */
@@ -144,90 +73,37 @@ st.markdown("""
             border-radius: inherit;
         }
         
-        /* Radio button styling - apply clean theme */
+        /* Radio button styling */
         section[data-testid="stRadio"] > div {
-            background: transparent !important;
-            border: none !important;
-            border-radius: 0px !important;
-            padding: 0px !important;
+            background: rgba(26, 26, 46, 0.8);
+            border: 2px solid #00FFFF;
+            border-radius: 15px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
         }
         
-        /* Radio button labels - clean style */
         div[role="radiogroup"] > label {
-            background: transparent !important;
-            padding: 8px 0px !important;
-            border-radius: 0px !important;
-            border: none !important;
-            margin: 2px 0 !important;
-            transition: all 0.2s ease !important;
-            cursor: pointer !important;
-            color: white !important;
-            font-weight: normal !important;
-            display: block !important;
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: 2px solid transparent;
+            margin: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
         
-        /* Radio button hover effect */
         div[role="radiogroup"] > label:hover {
-            background: transparent !important;
-            color: #00FFFF !important;
-            transform: none !important;
-            box-shadow: none !important;
-            border-radius: 0px !important;
+            background: linear-gradient(145deg, #00FFFF, #0080FF);
+            color: black;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,255,255,0.4);
         }
         
-        /* Radio button selected state */
         div[role="radiogroup"] > label[data-selected="true"] {
-            background: transparent !important;
-            color: #00FFFF !important;
-            font-weight: bold !important;
-            box-shadow: none !important;
-            border-radius: 0px !important;
-        }
-        
-        /* Radio button circles */
-        div[role="radiogroup"] > label > div {
-            border-color: white !important;
-        }
-        
-        div[role="radiogroup"] > label:hover > div {
-            border-color: #00FFFF !important;
-        }
-        
-        div[role="radiogroup"] > label[data-selected="true"] > div {
-            border-color: #00FFFF !important;
-            background-color: #00FFFF !important;
-        }
-        
-        /* Checkbox styling */
-        .stCheckbox {
-            color: white !important;
-        }
-        
-        .stCheckbox > label {
-            color: white !important;
-            font-weight: normal;
-        }
-        
-        .stCheckbox:hover > label {
-            color: #00FFFF !important;
-        }
-        
-        /* Button styling improvements - back to original */
-        .stButton > button {
-            background: #00FFFF !important;
-            border: none !important;
-            border-radius: 6px !important;
-            color: black !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            padding: 8px 16px !important;
-        }
-        
-        .stButton > button:hover {
-            background: #0080FF !important;
-            color: black !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
+            background: linear-gradient(145deg, #9b30ff, #00FFFF);
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(155,48,255,0.6);
         }
         
         /* Selectbox styling */
@@ -235,61 +111,6 @@ st.markdown("""
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid #00FFFF;
             border-radius: 10px;
-        }
-        
-        /* Style the menu dropdown - clean dark background */
-        .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
-            background: #2c2c54 !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            border-radius: 8px !important;
-            color: white !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-        }
-        
-        /* Force dark background on all menu containers */
-        .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
-            background: #2c2c54 !important;
-            color: white !important;
-        }
-        
-        /* Style dropdown items with white text and hover effect */
-        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
-        .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
-            color: white !important;
-            background: transparent !important;
-            font-weight: normal !important;
-            padding: 10px 15px !important;
-            border-radius: 6px !important;
-            transition: all 0.2s ease !important;
-        }
-        
-        .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
-            background: #00FFFF !important;
-            color: black !important;
-            border-radius: 6px !important;
-        }
-        
-        /* Force white text on all menu elements */
-        .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
-            color: white !important;
-            background: transparent !important;
-        }
-        
-        /* Override any white backgrounds in dropdowns */
-        div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
-            background: #2c2c54 !important;
-            color: white !important;
-        }
-        
-        div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
-            background: transparent !important;
-            color: white !important;
-        }
-        
-        /* Hover effect for menu items */
-        div[role="menu"] button:hover, div[role="listbox"] button:hover {
-            background: #00FFFF !important;
-            color: black !important;
         }
         
         /* Cards para insights */
@@ -339,54 +160,38 @@ except:
     })
 
 # 🏷️ Header aprimorado
-st.markdown("""
-<div style='text-align: center; padding: 20px 0;'>
-    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
-        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
-    </div>
-    <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
-        📊 Monitoramento de Crescimento de Resíduos | 2025
-    </div>
-</div>
-""", unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🚛 Dashboard Executivo - Coleta Centro</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">📊 Análise Inteligente de Resíduos Urbanos | 2024</p>', unsafe_allow_html=True)
 
 # 🎛️ Sidebar com controles avançados
 with st.sidebar:
-    st.markdown("## 🎛️ Filtros")
+    st.markdown("## 🎛️ Controles do Dashboard")
     
-    # Filtro de período melhorado
+    # Filtro de período
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
-    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
-    
-    st.markdown("### 📅 Período:")
-    mes_selecionado = st.radio(
-        "",
-        options=meses_disponiveis,
-        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
-        horizontal=False,
+    mes_selecionado = st.selectbox(
+        "📅 Selecione o período:",
+        meses_disponiveis,
         index=0
     )
     
     # Opções de visualização
-    st.markdown("### 📊 Visualização")
-    mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
+    st.markdown("### 📊 Opções de Visualização")
+    mostrar_comparativo = st.checkbox("Comparativo com mês anterior", True)
+    mostrar_metas = st.checkbox("Exibir metas e projeções", True)
     tipo_grafico = st.radio(
-        "Tipo de gráfico:",
-        ["Barras"],
-        horizontal=False
+        "Tipo de gráfico principal:",
+        ["Barras", "Área", "Linha"],
+        horizontal=True
     )
     
     # Configurações de export
-    st.markdown("### 📤 Exportar")
+    st.markdown("### 📤 Exportar Dados")
+    if st.button("📊 Gerar Relatório PDF"):
+        st.success("Funcionalidade em desenvolvimento!")
     
-    col_btn1, col_btn2 = st.columns(2)
-    with col_btn1:
-        if st.button("📊 PDF", use_container_width=True):
-            st.success("Em desenvolvimento!")
-    
-    with col_btn2:
-        if st.button("📋 Excel", use_container_width=True):
-            st.success("Em desenvolvimento!")
+    if st.button("📋 Exportar Excel"):
+        st.success("Funcionalidade em desenvolvimento!")
 
 # 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
@@ -435,13 +240,12 @@ with col3:
     )
 
 with col4:
-    # Calcular crescimento para adicionar outro coletor
-    necessidade_novo_coletor = "SIM" if total_sacos > 2000 else "AVALIAR" if total_sacos > 1500 else "NÃO"
-    
+    meta_mensal = 2500  # Meta exemplo
+    atingimento = (total_sacos / meta_mensal * 100) if meta_mensal > 0 else 0
     st.metric(
-        "🚛 Novo Coletor", 
-        necessidade_novo_coletor,
-        delta=f"Vol: {total_sacos}" if total_sacos > 0 else None
+        "🎯 Meta do Mês", 
+        f"{atingimento:.1f}%",
+        delta=f"{total_sacos - meta_mensal:+}" if mostrar_metas else None
     )
 
 # 📊 Seção de gráficos principais
@@ -461,51 +265,70 @@ cores = {
     "Coleta PM": "#FF6B35"
 }
 
-# Gráfico principal (apenas barras)
+# Gráfico principal (adaptável)
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
-    fig_main = px.bar(
-        df_melt,
-        x="Mes",
-        y="Quantidade de Sacos",
-        color="Periodo",
-        color_discrete_map=cores,
-        barmode="group",
-        title=f"📦 Coleta por Período - {mes_selecionado.title()}"
-    )
+    if tipo_grafico == "Barras":
+        fig_main = px.bar(
+            df_melt,
+            x="Mes",
+            y="Quantidade de Sacos",
+            color="Periodo",
+            color_discrete_map=cores,
+            barmode="group",
+            title=f"📦 Coleta por Período - {mes_selecionado.title()}"
+        )
+    elif tipo_grafico == "Área":
+        # Gráfico de área empilhada
+        fig_main = go.Figure()
+        fig_main.add_trace(go.Scatter(
+            x=df_filtrado["Mes"], 
+            y=df_filtrado["Coleta AM"],
+            fill='tonexty',
+            mode='lines',
+            name='Coleta AM',
+            line_color='#00FFFF'
+        ))
+        fig_main.add_trace(go.Scatter(
+            x=df_filtrado["Mes"], 
+            y=df_filtrado["Coleta PM"],
+            fill='tonexty',
+            mode='lines',
+            name='Coleta PM',
+            line_color='#FF6B35'
+        ))
+        fig_main.update_layout(title=f"📦 Evolução da Coleta - {mes_selecionado.title()}")
+    else:  # Linha
+        fig_main = px.line(
+            df_filtrado,
+            x="Mes",
+            y=["Coleta AM", "Coleta PM"],
+            markers=True,
+            title=f"📦 Tendência de Coleta - {mes_selecionado.title()}"
+        )
     
-    # Styling comum para gráfico de barras
+    # Styling comum para todos os gráficos
     fig_main.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=20, color="white"),
+        title_font=dict(size=20, color="#00FFFF"),
         title_x=0.5,
         xaxis=dict(
             showgrid=True, 
             gridcolor="rgba(255,255,255,0.1)",
-            color="white",
-            title_font=dict(color="white"),
-            tickfont=dict(color="white")
+            color="white"
         ),
         yaxis=dict(
             showgrid=True, 
             gridcolor="rgba(255,255,255,0.1)",
-            color="white",
-            title_font=dict(color="white"),
-            tickfont=dict(color="white")
+            color="white"
         ),
         legend=dict(
             font=dict(color="white", size=12),
             bgcolor="rgba(0,0,0,0.5)"
         )
-    )
-    
-    # Forçar texto branco nos elementos do gráfico
-    fig_main.update_traces(
-        textfont_color="white",
-        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<extra></extra>'
     )
     
     st.plotly_chart(fig_main, use_container_width=True)
@@ -527,7 +350,7 @@ with col_right:
     
     fig_pie.update_layout(
         title=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
-        title_font=dict(size=16, color="white"),
+        title_font=dict(size=16, color="#00FFFF"),
         title_x=0.5,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -536,14 +359,7 @@ with col_right:
             font=dict(color="white", size=12),
             bgcolor="rgba(0,0,0,0.5)"
         ),
-        height=400,
-        annotations=[dict(
-            text="",
-            x=0.5, y=0.5,
-            font_size=20,
-            showarrow=False,
-            font_color="white"
-        )]
+        height=400
     )
     
     st.plotly_chart(fig_pie, use_container_width=True)
@@ -576,6 +392,16 @@ fig_evolucao.add_trace(
     row=1, col=1
 )
 
+# Adicionar meta (se habilitada)
+if mostrar_metas:
+    fig_evolucao.add_hline(
+        y=meta_mensal, 
+        line_dash="dash", 
+        line_color="#FFD700",
+        annotation_text="Meta Mensal",
+        row=1, col=1
+    )
+
 # Gráfico de barras empilhadas para AM/PM
 fig_evolucao.add_trace(
     go.Bar(x=df_linha["Mes"], y=df_linha["Coleta AM"], name='AM', marker_color='#00FFFF'),
@@ -591,41 +417,13 @@ fig_evolucao.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
-    title_font=dict(size=18, color="white"),
+    title_font=dict(size=18, color="#00FFFF"),
     legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
-    barmode='stack',
-    annotations=[
-        dict(
-            text="Volume de Coleta (Sacos)",
-            xref="paper", yref="paper",
-            x=0.5, y=0.95,
-            showarrow=False,
-            font=dict(size=16, color="white")
-        ),
-        dict(
-            text="Distribuição AM/PM",
-            xref="paper", yref="paper", 
-            x=0.5, y=0.47,
-            showarrow=False,
-            font=dict(size=16, color="white")
-        )
-    ]
+    barmode='stack'
 )
 
-fig_evolucao.update_xaxes(
-    showgrid=True, 
-    gridcolor="rgba(255,255,255,0.1)", 
-    color="white",
-    title_font=dict(color="white"),
-    tickfont=dict(color="white")
-)
-fig_evolucao.update_yaxes(
-    showgrid=True, 
-    gridcolor="rgba(255,255,255,0.1)", 
-    color="white",
-    title_font=dict(color="white"),
-    tickfont=dict(color="white")
-)
+fig_evolucao.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
+fig_evolucao.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
 
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
@@ -659,16 +457,13 @@ with col_insight2:
     """, unsafe_allow_html=True)
 
 with col_insight3:
-    # Análise de necessidade de novo coletor
-    projecao_proxima = total_sacos * (1 + (variacao/100)) if variacao != 0 else total_sacos * 1.05
-    necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
-    cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
+    projecao_proxima = total_sacos * 1.1 if variacao > 0 else total_sacos * 0.95
     
     st.markdown(f"""
     <div class="insight-card">
-        <h4>🚛 Capacidade Coletora</h4>
-        <p>Status: <span class="{cor_necessidade}"><strong>{necessidade}</strong></span></p>
-        <p><strong>Projeção:</strong> {projecao_proxima:.0f} sacos</p>
+        <h4>🔮 Projeção</h4>
+        <p>Estimativa próximo mês:</p>
+        <p><strong>{projecao_proxima:.0f} sacos</strong></p>
         <p>({projecao_proxima*20:.0f} kg)</p>
     </div>
     """, unsafe_allow_html=True)
@@ -689,13 +484,8 @@ with st.expander("📋 Ver Dados Detalhados"):
 # 🎯 Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; padding: 20px;'>
-    <div style='font-size: 2em; margin-bottom: 10px;'>
-        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>Coleta Centro</span> 🚛
-    </div>
-    <div style='color: #00FFFF; font-size: 1.1em;'>
-        📊 Monitoramento para Otimização da Frota
-    </div>
-    <small style='color: rgba(255,255,255,0.7);'>Sistema de apoio à decisão para expansão da coleta urbana</small>
+<div style='text-align: center; color: #00FFFF; padding: 20px;'>
+    🚛 Dashboard Executivo - Coleta Centro | 📊 Análise de Dados Urbanos<br>
+    <small>Desenvolvido para otimização da gestão de resíduos municipais</small>
 </div>
 """, unsafe_allow_html=True)

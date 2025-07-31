@@ -381,7 +381,158 @@ with st.sidebar:
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("📊 PDF", use_container_width=True):
-            st.success("Em desenvolvimento!")
+            # Mostrar a apresentação HTML
+            st.components.v1.html("""
+            <!DOCTYPE html>
+            <html lang="pt-BR">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Apresentação - Coleta Centro</title>
+                <style>
+                    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+                    
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+                    
+                    body {
+                        font-family: 'Inter', sans-serif;
+                        background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+                        color: white;
+                        line-height: 1.6;
+                        overflow-x: hidden;
+                        height: 600px;
+                        overflow-y: auto;
+                    }
+                    
+                    .slide {
+                        min-height: 100vh;
+                        padding: 40px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        position: relative;
+                        border-bottom: 1px solid rgba(255,255,255,0.1);
+                    }
+                    
+                    .slide-header {
+                        text-align: center;
+                        margin-bottom: 40px;
+                    }
+                    
+                    .slide-title {
+                        font-size: 2.5em;
+                        font-weight: 700;
+                        background: linear-gradient(90deg, #00FFFF, #9b30ff);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        margin-bottom: 15px;
+                    }
+                    
+                    .slide-subtitle {
+                        font-size: 1.2em;
+                        color: #00FFFF;
+                        opacity: 0.8;
+                    }
+                    
+                    .content-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                        gap: 30px;
+                        max-width: 1000px;
+                        margin: 0 auto;
+                    }
+                    
+                    .card {
+                        background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+                        border: 1px solid rgba(0, 255, 255, 0.2);
+                        border-radius: 15px;
+                        padding: 25px;
+                        box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+                    }
+                    
+                    .card h3 {
+                        color: #00FFFF;
+                        font-size: 1.3em;
+                        margin-bottom: 15px;
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                    }
+                    
+                    .metric {
+                        font-size: 2em;
+                        font-weight: bold;
+                        color: #00FFFF;
+                        margin: 15px 0;
+                    }
+                    
+                    .logo {
+                        font-size: 2em;
+                        margin-bottom: 10px;
+                    }
+                    
+                    .print-button {
+                        position: fixed;
+                        top: 10px;
+                        right: 10px;
+                        background: #00FFFF;
+                        color: black;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        z-index: 1000;
+                        font-size: 12px;
+                    }
+                </style>
+            </head>
+            <body>
+                <button class="print-button" onclick="window.print()">📄 Imprimir</button>
+                
+                <!-- Slide 1: Capa -->
+                <div class="slide">
+                    <div class="slide-header">
+                        <div class="logo">🚛</div>
+                        <div class="slide-title">Coleta Centro</div>
+                        <div class="slide-subtitle">Análise de Crescimento dos Resíduos | 2025</div>
+                    </div>
+                    
+                    <div class="content-grid">
+                        <div class="card">
+                            <h3>📊 Objetivo</h3>
+                            <p>Conscientização sobre o crescimento dos resíduos no centro da cidade</p>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>📅 Período</h3>
+                            <p>Janeiro a Maio de 2025</p>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>📈 Principal Achado</h3>
+                            <div class="metric">+137%</div>
+                            <p>Crescimento em 5 meses</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'ArrowDown') {
+                            window.scrollBy(0, 200);
+                        } else if (e.key === 'ArrowUp') {
+                            window.scrollBy(0, -200);
+                        }
+                    });
+                </script>
+            </body>
+            </html>
+            """, height=600, scrolling=True)
     
     with col_btn2:
         if st.button("📋 Excel", use_container_width=True):

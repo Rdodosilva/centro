@@ -46,30 +46,14 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Show sidebar toggle button - clean without background */
-        .css-14xtw13 {
-            display: block !important;
-            visibility: visible !important;
-        }
-        
-        /* Style sidebar toggle button - remove background */
-        .css-14xtw13 > button {
-            background: transparent !important;
+        /* Sidebar toggle button - remove background completely */
+        .css-14xtw13 > button, button[data-testid="baseButton-header"] {
+            background: none !important;
             border: none !important;
             color: #00FFFF !important;
-            padding: 6px 8px !important;
+            padding: 4px !important;
         }
         
-        /* Alternative selector for sidebar button - clean */
-        button[data-testid="baseButton-header"] {
-            display: block !important;
-            visibility: visible !important;
-            background: transparent !important;
-            border: none !important;
-            color: #00FFFF !important;
-        }
-        
-        /* Make sure sidebar toggle icon is cyan */
         .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
             fill: #00FFFF !important;
             color: #00FFFF !important;

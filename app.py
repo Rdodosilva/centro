@@ -130,6 +130,37 @@ st.markdown("""
             border-radius: 10px;
         }
         
+        /* Plotly chart titles and text styling */
+        .js-plotly-plot .plotly .modebar {
+            background: rgba(26, 26, 46, 0.9) !important;
+        }
+        
+        .js-plotly-plot .plotly .modebar-btn {
+            color: white !important;
+        }
+        
+        /* Force white text in plotly charts */
+        .stPlotlyChart .user-select-none {
+            color: white !important;
+        }
+        
+        /* Button styling improvements */
+        .stButton > button {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+            color: white !important;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .stButton > button:hover {
+            background: linear-gradient(145deg, #00FFFF, #0080FF);
+            color: black !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,255,255,0.4);
+        }
+        
         /* Cards para insights */
         .insight-card {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
@@ -216,11 +247,15 @@ with st.sidebar:
     
     # Configurações de export
     st.markdown("### 📤 Exportar")
-    if st.button("📊 Relatório PDF"):
-        st.success("Em desenvolvimento!")
     
-    if st.button("📋 Excel"):
-        st.success("Em desenvolvimento!")
+    col_btn1, col_btn2 = st.columns(2)
+    with col_btn1:
+        if st.button("📊 PDF", use_container_width=True):
+            st.success("Em desenvolvimento!")
+    
+    with col_btn2:
+        if st.button("📋 Excel", use_container_width=True):
+            st.success("Em desenvolvimento!")
 
 # 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
@@ -311,27 +346,37 @@ with col_left:
         title=f"📦 Coleta por Período - {mes_selecionado.title()}"
     )
     
-    # Styling comum para todos os gráficos
+    # Styling comum para gráfico de barras
     fig_main.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=20, color="#00FFFF"),
+        title_font=dict(size=20, color="white"),
         title_x=0.5,
         xaxis=dict(
             showgrid=True, 
             gridcolor="rgba(255,255,255,0.1)",
-            color="white"
+            color="white",
+            title_font=dict(color="white"),
+            tickfont=dict(color="white")
         ),
         yaxis=dict(
             showgrid=True, 
             gridcolor="rgba(255,255,255,0.1)",
-            color="white"
+            color="white",
+            title_font=dict(color="white"),
+            tickfont=dict(color="white")
         ),
         legend=dict(
             font=dict(color="white", size=12),
             bgcolor="rgba(0,0,0,0.5)"
         )
+    )
+    
+    # Forçar texto branco nos elementos do gráfico
+    fig_main.update_traces(
+        textfont_color="white",
+        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<extra></extra>'
     )
     
     st.plotly_chart(fig_main, use_container_width=True)
@@ -353,7 +398,7 @@ with col_right:
     
     fig_pie.update_layout(
         title=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
-        title_font=dict(size=16, color="#00FFFF"),
+        title_font=dict(size=16, color="white"),
         title_x=0.5,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -362,7 +407,14 @@ with col_right:
             font=dict(color="white", size=12),
             bgcolor="rgba(0,0,0,0.5)"
         ),
-        height=400
+        height=400,
+        annotations=[dict(
+            text="",
+            x=0.5, y=0.5,
+            font_size=20,
+            showarrow=False,
+            font_color="white"
+        )]
     )
     
     st.plotly_chart(fig_pie, use_container_width=True)
@@ -413,13 +465,41 @@ fig_evolucao.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
-    title_font=dict(size=18, color="#00FFFF"),
+    title_font=dict(size=18, color="white"),
     legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
-    barmode='stack'
+    barmode='stack',
+    annotations=[
+        dict(
+            text="Volume de Coleta (Sacos)",
+            xref="paper", yref="paper",
+            x=0.5, y=0.95,
+            showarrow=False,
+            font=dict(size=16, color="white")
+        ),
+        dict(
+            text="Distribuição AM/PM",
+            xref="paper", yref="paper", 
+            x=0.5, y=0.47,
+            showarrow=False,
+            font=dict(size=16, color="white")
+        )
+    ]
 )
 
-fig_evolucao.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-fig_evolucao.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
+fig_evolucao.update_xaxes(
+    showgrid=True, 
+    gridcolor="rgba(255,255,255,0.1)", 
+    color="white",
+    title_font=dict(color="white"),
+    tickfont=dict(color="white")
+)
+fig_evolucao.update_yaxes(
+    showgrid=True, 
+    gridcolor="rgba(255,255,255,0.1)", 
+    color="white",
+    title_font=dict(color="white"),
+    tickfont=dict(color="white")
+)
 
 st.plotly_chart(fig_evolucao, use_container_width=True)
 

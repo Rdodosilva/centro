@@ -177,18 +177,31 @@ except:
     })
 
 # 🏷️ Header aprimorado
-st.markdown('<h1 class="main-header">🚛 Coleta Centro</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">📊 Monitoramento de Crescimento de Resíduos | 2024</p>', unsafe_allow_html=True)
+st.markdown("""
+<div style='text-align: center; padding: 20px 0;'>
+    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
+        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
+    </div>
+    <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
+        📊 Monitoramento de Crescimento de Resíduos | 2025
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 # 🎛️ Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período
+    # Filtro de período melhorado
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
-    mes_selecionado = st.selectbox(
-        "📅 Período:",
-        meses_disponiveis,
+    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
+    
+    st.markdown("### 📅 Período:")
+    mes_selecionado = st.radio(
+        "",
+        options=meses_disponiveis,
+        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
+        horizontal=False,
         index=0
     )
     
@@ -197,7 +210,7 @@ with st.sidebar:
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
     tipo_grafico = st.radio(
         "Tipo de gráfico:",
-        ["Barras", "Área", "Linha"],
+        ["Barras"],
         horizontal=False
     )
     
@@ -284,48 +297,19 @@ cores = {
     "Coleta PM": "#FF6B35"
 }
 
-# Gráfico principal (adaptável)
+# Gráfico principal (apenas barras)
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
-    if tipo_grafico == "Barras":
-        fig_main = px.bar(
-            df_melt,
-            x="Mes",
-            y="Quantidade de Sacos",
-            color="Periodo",
-            color_discrete_map=cores,
-            barmode="group",
-            title=f"📦 Coleta por Período - {mes_selecionado.title()}"
-        )
-    elif tipo_grafico == "Área":
-        # Gráfico de área empilhada
-        fig_main = go.Figure()
-        fig_main.add_trace(go.Scatter(
-            x=df_filtrado["Mes"], 
-            y=df_filtrado["Coleta AM"],
-            fill='tonexty',
-            mode='lines',
-            name='Coleta AM',
-            line_color='#00FFFF'
-        ))
-        fig_main.add_trace(go.Scatter(
-            x=df_filtrado["Mes"], 
-            y=df_filtrado["Coleta PM"],
-            fill='tonexty',
-            mode='lines',
-            name='Coleta PM',
-            line_color='#FF6B35'
-        ))
-        fig_main.update_layout(title=f"📦 Evolução da Coleta - {mes_selecionado.title()}")
-    else:  # Linha
-        fig_main = px.line(
-            df_filtrado,
-            x="Mes",
-            y=["Coleta AM", "Coleta PM"],
-            markers=True,
-            title=f"📦 Tendência de Coleta - {mes_selecionado.title()}"
-        )
+    fig_main = px.bar(
+        df_melt,
+        x="Mes",
+        y="Quantidade de Sacos",
+        color="Periodo",
+        color_discrete_map=cores,
+        barmode="group",
+        title=f"📦 Coleta por Período - {mes_selecionado.title()}"
+    )
     
     # Styling comum para todos os gráficos
     fig_main.update_layout(

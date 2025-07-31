@@ -2,90 +2,88 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# CSS futurista com contorno nas métricas
-st.markdown("""
+# URL direto para o arquivo .xlsx (modo RAW do GitHub)
+url = "https://raw.githubusercontent.com/Rdodosilva/centro/main/Coleta%20centro2.xlsx"
+
+# Lê o arquivo Excel corretamente
+df = pd.read_excel(url)
+
+# Remove linha de total (se existir)
+df = df[df["Mês"] != "Total"]
+
+# Configurações gerais do layout
+st.set_page_config(page_title="Dashboard Coleta Centro", layout="wide")
+st.markdown(
+    """
     <style>
-    body {background-color: #000000;}
-    .metric-box {
-        border: 2px solid #8000FF;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 10px;
-        background-color: #111111;
-        color: white;
-        text-align: center;
-        animation: pulse 1.5s infinite;
-    }
-    .metric-value {
-        font-size: 30px;
-        font-weight: bold;
-        color: white;
-    }
-    .metric-label {
-        font-size: 16px;
-        color: white;
-    }
-    @keyframes pulse {
-        0% { box-shadow: 0 0 5px #8000FF; }
-        50% { box-shadow: 0 0 20px #8000FF; }
-        100% { box-shadow: 0 0 5px #8000FF; }
-    }
+        body { background-color: #000000; }
+        .stApp { background-color: #000000; }
+        h1, h2, h3, .stRadio, .stMetric { color: white !important; }
+        .css-1v0mbdj p { color: white !important; }
+        .stRadio > div { flex-direction: row; }
+        .stRadio label { color: white; font-weight: bold; border: 1px solid #6c2dc7; border-radius: 10px; padding: 6px 12px; margin: 5px; }
+        .stRadio input:checked + label {
+            background-color: #6c2dc7;
+            color: white;
+        }
     </style>
-""", unsafe_allow_html=True)
+    """,
+    unsafe_allow_html=True
+)
 
-# Carregar planilha do GitHub
-url = "https://raw.githubusercontent.com/Rdodosilva/coleta/main/coleta_centro.csv"
-df = pd.read_csv(url)
-
-# Corrigir nomes das colunas
-df.columns = df.columns.str.strip()
-
-# Verificar colunas obrigatórias
-colunas_esperadas = {"Mês", "Coleta Am", "Coleta PM", "Total de Sacos"}
-if not colunas_esperadas.issubset(set(df.columns)):
-    st.error("Erro: A planilha não possui as colunas esperadas.")
-    st.write("Colunas encontradas:", df.columns.tolist())
-    st.stop()
+# Título
+st.markdown("<h1 style='text-align: center; color:white;'>📊 Dashboard de Coleta - Centro</h1>", unsafe_allow_html=True)
+st.markdown("---")
 
 # Filtro por mês
 meses = df["Mês"].unique()
 mes_selecionado = st.radio("Selecione o mês:", meses, horizontal=True)
 
+# Dados filtrados
 df_filtrado = df[df["Mês"] == mes_selecionado]
 
-# Cálculos
-total_sacos = int(df_filtrado["Total de Sacos"].sum())
-total_am = int(df_filtrado["Coleta Am"].sum())
-total_pm = int(df_filtrado["Coleta PM"].sum())
+# Métricas principais
+col1, col2, col3 = st.columns(3)
+col1.metric("🕗 Coleta AM", int(df_filtrado["Coleta AM"]))
+col2.metric("🌙 Coleta PM", int(df_filtrado["Coleta PM"]))
+col3.metric("🧺 Total de Sacos", int(df_filtrado["Total de Sacos"]))
 
-# Métricas com animação e contorno
-st.markdown(f"""
-<div class='metric-box'>
-    <div class='metric-label'>Total de Sacos</div>
-    <div class='metric-value'>{total_sacos} sacos</div>
-</div>
-<div class='metric-box'>
-    <div class='metric-label'>Coleta AM</div>
-    <div class='metric-value'>{total_am} sacos</div>
-</div>
-<div class='metric-box'>
-    <div class='metric-label'>Coleta PM</div>
-    <div class='metric-value'>{total_pm} sacos</div>
-</div>
-""", unsafe_allow_html=True)
+# Gráfico de barras
+fig_bar = px.bar(
+    df_filtrado.melt(id_vars=["Mês"], value_vars=["Coleta AM", "Coleta PM"]),
+    x="variable",
+    y="value",
+    color="variable",
+    title=f"Distribuição de Coletas - {mes_selecionado}",
+    text_auto=True,
+    template="plotly_dark",
+    color_discrete_sequence=["#6c2dc7", "#b478f1"]
+)
+fig_bar.update_layout(showlegend=False, title_font_color="white")
+fig_bar.update_xaxes(title_text="", color="white")
+fig_bar.update_yaxes(color="white")
 
-# Gráfico de linhas (AM/PM)
-fig = px.line(df_filtrado, x="Mês", y=["Coleta Am", "Coleta PM"],
-              markers=True,
-              labels={"value": "Quantidade", "variable": "Turno"},
-              title="Evolução da Coleta por Turno")
+st.plotly_chart(fig_bar, use_container_width=True)
 
-fig.update_layout(
-    plot_bgcolor="#000000",
-    paper_bgcolor="#000000",
-    font=dict(color="white"),
-    legend=dict(bgcolor="black"),
-    title_font=dict(size=18, color="white")
+# Gráfico de linha com todos os meses
+st.markdown("---")
+st.markdown("<h3 style='color:white;'>📈 Evolução Mensal das Coletas</h3>", unsafe_allow_html=True)
+
+fig_line = px.line(
+    df,
+    x="Mês",
+    y=["Coleta AM", "Coleta PM", "Total de Sacos"],
+    markers=True,
+    template="plotly_dark",
+    color_discrete_sequence=["#6c2dc7", "#b478f1", "#ffffff"]
+)
+fig_line.update_layout(
+    title="Tendência de Coletas por Mês",
+    xaxis_title="Mês",
+    yaxis_title="Quantidade",
+    title_font_color="white",
+    xaxis=dict(color="white"),
+    yaxis=dict(color="white")
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.plotly_chart(fig_line, use_container_width=True)

@@ -423,15 +423,13 @@ with st.sidebar:
                 .slide-title {
                     font-size: 3em;
                     font-weight: 700;
-                    background: linear-gradient(90deg, #00FFFF, #9b30ff);
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
+                    color: white;
                     margin-bottom: 20px;
                 }
                 
                 .slide-subtitle {
                     font-size: 1.4em;
-                    color: #00FFFF;
+                    color: white;
                     opacity: 0.8;
                 }
                 

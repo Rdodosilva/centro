@@ -48,6 +48,23 @@ st.markdown("""
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
         
+        .sidebar .sidebar-content {
+            color: white !important;
+        }
+        
+        /* Sidebar text color */
+        .css-1v0mbdj {
+            color: white !important;
+        }
+        
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        section[data-testid="stSidebar"] > div > div > div > div {
+            color: white !important;
+        }
+        
         /* Métricas aprimoradas */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
@@ -160,38 +177,37 @@ except:
     })
 
 # 🏷️ Header aprimorado
-st.markdown('<h1 class="main-header">🚛 Dashboard Executivo - Coleta Centro</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">📊 Análise Inteligente de Resíduos Urbanos | 2024</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">🚛 Coleta Centro</h1>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle">📊 Monitoramento de Crescimento de Resíduos | 2024</p>', unsafe_allow_html=True)
 
 # 🎛️ Sidebar com controles avançados
 with st.sidebar:
-    st.markdown("## 🎛️ Controles do Dashboard")
+    st.markdown("## 🎛️ Filtros")
     
     # Filtro de período
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
     mes_selecionado = st.selectbox(
-        "📅 Selecione o período:",
+        "📅 Período:",
         meses_disponiveis,
         index=0
     )
     
     # Opções de visualização
-    st.markdown("### 📊 Opções de Visualização")
-    mostrar_comparativo = st.checkbox("Comparativo com mês anterior", True)
-    mostrar_metas = st.checkbox("Exibir metas e projeções", True)
+    st.markdown("### 📊 Visualização")
+    mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
     tipo_grafico = st.radio(
-        "Tipo de gráfico principal:",
+        "Tipo de gráfico:",
         ["Barras", "Área", "Linha"],
-        horizontal=True
+        horizontal=False
     )
     
     # Configurações de export
-    st.markdown("### 📤 Exportar Dados")
-    if st.button("📊 Gerar Relatório PDF"):
-        st.success("Funcionalidade em desenvolvimento!")
+    st.markdown("### 📤 Exportar")
+    if st.button("📊 Relatório PDF"):
+        st.success("Em desenvolvimento!")
     
-    if st.button("📋 Exportar Excel"):
-        st.success("Funcionalidade em desenvolvimento!")
+    if st.button("📋 Excel"):
+        st.success("Em desenvolvimento!")
 
 # 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
@@ -240,12 +256,15 @@ with col3:
     )
 
 with col4:
-    meta_mensal = 2500  # Meta exemplo
-    atingimento = (total_sacos / meta_mensal * 100) if meta_mensal > 0 else 0
+    # Calcular crescimento para adicionar outro coletor
+    media_crescimento = variacao if variacao > 0 else 5  # Crescimento médio estimado
+    necessidade_novo_coletor = "SIM" if total_sacos > 2000 else "AVALIAR" if total_sacos > 1500 else "NÃO"
+    cor_necessidade = "#FF4444" if necessidade_novo_coletor == "SIM" else "#FFAA00" if necessidade_novo_coletor == "AVALIAR" else "#00FF88"
+    
     st.metric(
-        "🎯 Meta do Mês", 
-        f"{atingimento:.1f}%",
-        delta=f"{total_sacos - meta_mensal:+}" if mostrar_metas else None
+        "🚛 Novo Coletor", 
+        necessidade_novo_coletor,
+        delta=f"Vol: {total_sacos}" if total_sacos > 0 else None
     )
 
 # 📊 Seção de gráficos principais
@@ -393,14 +412,7 @@ fig_evolucao.add_trace(
 )
 
 # Adicionar meta (se habilitada)
-if mostrar_metas:
-    fig_evolucao.add_hline(
-        y=meta_mensal, 
-        line_dash="dash", 
-        line_color="#FFD700",
-        annotation_text="Meta Mensal",
-        row=1, col=1
-    )
+# Removido - não utilizamos metas
 
 # Gráfico de barras empilhadas para AM/PM
 fig_evolucao.add_trace(
@@ -457,13 +469,16 @@ with col_insight2:
     """, unsafe_allow_html=True)
 
 with col_insight3:
-    projecao_proxima = total_sacos * 1.1 if variacao > 0 else total_sacos * 0.95
+    # Análise de necessidade de novo coletor
+    projecao_proxima = total_sacos * (1 + (variacao/100)) if variacao != 0 else total_sacos * 1.05
+    necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
+    cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
     
     st.markdown(f"""
     <div class="insight-card">
-        <h4>🔮 Projeção</h4>
-        <p>Estimativa próximo mês:</p>
-        <p><strong>{projecao_proxima:.0f} sacos</strong></p>
+        <h4>🚛 Capacidade Coletora</h4>
+        <p>Status: <span class="{cor_necessidade}"><strong>{necessidade}</strong></span></p>
+        <p><strong>Projeção:</strong> {projecao_proxima:.0f} sacos</p>
         <p>({projecao_proxima*20:.0f} kg)</p>
     </div>
     """, unsafe_allow_html=True)
@@ -484,8 +499,13 @@ with st.expander("📋 Ver Dados Detalhados"):
 # 🎯 Footer
 st.markdown("---")
 st.markdown("""
-<div style='text-align: center; color: #00FFFF; padding: 20px;'>
-    🚛 Dashboard Executivo - Coleta Centro | 📊 Análise de Dados Urbanos<br>
-    <small>Desenvolvido para otimização da gestão de resíduos municipais</small>
+<div style='text-align: center; padding: 20px;'>
+    <div style='font-size: 2em; margin-bottom: 10px;'>
+        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>Coleta Centro</span> 🚛
+    </div>
+    <div style='color: #00FFFF; font-size: 1.1em;'>
+        📊 Monitoramento para Otimização da Frota
+    </div>
+    <small style='color: rgba(255,255,255,0.7);'>Sistema de apoio à decisão para expansão da coleta urbana</small>
 </div>
 """, unsafe_allow_html=True)

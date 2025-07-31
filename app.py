@@ -46,23 +46,31 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Hide all header buttons except sidebar toggle */
-        header[data-testid="stHeader"] button:not([kind="header"]) {
-            display: none !important;
-        }
-        
-        /* Keep only sidebar toggle visible and styled */
+        /* Show sidebar toggle button */
         header[data-testid="stHeader"] button[kind="header"] {
             visibility: visible !important;
+            display: block !important;
             background: rgba(26, 26, 46, 0.9) !important;
-            border: 2px solid #00FFFF !important;
-            border-radius: 8px !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 6px !important;
             color: white !important;
+            padding: 6px 8px !important;
+        }
+        
+        /* Hide other header buttons completely */
+        header[data-testid="stHeader"] button:not([kind="header"]) {
+            display: none !important;
         }
         
         /* Hide other header elements but keep functionality */
         header[data-testid="stHeader"] > div {
             background: transparent;
+        }
+        
+        /* Ensure hamburger icon is visible */
+        header[data-testid="stHeader"] button[kind="header"] svg {
+            fill: white !important;
+            color: white !important;
         }
         
         /* Style the menu dropdown - Clean dark background */

@@ -60,6 +60,33 @@ st.markdown("""
             background: transparent;
         }
         
+        /* Style the GitHub and other header buttons */
+        header[data-testid="stHeader"] button {
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 8px !important;
+            color: white !important;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Style the menu dropdown */
+        .css-1rs6os, .css-17lntkn {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 10px !important;
+            color: white !important;
+        }
+        
+        /* Style dropdown items */
+        .css-1rs6os button, .css-17lntkn button {
+            color: white !important;
+            background: transparent !important;
+        }
+        
+        .css-1rs6os button:hover, .css-17lntkn button:hover {
+            background: rgba(0, 255, 255, 0.2) !important;
+        }
+        
         /* Remove white space at top */
         .stApp > header {
             display: none;

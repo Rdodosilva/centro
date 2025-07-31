@@ -42,26 +42,22 @@ st.markdown("""
         
         /* Hide streamlit header but keep sidebar toggle */
         header[data-testid="stHeader"] {
-            height: 0rem;
-            visibility: hidden;
+            height: 2.875rem;
+            background: transparent;
         }
         
-        /* Keep sidebar toggle visible */
+        /* Keep sidebar toggle in original position */
         button[kind="header"] {
             visibility: visible !important;
-            position: fixed !important;
-            top: 10px !important;
-            left: 10px !important;
-            z-index: 999 !important;
             background: rgba(26, 26, 46, 0.9) !important;
             border: 2px solid #00FFFF !important;
             border-radius: 8px !important;
             color: white !important;
         }
         
-        /* Style the hamburger menu */
-        .css-14xtw13 {
-            visibility: visible !important;
+        /* Hide other header elements but keep functionality */
+        header[data-testid="stHeader"] > div {
+            background: transparent;
         }
         
         /* Remove white space at top */

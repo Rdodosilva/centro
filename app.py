@@ -40,9 +40,28 @@ st.markdown("""
             padding: 0;
         }
         
-        /* Hide streamlit header */
+        /* Hide streamlit header but keep sidebar toggle */
         header[data-testid="stHeader"] {
-            display: none;
+            height: 0rem;
+            visibility: hidden;
+        }
+        
+        /* Keep sidebar toggle visible */
+        button[kind="header"] {
+            visibility: visible !important;
+            position: fixed !important;
+            top: 10px !important;
+            left: 10px !important;
+            z-index: 999 !important;
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 2px solid #00FFFF !important;
+            border-radius: 8px !important;
+            color: white !important;
+        }
+        
+        /* Style the hamburger menu */
+        .css-14xtw13 {
+            visibility: visible !important;
         }
         
         /* Remove white space at top */

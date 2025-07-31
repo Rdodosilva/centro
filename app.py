@@ -119,16 +119,20 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
-        /* Métricas menores */
+        /* Métricas menores - todas do mesmo tamanho */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
             border-radius: 10px;
-            padding: 15px;
+            padding: 12px;
             box-shadow: 0 4px 16px rgba(0,255,255,0.1);
             backdrop-filter: blur(5px);
             position: relative;
             overflow: hidden;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         .stMetric::before {
@@ -142,6 +146,14 @@ st.markdown("""
             z-index: -1;
             margin: -2px;
             border-radius: inherit;
+        }
+        
+        /* Forçar altura uniforme */
+        .stMetric > div {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         /* Radio button styling - exact as your first image */

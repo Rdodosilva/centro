@@ -22,6 +22,37 @@ st.markdown("""
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Remove white borders and padding */
+        .main .block-container {
+            padding-top: 0rem;
+            padding-bottom: 0rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            max-width: none;
+        }
+        
+        /* Remove default streamlit padding */
+        .main {
+            padding: 0;
+        }
+        
+        /* Hide streamlit header */
+        header[data-testid="stHeader"] {
+            display: none;
+        }
+        
+        /* Remove white space at top */
+        .stApp > header {
+            display: none;
+        }
+        
+        /* Force full background */
+        .stApp {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
         }
         
         .main-header {

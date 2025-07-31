@@ -149,7 +149,7 @@ st.markdown("""
             opacity: 0.8;
         }
         
-        /* Sidebar styling */
+        /* Sidebar styling - clean theme */
         .css-1d391kg {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
@@ -158,7 +158,7 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Sidebar text color */
+        /* Sidebar text color - clean and simple */
         .css-1v0mbdj {
             color: white !important;
         }
@@ -169,6 +169,16 @@ st.markdown("""
         
         section[data-testid="stSidebar"] > div > div > div > div {
             color: white !important;
+        }
+        
+        /* Sidebar headers styling */
+        section[data-testid="stSidebar"] h2, 
+        section[data-testid="stSidebar"] h3 {
+            color: white !important;
+            font-weight: normal !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
         }
         
         /* Métricas aprimoradas */

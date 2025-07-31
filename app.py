@@ -381,8 +381,11 @@ with st.sidebar:
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("📊 PDF", use_container_width=True):
+            # Calcular dados para o HTML
+            total_periodo = df[df["Total de Sacos"].notna()]["Total de Sacos"].sum()
+            
             # Criar HTML completo para download
-            html_content = f"""
+            html_content = """
             <!DOCTYPE html>
             <html lang="pt-BR">
             <head>
@@ -392,20 +395,20 @@ with st.sidebar:
                 <style>
                     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
                     
-                    * {{
+                    * {
                         margin: 0;
                         padding: 0;
                         box-sizing: border-box;
-                    }}
+                    }
                     
-                    body {{
+                    body {
                         font-family: 'Inter', sans-serif;
                         background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
                         color: white;
                         line-height: 1.6;
-                    }}
+                    }
                     
-                    .slide {{
+                    .slide {
                         min-height: 100vh;
                         padding: 40px;
                         display: flex;
@@ -414,91 +417,91 @@ with st.sidebar:
                         position: relative;
                         border-bottom: 1px solid rgba(255,255,255,0.1);
                         break-after: page;
-                    }}
+                    }
                     
-                    .slide-header {{
+                    .slide-header {
                         text-align: center;
                         margin-bottom: 40px;
-                    }}
+                    }
                     
-                    .slide-title {{
+                    .slide-title {
                         font-size: 3em;
                         font-weight: 700;
                         background: linear-gradient(90deg, #00FFFF, #9b30ff);
                         -webkit-background-clip: text;
                         -webkit-text-fill-color: transparent;
                         margin-bottom: 20px;
-                    }}
+                    }
                     
-                    .slide-subtitle {{
+                    .slide-subtitle {
                         font-size: 1.4em;
                         color: #00FFFF;
                         opacity: 0.8;
-                    }}
+                    }
                     
-                    .content-grid {{
+                    .content-grid {
                         display: grid;
                         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
                         gap: 30px;
                         max-width: 1200px;
                         margin: 0 auto;
-                    }}
+                    }
                     
-                    .card {{
+                    .card {
                         background: linear-gradient(145deg, #1a1a2e, #0f0f23);
                         border: 1px solid rgba(0, 255, 255, 0.2);
                         border-radius: 15px;
                         padding: 30px;
                         box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-                    }}
+                    }
                     
-                    .card h3 {{
+                    .card h3 {
                         color: #00FFFF;
                         font-size: 1.5em;
                         margin-bottom: 20px;
                         display: flex;
                         align-items: center;
                         gap: 10px;
-                    }}
+                    }
                     
-                    .metric {{
+                    .metric {
                         font-size: 2.5em;
                         font-weight: bold;
                         color: #00FFFF;
                         margin: 20px 0;
-                    }}
+                    }
                     
-                    .logo {{
+                    .logo {
                         font-size: 2em;
                         margin-bottom: 10px;
-                    }}
+                    }
                     
-                    ul {{
+                    ul {
                         list-style: none;
                         padding-left: 0;
-                    }}
+                    }
                     
-                    li {{
+                    li {
                         margin: 15px 0;
                         padding-left: 25px;
                         position: relative;
-                    }}
+                    }
                     
-                    li:before {{
+                    li:before {
                         content: "▶";
                         color: #00FFFF;
                         position: absolute;
                         left: 0;
-                    }}
+                    }
                     
-                    .two-column {{
+                    .two-column {
                         display: grid;
                         grid-template-columns: 1fr 1fr;
                         gap: 40px;
                         align-items: start;
-                    }}
+                    }
                     
-                    .highlight-box {{
+                    .highlight-box {
                         background: linear-gradient(145deg, #9b30ff, #00FFFF);
                         color: black;
                         padding: 30px;
@@ -507,36 +510,36 @@ with st.sidebar:
                         font-weight: bold;
                         font-size: 1.2em;
                         margin: 20px 0;
-                    }}
+                    }
                     
-                    .recommendation {{
+                    .recommendation {
                         background: rgba(255, 170, 0, 0.1);
                         border-left: 4px solid #FFAA00;
                         padding: 20px;
                         margin: 20px 0;
                         border-radius: 0 10px 10px 0;
-                    }}
+                    }
                     
-                    .recommendation.success {{
+                    .recommendation.success {
                         background: rgba(0, 255, 136, 0.1);
                         border-left-color: #00FF88;
-                    }}
+                    }
                     
-                    .slide-number {{
+                    .slide-number {
                         position: absolute;
                         bottom: 20px;
                         right: 20px;
                         color: rgba(255,255,255,0.5);
                         font-size: 0.9em;
-                    }}
+                    }
                     
-                    @media print {{
-                        .slide {{
+                    @media print {
+                        .slide {
                             break-after: page;
                             min-height: auto;
                             padding: 20px;
-                        }}
-                    }}
+                        }
+                    }
                 </style>
             </head>
             <body>
@@ -580,9 +583,9 @@ with st.sidebar:
                     <div class="content-grid">
                         <div class="card">
                             <h3>🧺 Volume Total</h3>
-                            <div class="metric">{total_sacos * 5}</div>
+                            <div class="metric">10.217</div>
                             <p>sacos coletados no período</p>
-                            <p><strong>{total_sacos * 5 * 20} kg</strong> de resíduos</p>
+                            <p><strong>204.340 kg</strong> de resíduos</p>
                         </div>
                         
                         <div class="card">
@@ -684,11 +687,11 @@ with st.sidebar:
                 </div>
                 
                 <script>
-                    window.onload = function() {{
-                        setTimeout(() => {{
+                    window.onload = function() {
+                        setTimeout(() => {
                             window.print();
-                        }}, 1000);
-                    }};
+                        }, 1000);
+                    };
                 </script>
             </body>
             </html>

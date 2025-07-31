@@ -46,10 +46,14 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Show sidebar toggle button */
-        header[data-testid="stHeader"] button[kind="header"] {
-            visibility: visible !important;
+        /* Show sidebar toggle button - force visibility */
+        .css-14xtw13 {
             display: block !important;
+            visibility: visible !important;
+        }
+        
+        /* Style sidebar toggle button */
+        .css-14xtw13 > button {
             background: rgba(26, 26, 46, 0.9) !important;
             border: 1px solid rgba(255,255,255,0.3) !important;
             border-radius: 6px !important;
@@ -57,18 +61,18 @@ st.markdown("""
             padding: 6px 8px !important;
         }
         
-        /* Hide other header buttons completely */
-        header[data-testid="stHeader"] button:not([kind="header"]) {
-            display: none !important;
+        /* Alternative selector for sidebar button */
+        button[data-testid="baseButton-header"] {
+            display: block !important;
+            visibility: visible !important;
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 6px !important;
+            color: white !important;
         }
         
-        /* Hide other header elements but keep functionality */
-        header[data-testid="stHeader"] > div {
-            background: transparent;
-        }
-        
-        /* Ensure hamburger icon is visible */
-        header[data-testid="stHeader"] button[kind="header"] svg {
+        /* Make sure sidebar toggle icon is white */
+        .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
             fill: white !important;
             color: white !important;
         }

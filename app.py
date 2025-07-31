@@ -70,11 +70,30 @@ st.markdown("""
             padding: 6px 12px !important;
         }
         
-        /* Style GitHub icon specifically */
-        header[data-testid="stHeader"] svg, header[data-testid="stHeader"] path {
+        /* Fix the three dots menu button specifically */
+        header[data-testid="stHeader"] button[aria-label*="menu"] {
+            background: rgba(44, 44, 84, 0.8) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
+            color: white !important;
+        }
+        
+        /* Style GitHub icon and all SVG icons */
+        header[data-testid="stHeader"] svg {
             fill: white !important;
             color: white !important;
             stroke: white !important;
+        }
+        
+        header[data-testid="stHeader"] svg path {
+            fill: white !important;
+            stroke: white !important;
+        }
+        
+        /* Fix three dots icon specifically */
+        header[data-testid="stHeader"] button[aria-label*="menu"] svg,
+        header[data-testid="stHeader"] button[aria-label*="menu"] svg path {
+            fill: white !important;
+            color: white !important;
         }
         
         /* Hover effect for header buttons */
@@ -86,7 +105,7 @@ st.markdown("""
         }
         
         header[data-testid="stHeader"] button:hover svg, 
-        header[data-testid="stHeader"] button:hover path {
+        header[data-testid="stHeader"] button:hover svg path {
             fill: white !important;
             color: white !important;
         }

@@ -681,24 +681,42 @@ with st.sidebar:
             </div>
             
             <script>
-                window.onload = function() {
-                    setTimeout(() => {
-                        window.print();
-                    }, 1000);
-                };
+                // Remover auto-print
+                // window.onload = function() {
+                //     setTimeout(() => {
+                //         window.print();
+                //     }, 1000);
+                // };
             </script>
         </body>
         </html>
         """
         
-        # Botão de download direto
-        st.download_button(
-            label="📊 PDF",
-            data=html_content,
-            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
-            mime="text/html",
-            use_container_width=True
-        )
+        # Botão de download direto - forçar com CSS inline
+        st.markdown(f"""
+        <div style="width: 100%;">
+            <a href="data:text/html;charset=utf-8,{html_content.replace(' ', '%20').replace('\n', '%0A')}" 
+               download="Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html"
+               style="display: inline-block; width: 100%; text-decoration: none;">
+                <button style="
+                    background: #00FFFF !important;
+                    border: none !important;
+                    border-radius: 6px !important;
+                    color: black !important;
+                    font-weight: bold !important;
+                    padding: 12px 16px !important;
+                    width: 100% !important;
+                    cursor: pointer !important;
+                    transition: all 0.3s ease !important;
+                    font-size: 14px !important;
+                "
+                onmouseover="this.style.background='#0080FF'; this.style.transform='translateY(-1px)'"
+                onmouseout="this.style.background='#00FFFF'; this.style.transform='translateY(0)'">
+                    📊 PDF
+                </button>
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col_btn2:
         # Criar dados para Excel
@@ -708,16 +726,31 @@ with st.sidebar:
         df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
         df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
         
-        # Preparar CSV para download
-        csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
-        
-        st.download_button(
-            label="📋 Excel",
-            data=csv_data,
-            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
-            mime="text/csv",
-            use_container_width=True
-        )
+        # Botão Excel com CSS inline
+        st.markdown(f"""
+        <div style="width: 100%;">
+            <a href="data:text/csv;charset=utf-8,{csv_data.replace(' ', '%20').replace('\n', '%0A')}" 
+               download="Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv"
+               style="display: inline-block; width: 100%; text-decoration: none;">
+                <button style="
+                    background: #00FFFF !important;
+                    border: none !important;
+                    border-radius: 6px !important;
+                    color: black !important;
+                    font-weight: bold !important;
+                    padding: 12px 16px !important;
+                    width: 100% !important;
+                    cursor: pointer !important;
+                    transition: all 0.3s ease !important;
+                    font-size: 14px !important;
+                "
+                onmouseover="this.style.background='#0080FF'; this.style.transform='translateY(-1px)'"
+                onmouseout="this.style.background='#00FFFF'; this.style.transform='translateY(0)'">
+                    📋 Excel
+                </button>
+            </a>
+        </div>
+        """, unsafe_allow_html=True)
 
 # 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]

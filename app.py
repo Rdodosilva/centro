@@ -212,8 +212,10 @@ st.markdown("""
             color: #00FFFF !important;
         }
         
-        /* Button styling improvements - back to original */
-        .stButton > button {
+        /* Button styling improvements - force download buttons */
+        .stButton > button, .stDownloadButton > button, 
+        button[data-testid*="stDownloadButton"], 
+        div[data-testid="stDownloadButton"] button {
             background: #00FFFF !important;
             border: none !important;
             border-radius: 6px !important;
@@ -223,7 +225,27 @@ st.markdown("""
             padding: 8px 16px !important;
         }
         
-        .stButton > button:hover {
+        .stButton > button:hover, .stDownloadButton > button:hover,
+        button[data-testid*="stDownloadButton"]:hover,
+        div[data-testid="stDownloadButton"] button:hover {
+            background: #0080FF !important;
+            color: black !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
+        }
+        
+        /* Force styling on all buttons in sidebar */
+        section[data-testid="stSidebar"] button {
+            background: #00FFFF !important;
+            border: none !important;
+            border-radius: 6px !important;
+            color: black !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+            padding: 8px 16px !important;
+        }
+        
+        section[data-testid="stSidebar"] button:hover {
             background: #0080FF !important;
             color: black !important;
             transform: translateY(-1px) !important;

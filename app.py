@@ -60,13 +60,32 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Style the GitHub and other header buttons */
+        /* Style the GitHub and other header buttons - remove borders */
         header[data-testid="stHeader"] button {
-            background: rgba(26, 26, 46, 0.9) !important;
-            border: 2px solid #00FFFF !important;
+            background: transparent !important;
+            border: none !important;
             border-radius: 8px !important;
             color: white !important;
-            backdrop-filter: blur(10px);
+            backdrop-filter: none;
+        }
+        
+        /* Style GitHub icon specifically */
+        header[data-testid="stHeader"] svg, header[data-testid="stHeader"] path {
+            fill: white !important;
+            color: white !important;
+            stroke: white !important;
+        }
+        
+        /* Hover effect for header buttons */
+        header[data-testid="stHeader"] button:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
+        
+        header[data-testid="stHeader"] button:hover svg, 
+        header[data-testid="stHeader"] button:hover path {
+            fill: white !important;
+            color: white !important;
         }
         
         /* Style the menu dropdown - Clean dark background */

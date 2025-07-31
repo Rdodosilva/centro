@@ -119,14 +119,14 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
-        /* Métricas aprimoradas */
+        /* Métricas menores */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 16px rgba(0,255,255,0.1);
+            backdrop-filter: blur(5px);
             position: relative;
             overflow: hidden;
         }
@@ -742,7 +742,7 @@ else:
     variacao = 0
 
 # 🎯 Exibir métricas com design aprimorado
-st.markdown("## 📈 Indicadores Principais")
+st.markdown("## 📈 Principais Indicadores")
 
 col1, col2, col3, col4 = st.columns(4)
 

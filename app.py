@@ -60,13 +60,14 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Style the GitHub and other header buttons - remove borders */
+        /* Style the GitHub and other header buttons - clean look */
         header[data-testid="stHeader"] button {
-            background: transparent !important;
-            border: none !important;
+            background: rgba(44, 44, 84, 0.8) !important;
+            border: 1px solid rgba(255,255,255,0.2) !important;
             border-radius: 8px !important;
             color: white !important;
-            backdrop-filter: none;
+            backdrop-filter: blur(5px);
+            padding: 6px 12px !important;
         }
         
         /* Style GitHub icon specifically */
@@ -78,8 +79,10 @@ st.markdown("""
         
         /* Hover effect for header buttons */
         header[data-testid="stHeader"] button:hover {
-            background: rgba(255, 255, 255, 0.1) !important;
+            background: rgba(44, 44, 84, 1) !important;
+            border: 1px solid rgba(255,255,255,0.4) !important;
             color: white !important;
+            transform: translateY(-1px);
         }
         
         header[data-testid="stHeader"] button:hover svg, 

@@ -216,13 +216,15 @@ st.markdown("""
             color: black;
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,255,255,0.4);
+            border-radius: 25px;
         }
         
         div[role="radiogroup"] > label[data-selected="true"] {
-            background: linear-gradient(145deg, #9b30ff, #00FFFF);
+            background: linear-gradient(145deg, #00FFFF, #0080FF);
             color: black;
             font-weight: bold;
-            box-shadow: 0 0 20px rgba(155,48,255,0.6);
+            box-shadow: 0 0 20px rgba(0,255,255,0.6);
+            border-radius: 25px;
         }
         
         /* Selectbox styling */

@@ -40,14 +40,19 @@ st.markdown("""
             padding: 0;
         }
         
-        /* Hide streamlit header but keep sidebar toggle */
+        /* Hide problematic header buttons and keep only sidebar toggle */
         header[data-testid="stHeader"] {
             height: 2.875rem;
             background: transparent;
         }
         
-        /* Keep sidebar toggle in original position */
-        button[kind="header"] {
+        /* Hide all header buttons except sidebar toggle */
+        header[data-testid="stHeader"] button:not([kind="header"]) {
+            display: none !important;
+        }
+        
+        /* Keep only sidebar toggle visible and styled */
+        header[data-testid="stHeader"] button[kind="header"] {
             visibility: visible !important;
             background: rgba(26, 26, 46, 0.9) !important;
             border: 2px solid #00FFFF !important;
@@ -58,56 +63,6 @@ st.markdown("""
         /* Hide other header elements but keep functionality */
         header[data-testid="stHeader"] > div {
             background: transparent;
-        }
-        
-        /* Style the GitHub and other header buttons - clean look */
-        header[data-testid="stHeader"] button {
-            background: rgba(44, 44, 84, 0.8) !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            border-radius: 8px !important;
-            color: white !important;
-            backdrop-filter: blur(5px);
-            padding: 6px 12px !important;
-        }
-        
-        /* Fix the three dots menu button specifically */
-        header[data-testid="stHeader"] button[aria-label*="menu"] {
-            background: rgba(44, 44, 84, 0.8) !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            color: white !important;
-        }
-        
-        /* Style GitHub icon and all SVG icons */
-        header[data-testid="stHeader"] svg {
-            fill: white !important;
-            color: white !important;
-            stroke: white !important;
-        }
-        
-        header[data-testid="stHeader"] svg path {
-            fill: white !important;
-            stroke: white !important;
-        }
-        
-        /* Fix three dots icon specifically */
-        header[data-testid="stHeader"] button[aria-label*="menu"] svg,
-        header[data-testid="stHeader"] button[aria-label*="menu"] svg path {
-            fill: white !important;
-            color: white !important;
-        }
-        
-        /* Hover effect for header buttons */
-        header[data-testid="stHeader"] button:hover {
-            background: rgba(44, 44, 84, 1) !important;
-            border: 1px solid rgba(255,255,255,0.4) !important;
-            color: white !important;
-            transform: translateY(-1px);
-        }
-        
-        header[data-testid="stHeader"] button:hover svg, 
-        header[data-testid="stHeader"] button:hover svg path {
-            fill: white !important;
-            color: white !important;
         }
         
         /* Style the menu dropdown - Clean dark background */

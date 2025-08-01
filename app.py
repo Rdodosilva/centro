@@ -151,45 +151,65 @@ st.markdown("""
             padding: 0px !important;
         }
         
-        /* BOTÕES DOS MESES ORGANIZADOS */
-        div[role="radiogroup"] > label {
+        /* FORÇAR ESTILO DOS BOTÕES DOS MESES */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label {
             background: #1a1a2e !important;
-            padding: 8px 12px !important;
+            padding: 12px 16px !important;
             border-radius: 8px !important;
             border: 1px solid #00FFFF !important;
-            margin: 3px 0 !important;
+            margin: 5px 0 !important;
             transition: all 0.2s ease !important;
             cursor: pointer !important;
             color: white !important;
-            font-weight: normal !important;
+            font-weight: 500 !important;
             font-size: 0.9em !important;
             display: block !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
         }
         
-        /* Radio button hover effect */
-        div[role="radiogroup"] > label:hover {
-            background: rgba(0,255,255,0.1) !important;
+        /* Hover dos botões dos meses */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
+            background: rgba(0,255,255,0.15) !important;
             color: white !important;
             border: 1px solid #00FFFF !important;
+            transform: translateX(3px) !important;
         }
         
-        /* Radio button selected state - CIANO */
-        div[role="radiogroup"] > label[data-selected="true"] {
-            background: #00FFFF !important;
-            color: #000000 !important;
+        /* Botão selecionado - gradiente roxo */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+            color: white !important;
             font-weight: 600 !important;
+            border: 1px solid #9b30ff !important;
+            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
+        }
+        
+        /* Esconder círculos dos radio buttons */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
+            display: none !important;
+        }
+        
+        /* Forçar aplicação em todos os elementos de radio */
+        .stRadio > div > div > div > label {
+            background: #1a1a2e !important;
+            padding: 12px 16px !important;
+            border-radius: 8px !important;
             border: 1px solid #00FFFF !important;
+            margin: 5px 0 !important;
+            color: white !important;
+            font-weight: 500 !important;
         }
         
-        /* Radio circles */
-        div[role="radiogroup"] > label > div {
-            border-color: #00FFFF !important;
-            background-color: transparent !important;
+        .stRadio > div > div > div > label:hover {
+            background: rgba(0,255,255,0.15) !important;
+            transform: translateX(3px) !important;
         }
         
-        div[role="radiogroup"] > label[data-selected="true"] > div {
-            border-color: #000000 !important;
-            background-color: #000000 !important;
+        .stRadio > div > div > div > label[data-selected="true"] {
+            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+            border: 1px solid #9b30ff !important;
+            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
         }
         
         /* Checkbox styling */

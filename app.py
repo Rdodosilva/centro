@@ -119,8 +119,6 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 from datetime import datetime
-import base64
-from io import BytesIO
 
 # 🎯 Configuração da página
 st.set_page_config(
@@ -399,78 +397,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📈 Função para calcular tendências avançadas
-def calcular_tendencias(df):
-    """Calcula tendências e previsões baseadas nos dados históricos"""
-    df_clean = df[df["Total de Sacos"].notna()].copy()
-    
-    # Tendência linear simples
-    x = np.arange(len(df_clean))
-    y = df_clean["Total de Sacos"].values
-    
-    if len(y) > 1:
-        coef = np.polyfit(x, y, 1)
-        tendencia = coef[0]  # coeficiente angular
-        
-        # Previsão para próximo mês
-        proximo_mes = coef[0] * len(df_clean) + coef[1]
-        
-        return {
-            'tendencia': tendencia,
-            'proximo_mes': max(0, proximo_mes),
-            'crescimento_mensal': (tendencia / np.mean(y)) * 100 if np.mean(y) > 0 else 0
-        }
-    
-    return {'tendencia': 0, 'proximo_mes': 0, 'crescimento_mensal': 0}
-
-# 📊 Função para gerar gráfico de radar de performance
-def criar_radar_performance(dados_mes):
-    """Cria gráfico radar para análise multidimensional"""
-    if dados_mes.empty:
-        return go.Figure()
-    
-    # Métricas normalizadas (0-100)
-    volume_norm = min(100, (dados_mes["Total de Sacos"].iloc[0] / 3000) * 100)
-    eficiencia_am = (dados_mes["Coleta AM"].iloc[0] / dados_mes["Total de Sacos"].iloc[0]) * 100
-    eficiencia_pm = (dados_mes["Coleta PM"].iloc[0] / dados_mes["Total de Sacos"].iloc[0]) * 100
-    
-    categorias = ['Volume Total', 'Eficiência AM', 'Eficiência PM', 'Capacidade Utilizada']
-    valores = [volume_norm, eficiencia_am, eficiencia_pm, min(100, volume_norm * 1.2)]
-    
-    fig = go.Figure()
-    
-    fig.add_trace(go.Scatterpolar(
-        r=valores,
-        theta=categorias,
-        fill='toself',
-        name='Performance Atual',
-        line_color='#00FFFF',
-        fillcolor='rgba(0,255,255,0.1)'
-    ))
-    
-    fig.update_layout(
-        polar=dict(
-            radialaxis=dict(
-                visible=True,
-                range=[0, 100],
-                gridcolor="rgba(255,255,255,0.2)",
-                tickcolor="white"
-            ),
-            angularaxis=dict(
-                gridcolor="rgba(255,255,255,0.2)",
-                tickcolor="white"
-            )
-        ),
-        showlegend=True,
-        title="Radar de Performance",
-        title_font=dict(color="white", size=16),
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_color="white"
-    )
-    
-    return fig
-
 # 📥 Carregar dados
 @st.cache_data
 def carregar_dados():
@@ -589,8 +515,7 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum()) if not df_filtrado.empty else 0
 total_pm = int(df_filtrado["Coleta PM"].sum()) if not df_filtrado.empty else 0
 
-# Cálculos avançados
-tendencias = calcular_tendencias(df)
+# Cálculos básicos
 meses_list = df[df["Total de Sacos"].notna()]["Mes"].unique().tolist()
 mes_idx = meses_list.index(mes_selecionado) if mes_selecionado in meses_list else -1
 

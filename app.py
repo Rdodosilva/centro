@@ -46,17 +46,35 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Sidebar toggle button - remove background completely */
-        .css-14xtw13 > button, button[data-testid="baseButton-header"] {
-            background: none !important;
-            border: none !important;
-            color: #00FFFF !important;
-            padding: 4px !important;
+        /* Show sidebar toggle button - force visibility */
+        .css-14xtw13 {
+            display: block !important;
+            visibility: visible !important;
         }
         
+        /* Style sidebar toggle button */
+        .css-14xtw13 > button {
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 6px !important;
+            color: white !important;
+            padding: 6px 8px !important;
+        }
+        
+        /* Alternative selector for sidebar button */
+        button[data-testid="baseButton-header"] {
+            display: block !important;
+            visibility: visible !important;
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            border-radius: 6px !important;
+            color: white !important;
+        }
+        
+        /* Make sure sidebar toggle icon is white */
         .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
-            fill: #00FFFF !important;
-            color: #00FFFF !important;
+            fill: white !important;
+            color: white !important;
         }
         
         /* Hide other header elements but keep functionality */
@@ -101,20 +119,16 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
-        /* Métricas menores - todas do mesmo tamanho */
+        /* Métricas aprimoradas */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
-            border-radius: 10px;
-            padding: 12px;
-            box-shadow: 0 4px 16px rgba(0,255,255,0.1);
-            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+            backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         .stMetric::before {
@@ -130,59 +144,58 @@ st.markdown("""
             border-radius: inherit;
         }
         
-        /* Forçar altura uniforme */
-        .stMetric > div {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        /* Radio button styling - exact as your first image */
+        /* Radio button styling - apply clean theme */
         section[data-testid="stRadio"] > div {
             background: transparent !important;
             border: none !important;
+            border-radius: 0px !important;
             padding: 0px !important;
         }
         
-        /* Radio button labels - dark background with blue border */
+        /* Radio button labels - clean style */
         div[role="radiogroup"] > label {
-            background: #1a1a2e !important;
-            padding: 10px 15px !important;
-            border-radius: 15px !important;
-            border: 2px solid #00FFFF !important;
-            margin: 5px 0 !important;
-            transition: all 0.3s ease !important;
+            background: transparent !important;
+            padding: 8px 0px !important;
+            border-radius: 0px !important;
+            border: none !important;
+            margin: 2px 0 !important;
+            transition: all 0.2s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: normal !important;
             display: block !important;
         }
         
-        /* Radio button hover effect - blue border */
+        /* Radio button hover effect */
         div[role="radiogroup"] > label:hover {
-            background: #1a1a2e !important;
-            color: white !important;
-            border: 2px solid #00FFFF !important;
+            background: transparent !important;
+            color: #00FFFF !important;
+            transform: none !important;
+            box-shadow: none !important;
+            border-radius: 0px !important;
         }
         
-        /* Radio button selected state - RED border */
+        /* Radio button selected state */
         div[role="radiogroup"] > label[data-selected="true"] {
-            background: #1a1a2e !important;
-            color: white !important;
+            background: transparent !important;
+            color: #00FFFF !important;
             font-weight: bold !important;
-            border: 2px solid #FF4444 !important;
+            box-shadow: none !important;
+            border-radius: 0px !important;
         }
         
-        /* Radio circles - white normally, red when selected */
+        /* Radio button circles */
         div[role="radiogroup"] > label > div {
             border-color: white !important;
-            background-color: transparent !important;
+        }
+        
+        div[role="radiogroup"] > label:hover > div {
+            border-color: #00FFFF !important;
         }
         
         div[role="radiogroup"] > label[data-selected="true"] > div {
-            border-color: #FF4444 !important;
-            background-color: #FF4444 !important;
+            border-color: #00FFFF !important;
+            background-color: #00FFFF !important;
         }
         
         /* Checkbox styling */
@@ -199,10 +212,8 @@ st.markdown("""
             color: #00FFFF !important;
         }
         
-        /* Button styling improvements - force download buttons */
-        .stButton > button, .stDownloadButton > button, 
-        button[data-testid*="stDownloadButton"], 
-        div[data-testid="stDownloadButton"] button {
+        /* Button styling improvements - back to original */
+        .stButton > button {
             background: #00FFFF !important;
             border: none !important;
             border-radius: 6px !important;
@@ -212,27 +223,7 @@ st.markdown("""
             padding: 8px 16px !important;
         }
         
-        .stButton > button:hover, .stDownloadButton > button:hover,
-        button[data-testid*="stDownloadButton"]:hover,
-        div[data-testid="stDownloadButton"] button:hover {
-            background: #0080FF !important;
-            color: black !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
-        }
-        
-        /* Force styling on all buttons in sidebar */
-        section[data-testid="stSidebar"] button {
-            background: #00FFFF !important;
-            border: none !important;
-            border-radius: 6px !important;
-            color: black !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            padding: 8px 16px !important;
-        }
-        
-        section[data-testid="stSidebar"] button:hover {
+        .stButton > button:hover {
             background: #0080FF !important;
             color: black !important;
             transform: translateY(-1px) !important;
@@ -359,457 +350,43 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 🎛️ Sidebar com controles modernos
+# 🎛️ Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período com botões customizados
-    st.markdown("### 📅 Período:")
-    
+    # Filtro de período melhorado
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
     meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
     
-    # Criar botões modernos customizados
-    if 'mes_selecionado' not in st.session_state:
-        st.session_state.mes_selecionado = "janeiro"
-    
-    for i, (mes, display) in enumerate(zip(meses_disponiveis, meses_display)):
-        is_selected = st.session_state.mes_selecionado == mes
-        
-        button_style = """
-        <div style="margin: 5px 0;">
-            <button onclick="selectMonth('{}', {})" style="
-                width: 100%;
-                padding: 12px 20px;
-                border: 2px solid {};
-                border-radius: 10px;
-                background: {};
-                color: {};
-                font-weight: {};
-                cursor: pointer;
-                transition: all 0.3s ease;
-                font-size: 14px;
-                text-align: left;
-                display: flex;
-                align-items: center;
-            " onmouseover="this.style.background='{}'; this.style.color='black'"
-               onmouseout="this.style.background='{}'; this.style.color='{}'">
-                <span style="
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 50%;
-                    background: {};
-                    margin-right: 10px;
-                    display: inline-block;
-                "></span>
-                {}
-            </button>
-        </div>
-        """.format(
-            mes, i,
-            "#00FFFF" if is_selected else "#666",
-            "rgba(0,255,255,0.1)" if is_selected else "transparent",
-            "#00FFFF" if is_selected else "white",
-            "bold" if is_selected else "normal",
-            "#00FFFF",
-            "rgba(0,255,255,0.1)" if is_selected else "transparent",
-            "#00FFFF" if is_selected else "white",
-            "#00FFFF" if is_selected else "#666",
-            display
-        )
-        
-        st.markdown(button_style, unsafe_allow_html=True)
-        
-        # Botão invisível para capturar clique
-        if st.button(f"_{display}", key=f"btn_{mes}", label_visibility="hidden"):
-            st.session_state.mes_selecionado = mes
-            st.rerun()
-    
-    mes_selecionado = st.session_state.mes_selecionado
+    st.markdown("### 📅 Período:")
+    mes_selecionado = st.radio(
+        "",
+        options=meses_disponiveis,
+        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
+        horizontal=False,
+        index=0
+    )
     
     # Opções de visualização
     st.markdown("### 📊 Visualização")
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
-    tipo_grafico = st.selectbox("Tipo de gráfico:", ["Barras"])
+    tipo_grafico = st.radio(
+        "Tipo de gráfico:",
+        ["Barras"],
+        horizontal=False
+    )
     
-    # Configurações de export com botões modernos
+    # Configurações de export
     st.markdown("### 📤 Exportar")
-    
-    # HTML da apresentação
-    apresentacao_html = """<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apresentação - Coleta Centro</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: white;
-            line-height: 1.6;
-        }
-        
-        .slide {
-            min-height: 100vh;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            break-after: page;
-        }
-        
-        .slide-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .slide-title {
-            font-size: 3em;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 20px;
-        }
-        
-        .slide-subtitle {
-            font-size: 1.4em;
-            color: white;
-            opacity: 0.8;
-        }
-        
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .card {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-        }
-        
-        .card h3 {
-            color: #00FFFF;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .metric {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #00FFFF;
-            margin: 20px 0;
-        }
-        
-        .logo {
-            font-size: 2em;
-            margin-bottom: 10px;
-        }
-        
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        
-        li {
-            margin: 15px 0;
-            padding-left: 25px;
-            position: relative;
-        }
-        
-        li:before {
-            content: "▶";
-            color: #00FFFF;
-            position: absolute;
-            left: 0;
-        }
-        
-        .two-column {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }
-        
-        .highlight-box {
-            background: linear-gradient(145deg, #9b30ff, #00FFFF);
-            color: black;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2em;
-            margin: 20px 0;
-        }
-        
-        .recommendation {
-            background: rgba(255, 170, 0, 0.1);
-            border-left: 4px solid #FFAA00;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 10px 10px 0;
-        }
-        
-        .recommendation.success {
-            background: rgba(0, 255, 136, 0.1);
-            border-left-color: #00FF88;
-        }
-        
-        .slide-number {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9em;
-        }
-        
-        @media print {
-            .slide {
-                break-after: page;
-                min-height: auto;
-                padding: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Slide 1: Capa -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="logo">🚛</div>
-            <div class="slide-title">Coleta Centro</div>
-            <div class="slide-subtitle">Análise de Crescimento dos Resíduos | 2025</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>📊 Objetivo da Análise</h3>
-                <p>Conscientização sobre o crescimento dos resíduos no centro da cidade</p>
-            </div>
-            
-            <div class="card">
-                <h3>📅 Período Analisado</h3>
-                <p>Janeiro a Maio de 2025</p>
-                <p>Dados coletados mensalmente</p>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Principal Achado</h3>
-                <div class="metric">+137%</div>
-                <p>Crescimento em 5 meses</p>
-            </div>
-        </div>
-        
-        <div class="slide-number">01</div>
-    </div>
-    
-    <!-- Slide 2: Panorama Geral -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📈 Panorama Geral</div>
-            <div class="slide-subtitle">Principais Indicadores - Janeiro a Maio 2025</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>🧺 Volume Total</h3>
-                <div class="metric">10.217</div>
-                <p>sacos coletados no período</p>
-                <p><strong>204.340 kg</strong> de resíduos</p>
-            </div>
-            
-            <div class="card">
-                <h3>📊 Distribuição por Período</h3>
-                <p><strong>36% Manhã</strong></p>
-                <p><strong>64% Tarde</strong></p>
-                <p>Maior concentração vespertina</p>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Crescimento</h3>
-                <div class="metric">+137%</div>
-                <p>Janeiro → Maio</p>
-                <p>Volume em expansão</p>
-            </div>
-            
-            <div class="card">
-                <h3>🚛 Status Atual</h3>
-                <div class="metric">CRESCIMENTO</div>
-                <p>Tendência de alta observada</p>
-            </div>
-        </div>
-        
-        <div class="slide-number">02</div>
-    </div>
-    
-    <!-- Slide 3: Evolução Mensal -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📊 Evolução Mensal</div>
-            <div class="slide-subtitle">Crescimento Consistente dos Resíduos</div>
-        </div>
-        
-        <div class="two-column">
-            <div>
-                <div class="card">
-                    <h3>📈 Dados Mensais</h3>
-                    <ul>
-                        <li><strong>Janeiro:</strong> 1.055 sacos (21.100 kg)</li>
-                        <li><strong>Fevereiro:</strong> 2.657 sacos (53.140 kg)</li>
-                        <li><strong>Março:</strong> 1.201 sacos (24.020 kg)</li>
-                        <li><strong>Abril:</strong> 2.798 sacos (55.960 kg)</li>
-                        <li><strong>Maio:</strong> 2.506 sacos (50.120 kg)</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div>
-                <div class="highlight-box">
-                    <strong>Crescimento de 137% no período</strong><br>
-                    Volume demonstra expansão significativa
-                </div>
-            </div>
-        </div>
-        
-        <div class="slide-number">03</div>
-    </div>
-    
-    <!-- Slide 4: Resumo -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📋 Resumo</div>
-            <div class="slide-subtitle">Principais Achados</div>
-        </div>
-        
-        <div class="highlight-box">
-            <div style="font-size: 1.5em; margin-bottom: 20px;">📊 CONSCIENTIZAÇÃO SOBRE CRESCIMENTO</div>
-            <div style="font-size: 1.3em;">Volume cresceu 137% em apenas 5 meses</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>📊 Dados Principais</h3>
-                <ul>
-                    <li>Crescimento de <strong>137% em 5 meses</strong></li>
-                    <li>Volume atual: <strong>2.506 sacos/mês</strong></li>
-                    <li>Tendência: <strong>Crescimento contínuo</strong></li>
-                    <li>Período crítico: <strong>Tarde (64%)</strong></li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3>📊 Próximos Passos</h3>
-                <ul>
-                    <li><strong>Continuidade do monitoramento</strong></li>
-                    <li><strong>Análises mensais regulares</strong></li>
-                    <li><strong>Relatórios de acompanhamento</strong></li>
-                    <li><strong>Avaliação contínua</strong></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="recommendation success">
-            <h3>💡 Considerações Finais</h3>
-            <p>Os dados revelam um <strong>crescimento importante</strong> que deve ser acompanhado. A análise contínua permitirá <strong>decisões baseadas em evidências</strong>.</p>
-        </div>
-        
-        <div class="slide-number">04</div>
-    </div>
-</body>
-</html>"""
-    
-    # Criar dados para Excel
-    df_export = df[df["Total de Sacos"].notna()].copy()
-    df_export["Mês"] = df_export["Mês"].str.title()
-    df_export["Peso Total (kg)"] = df_export["Total de Sacos"] * 20
-    df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
-    df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
-    
-    csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
-    
-    # Botões de export modernos
-    st.markdown("""
-    <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <div style="flex: 1;">
-            <a href="data:text/html;charset=utf-8,{}" download="Apresentacao_Coleta_Centro.html" style="text-decoration: none;">
-                <div style="
-                    background: linear-gradient(135deg, #00FFFF, #0080FF);
-                    color: black;
-                    padding: 12px 16px;
-                    border-radius: 8px;
-                    text-align: center;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    border: none;
-                    display: block;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,255,255,0.4)'"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                    📊 PDF
-                </div>
-            </a>
-        </div>
-        <div style="flex: 1;">
-            <a href="data:text/csv;charset=utf-8,{}" download="Dados_Coleta_Centro.csv" style="text-decoration: none;">
-                <div style="
-                    background: linear-gradient(135deg, #00FFFF, #0080FF);
-                    color: black;
-                    padding: 12px 16px;
-                    border-radius: 8px;
-                    text-align: center;
-                    font-weight: bold;
-                    cursor: pointer;
-                    transition: all 0.3s ease;
-                    border: none;
-                    display: block;
-                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,255,255,0.4)'"
-                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                    📋 Excel
-                </div>
-            </a>
-        </div>
-    </div>
-    """.format(
-        apresentacao_html.replace(' ', '%20').replace('\n', '%0A').replace('#', '%23'),
-        csv_data.replace(' ', '%20').replace('\n', '%0A')
-    ), unsafe_allow_html=True)ês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        st.download_button(
-            label="📊 PDF",
-            data=apresentacao_html,
-            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
-            mime="text/html",
-            use_container_width=True
-        )
+        if st.button("📊 PDF", use_container_width=True):
+            st.success("Em desenvolvimento!")
     
     with col_btn2:
-        st.download_button(
-            label="📋 Excel",
-            data=csv_data,
-            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
-            mime="text/csv",
-            use_container_width=True
-        )
+        if st.button("📋 Excel", use_container_width=True):
+            st.success("Em desenvolvimento!")
 
 # 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
@@ -830,7 +407,7 @@ else:
     variacao = 0
 
 # 🎯 Exibir métricas com design aprimorado
-st.markdown("## 📈 Principais Indicadores")
+st.markdown("## 📈 Indicadores Principais")
 
 col1, col2, col3, col4 = st.columns(4)
 

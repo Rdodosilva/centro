@@ -386,14 +386,14 @@ try:
     df.columns = df.columns.str.strip()
     df["Mes"] = df["Mês"].str.lower().str.strip()
 except:
-    # Dados simulados para demonstração
+    # Dados simulados para demonstração - ADICIONANDO JUNHO E JULHO
     st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
     df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
-        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio'],
-        'Coleta AM': [295, 1021, 408, 1192, 1045],
-        'Coleta PM': [760, 1636, 793, 1606, 1461],
-        'Total de Sacos': [1055, 2657, 1201, 2798, 2506]
+        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
+        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho'],
+        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150],
+        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720],
+        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870]
     })
 
 # 🏷️ Header aprimorado
@@ -412,9 +412,9 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período melhorado
-    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
-    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
+    # Filtro de período melhorado - ADICIONANDO JUNHO E JULHO
+    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho"]
+    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho"]
     
     st.markdown("### 📅 Período:")
     mes_selecionado = st.radio(
@@ -841,13 +841,13 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# Cores aprimoradas
+# Cores modernizadas - Azul e Laranja vibrantes
 cores = {
-    "Coleta AM": "#00FFFF",
-    "Coleta PM": "#FF6B35"
+    "Coleta AM": "#00D4FF",  # Azul ciano moderno
+    "Coleta PM": "#FF6B35"   # Laranja vibrante
 }
 
-# Gráfico principal (apenas barras)
+# Gráfico principal MODERNIZADO
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
@@ -861,74 +861,106 @@ with col_left:
         title=f"📦 Coleta por Período - {mes_selecionado.title()}"
     )
     
-    # Styling comum para gráfico de barras
+    # Styling MODERNO para gráfico de barras
     fig_main.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=20, color="white"),
+        title_font=dict(size=20, color="white", family="Inter"),
         title_x=0.5,
+        font_family="Inter",
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(color="white", size=12),
+            bgcolor="rgba(0,0,0,0)"
+        ),
+        margin=dict(l=20, r=20, t=60, b=40),
         xaxis=dict(
-            showgrid=True, 
-            gridcolor="rgba(255,255,255,0.1)",
+            showgrid=False,
+            showline=True,
+            linewidth=1,
+            linecolor="rgba(255,255,255,0.2)",
             color="white",
-            title_font=dict(color="white"),
-            tickfont=dict(color="white")
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=12),
+            categoryorder='array',
+            categoryarray=meses_disponiveis
         ),
         yaxis=dict(
-            showgrid=True, 
+            showgrid=True,
+            gridwidth=1,
             gridcolor="rgba(255,255,255,0.1)",
+            showline=False,
             color="white",
-            title_font=dict(color="white"),
-            tickfont=dict(color="white")
-        ),
-        legend=dict(
-            font=dict(color="white", size=12),
-            bgcolor="rgba(0,0,0,0.5)"
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=12),
+            title="Quantidade de Sacos"
         )
     )
     
-    # Forçar texto branco nos elementos do gráfico
+    # Barras com bordas arredondadas e efeitos modernos
     fig_main.update_traces(
+        marker=dict(
+            line=dict(width=0),
+            opacity=0.9
+        ),
         textfont_color="white",
-        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<extra></extra>'
+        textposition="outside",
+        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<br><extra></extra>'
     )
     
     st.plotly_chart(fig_main, use_container_width=True)
 
 with col_right:
-    # Gráfico de pizza aprimorado
+    # Gráfico de pizza MODERNIZADO
     fig_pie = go.Figure(data=[go.Pie(
         labels=["Coleta AM", "Coleta PM"],
         values=[total_am, total_pm],
-        hole=0.4,
+        hole=0.5,  # Maior buraco para look moderno
         marker=dict(
-            colors=["#00FFFF", "#FF6B35"],
-            line=dict(color="white", width=3)
+            colors=["#00D4FF", "#FF6B35"],
+            line=dict(color="rgba(255,255,255,0.2)", width=2)
         ),
         textinfo='label+percent',
-        textfont=dict(color='white', size=14),
-        hovertemplate='%{label}: %{value} sacos<br>%{percent}<extra></extra>'
+        textfont=dict(color='white', size=13, family="Inter"),
+        hovertemplate='%{label}<br>%{value} sacos<br>%{percent}<extra></extra>',
+        pull=[0.05, 0.05]  # Separar fatias levemente
     )])
     
     fig_pie.update_layout(
-        title=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
-        title_font=dict(size=16, color="white"),
-        title_x=0.5,
+        title=dict(
+            text=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
+            font=dict(size=16, color="white", family="Inter"),
+            x=0.5,
+            y=0.95
+        ),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
+        font_family="Inter",
         legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=1.05,
             font=dict(color="white", size=12),
-            bgcolor="rgba(0,0,0,0.5)"
+            bgcolor="rgba(0,0,0,0)"
         ),
         height=400,
+        margin=dict(l=20, r=20, t=80, b=20),
         annotations=[dict(
-            text="",
+            text=f"<b>{total_sacos:,}</b><br>Total",
             x=0.5, y=0.5,
-            font_size=20,
-            showarrow=False,
-            font_color="white"
+            font_size=16,
+            font_color="white",
+            font_family="Inter",
+            showarrow=False
         )]
     )
     
@@ -942,75 +974,105 @@ df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponive
 df_linha = df_linha.sort_values("Mes_cat")
 
 # Criar gráfico de linha com múltiplas métricas
+# GRÁFICO DE EVOLUÇÃO MODERNIZADO
 fig_evolucao = make_subplots(
     rows=2, cols=1,
-    subplot_titles=("Volume de Coleta (Sacos)", "Distribuição AM/PM"),
-    vertical_spacing=0.1,
+    subplot_titles=("📈 Volume de Coleta (Sacos)", "📊 Distribuição AM/PM"),
+    vertical_spacing=0.15,
     specs=[[{"secondary_y": True}], [{"secondary_y": False}]]
 )
 
-# Linha principal - Total de sacos
+# Linha principal com design moderno
 fig_evolucao.add_trace(
     go.Scatter(
         x=df_linha["Mes"], 
         y=df_linha["Total de Sacos"],
         mode='lines+markers',
         name='Total de Sacos',
-        line=dict(color='#9b30ff', width=4),
-        marker=dict(size=10, color='white', line=dict(color='#9b30ff', width=2))
+        line=dict(color='#9b30ff', width=3, shape='spline'),
+        marker=dict(
+            size=8, 
+            color='white', 
+            line=dict(color='#9b30ff', width=2),
+            symbol='circle'
+        ),
+        fill='tonexty',
+        fillcolor='rgba(155,48,255,0.1)',
+        hovertemplate='<b>%{y}</b> sacos<br>%{x}<extra></extra>'
     ),
     row=1, col=1
 )
 
-# Gráfico de barras empilhadas para AM/PM
+# Barras empilhadas modernas
 fig_evolucao.add_trace(
-    go.Bar(x=df_linha["Mes"], y=df_linha["Coleta AM"], name='AM', marker_color='#00FFFF'),
+    go.Bar(
+        x=df_linha["Mes"], 
+        y=df_linha["Coleta AM"], 
+        name='AM', 
+        marker_color='#00D4FF',
+        marker=dict(opacity=0.8),
+        hovertemplate='<b>AM:</b> %{y} sacos<br>%{x}<extra></extra>'
+    ),
     row=2, col=1
 )
 fig_evolucao.add_trace(
-    go.Bar(x=df_linha["Mes"], y=df_linha["Coleta PM"], name='PM', marker_color='#FF6B35'),
+    go.Bar(
+        x=df_linha["Mes"], 
+        y=df_linha["Coleta PM"], 
+        name='PM', 
+        marker_color='#FF6B35',
+        marker=dict(opacity=0.8),
+        hovertemplate='<b>PM:</b> %{y} sacos<br>%{x}<extra></extra>'
+    ),
     row=2, col=1
 )
 
 fig_evolucao.update_layout(
-    height=600,
+    height=650,
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
+    font_family="Inter",
     title_font=dict(size=18, color="white"),
-    legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.15,
+        xanchor="center",
+        x=0.5,
+        font=dict(color="white", size=12),
+        bgcolor="rgba(0,0,0,0)"
+    ),
     barmode='stack',
-    annotations=[
-        dict(
-            text="Volume de Coleta (Sacos)",
-            xref="paper", yref="paper",
-            x=0.5, y=0.95,
-            showarrow=False,
-            font=dict(size=16, color="white")
-        ),
-        dict(
-            text="Distribuição AM/PM",
-            xref="paper", yref="paper", 
-            x=0.5, y=0.47,
-            showarrow=False,
-            font=dict(size=16, color="white")
-        )
-    ]
+    margin=dict(l=40, r=40, t=80, b=80)
 )
 
+# Styling dos eixos
 fig_evolucao.update_xaxes(
-    showgrid=True, 
-    gridcolor="rgba(255,255,255,0.1)", 
+    showgrid=False,
+    showline=True,
+    linewidth=1,
+    linecolor="rgba(255,255,255,0.2)",
     color="white",
-    title_font=dict(color="white"),
-    tickfont=dict(color="white")
+    title_font=dict(color="white", size=12),
+    tickfont=dict(color="white", size=10),
+    categoryorder='array',
+    categoryarray=meses_disponiveis
 )
+
 fig_evolucao.update_yaxes(
-    showgrid=True, 
-    gridcolor="rgba(255,255,255,0.1)", 
+    showgrid=True,
+    gridwidth=1,
+    gridcolor="rgba(255,255,255,0.1)",
+    showline=False,
     color="white",
-    title_font=dict(color="white"),
-    tickfont=dict(color="white")
+    title_font=dict(color="white", size=12),
+    tickfont=dict(color="white", size=10)
+)
+
+# Personalizar títulos dos subplots
+fig_evolucao.update_annotations(
+    font=dict(color="white", size=14, family="Inter")
 )
 
 st.plotly_chart(fig_evolucao, use_container_width=True)

@@ -44,14 +44,14 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Métricas compactas COM cores */
+        /* Métricas MUITO COMPACTAS */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            padding: 12px 16px;
-            box-shadow: 0 4px 16px rgba(0,255,255,0.1);
-            backdrop-filter: blur(10px);
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.1);
+            backdrop-filter: blur(6px);
             position: relative;
             overflow: hidden;
             transition: all 0.2s ease;
@@ -66,28 +66,30 @@ st.markdown("""
             bottom: 0;
             background: linear-gradient(45deg, #00FFFF, #9b30ff);
             z-index: -1;
-            margin: -2px;
+            margin: -1px;
             border-radius: inherit;
         }
         
         .stMetric:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(0,255,255,0.15);
+            box-shadow: 0 3px 12px rgba(0,255,255,0.15);
         }
         
-        /* Fonte das métricas menor */
+        /* Fontes MUITO pequenas */
         .stMetric [data-testid="metric-container"] > div:first-child {
-            font-size: 0.8em !important;
+            font-size: 0.7em !important;
             font-weight: 500 !important;
+            margin-bottom: 2px !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:nth-child(2) {
-            font-size: 1.6em !important;
+            font-size: 1.3em !important;
             font-weight: 700 !important;
+            margin: 2px 0 !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:last-child {
-            font-size: 0.75em !important;
+            font-size: 0.65em !important;
+            margin-top: 2px !important;
         }
         
         /* Sidebar styling */
@@ -139,23 +141,33 @@ st.markdown("""
             background-color: #000000 !important;
         }
         
-        /* Botões da sidebar mais elegantes */
+        /* Botões sidebar PADRONIZADOS */
         .stButton > button, .stDownloadButton > button {
-            background: rgba(0,255,255,0.1) !important;
+            background: rgba(26, 26, 46, 0.8) !important;
             border: 1px solid #00FFFF !important;
             border-radius: 6px !important;
             color: #00FFFF !important;
             font-weight: 500 !important;
+            font-size: 0.85em !important;
+            padding: 8px 12px !important;
+            width: 100% !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
             transition: all 0.2s ease !important;
-            padding: 8px 16px !important;
-            font-size: 0.9em !important;
         }
         
         .stButton > button:hover, .stDownloadButton > button:hover {
-            background: #00FFFF !important;
-            color: #000000 !important;
-            transform: none !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
+            background: rgba(0, 255, 255, 0.1) !important;
+            color: #FFFFFF !important;
+            border-color: #FFFFFF !important;
+        }
+        
+        /* Forçar mesmo tamanho para todos os botões */
+        section[data-testid="stSidebar"] button {
+            min-height: 36px !important;
+            max-height: 36px !important;
         }
         
         /* Checkboxes */
@@ -295,9 +307,8 @@ with st.sidebar:
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        if st.button("📊 PDF", use_container_width=True):
-            # Gerar HTML da apresentação
-            apresentacao_html = f"""<!DOCTYPE html>
+        # Criar apresentação diretamente
+        apresentacao_html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -305,252 +316,83 @@ with st.sidebar:
     <title>Análise Coleta Centro - {mes_selecionado.title()}</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
-        body {{
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ 
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: white;
-            line-height: 1.6;
+            color: white; line-height: 1.6; 
         }}
-        
-        .slide {{
-            min-height: 100vh;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            page-break-after: always;
+        .slide {{ 
+            min-height: 100vh; padding: 40px; display: flex; flex-direction: column; 
+            justify-content: center; page-break-after: always; 
         }}
-        
-        .slide-header {{
-            text-align: center;
-            margin-bottom: 40px;
-        }}
-        
-        .slide-title {{
-            font-size: 2.8em;
-            font-weight: 700;
+        .slide-title {{ 
+            font-size: 2.8em; font-weight: 700; text-align: center;
             background: linear-gradient(90deg, #00FFFF, #9b30ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
         }}
-        
-        .slide-subtitle {{
-            font-size: 1.2em;
-            color: #00FFFF;
-            opacity: 0.9;
-        }}
-        
-        .content-grid {{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }}
-        
-        .card {{
+        .metric {{ font-size: 2.5em; font-weight: bold; color: #00FFFF; margin: 15px 0; }}
+        .card {{ 
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,255,255,0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 12px;
+            padding: 25px; margin: 15px; box-shadow: 0 4px 20px rgba(0,255,255,0.1);
         }}
-        
-        .card h3 {{
-            color: #00FFFF;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }}
-        
-        .metric {{
-            font-size: 2.2em;
-            font-weight: bold;
-            color: #00FFFF;
-            margin: 15px 0;
-        }}
-        
-        .highlight {{
-            background: rgba(0, 255, 255, 0.1);
-            border-left: 3px solid #00FFFF;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-        }}
-        
+        .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }}
         .status-ok {{ color: #00FF88; }}
         .status-warning {{ color: #FFAA00; }}
-        .status-alert {{ color: #FF4444; }}
-        
-        ul {{
-            list-style: none;
-            padding-left: 0;
-        }}
-        
-        li {{
-            margin: 10px 0;
-            padding-left: 20px;
-            position: relative;
-        }}
-        
-        li:before {{
-            content: "▶";
-            color: #00FFFF;
-            position: absolute;
-            left: 0;
-        }}
-        
-        .slide-number {{
-            position: absolute;
-            bottom: 15px;
-            right: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9em;
-        }}
-        
-        @media print {{
-            .slide {{
-                page-break-after: always;
-                min-height: auto;
-            }}
-        }}
     </style>
 </head>
 <body>
-    <!-- Slide 1: Capa -->
     <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">🚛 Coleta Centro</div>
-            <div class="slide-subtitle">Análise Mensal de Resíduos - {mes_selecionado.title()} 2025</div>
-        </div>
-        
-        <div class="content-grid">
+        <div class="slide-title">🚛 Coleta Centro - {mes_selecionado.title()}</div>
+        <div class="grid">
             <div class="card">
-                <h3>📊 Resumo Executivo</h3>
-                <p><strong>Período:</strong> {mes_selecionado.title()}</p>
-                <p><strong>Volume Total:</strong> {total_sacos:,} sacos</p>
-                <p><strong>Peso Estimado:</strong> {peso_total:,} kg</p>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Principais Métricas</h3>
+                <h3 style="color: #00FFFF;">📊 Resumo Executivo</h3>
                 <div class="metric">{total_sacos:,}</div>
-                <p>sacos coletados no período</p>
-                <p>Distribuição: {eficiencia_am:.1f}% AM | {100-eficiencia_am:.1f}% PM</p>
+                <p>sacos coletados em {mes_selecionado}</p>
+                <p><strong>Peso:</strong> {peso_total:,} kg</p>
+                <p><strong>Distribuição:</strong> {eficiencia_am:.1f}% AM | {100-eficiencia_am:.1f}% PM</p>
             </div>
-        </div>
-        
-        <div class="slide-number">01</div>
-    </div>
-    
-    <!-- Slide 2: Análise Detalhada -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📊 Análise Detalhada</div>
-            <div class="slide-subtitle">Distribuição e Performance - {mes_selecionado.title()}</div>
-        </div>
-        
-        <div class="content-grid">
             <div class="card">
-                <h3>🌅 Coleta Matutina</h3>
-                <div class="metric">{total_am:,}</div>
-                <p>sacos coletados</p>
-                <p><strong>{eficiencia_am:.1f}%</strong> do volume total</p>
-                <p>Peso estimado: <strong>{total_am*20:,} kg</strong></p>
-            </div>
-            
-            <div class="card">
-                <h3>🌆 Coleta Vespertina</h3>
-                <div class="metric">{total_pm:,}</div>
-                <p>sacos coletados</p>
-                <p><strong>{100-eficiencia_am:.1f}%</strong> do volume total</p>
-                <p>Peso estimado: <strong>{total_pm*20:,} kg</strong></p>
-            </div>
-            
-            <div class="card">
-                <h3>📊 Análise Comparativa</h3>
-                <p><strong>Variação mensal:</strong> <span class="{'status-ok' if variacao >= 0 else 'status-alert'}">{variacao:+.1f}%</span></p>
-                <p><strong>Tendência:</strong> {'Crescimento' if variacao > 0 else 'Declínio' if variacao < 0 else 'Estável'}</p>
-                <p><strong>Status operacional:</strong> <span class="status-ok">Normal</span></p>
+                <h3 style="color: #00FFFF;">📈 Análise Mensal</h3>
+                <p><strong>Coleta Matutina:</strong> {total_am:,} sacos</p>
+                <p><strong>Coleta Vespertina:</strong> {total_pm:,} sacos</p>
+                <p><strong>Variação:</strong> <span class="{'status-ok' if variacao >= 0 else 'status-warning'}">{variacao:+.1f}%</span></p>
+                <p><strong>Status:</strong> <span class="status-ok">Normal</span></p>
             </div>
         </div>
-        
-        <div class="slide-number">02</div>
-    </div>
-    
-    <!-- Slide 3: Insights e Recomendações -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">💡 Insights e Recomendações</div>
-            <div class="slide-subtitle">Análise Estratégica e Próximos Passos</div>
+        <div style="margin-top: 40px; padding: 20px; background: rgba(0,255,255,0.1); border-radius: 10px;">
+            <h3>💡 Principais Insights</h3>
+            <p>• Volume {'' if variacao >= 0 else 'de'}crescente em relação ao mês anterior ({variacao:+.1f}%)</p>
+            <p>• Maior concentração no período {'vespertino' if total_pm > total_am else 'matutino'}</p>
+            <p>• Operação {'dentro do esperado' if total_sacos < 2000 else 'em crescimento controlado'}</p>
+            <p>• {'Capacidade adequada' if total_sacos < 2500 else 'Monitorar evolução'}</p>
         </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>📈 Principais Insights</h3>
-                <ul>
-                    <li>Volume {'maior' if pico_coleta == 'PM' else 'menor'} no período vespertino ({percentual_pico:.1f}%)</li>
-                    <li>Distribuição {'equilibrada' if abs(eficiencia_am - 50) < 15 else 'desbalanceada'} entre períodos</li>
-                    <li>Tendência {'positiva' if variacao > 0 else 'negativa' if variacao < 0 else 'estável'} em relação ao mês anterior</li>
-                    <li>Capacidade atual {'adequada' if total_sacos < 2000 else 'em monitoramento'}</li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3>🎯 Recomendações</h3>
-                <ul>
-                    <li>Manter monitoramento mensal dos volumes</li>
-                    <li>{'Considerar redistribuição de horários' if percentual_pico > 70 else 'Manter distribuição atual'}</li>
-                    <li>Acompanhar tendência de crescimento</li>
-                    <li>{'Avaliar necessidade de expansão' if total_sacos > 2500 else 'Capacidade adequada no momento'}</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="highlight">
-            <h3>📊 Resumo Final</h3>
-            <p>O volume de {total_sacos:,} sacos em {mes_selecionado} representa {peso_total:,} kg de resíduos coletados. 
-            A operação está {'dentro do esperado' if total_sacos < 2000 else 'em crescimento controlado'}, 
-            com distribuição {'equilibrada' if abs(eficiencia_am - 50) < 15 else 'concentrada no período ' + pico_coleta} 
-            entre os períodos de coleta.</p>
-        </div>
-        
-        <div class="slide-number">03</div>
     </div>
 </body>
 </html>"""
-            
-            st.download_button(
-                "⬇️ Baixar Apresentação",
-                apresentacao_html,
-                f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
-                "text/html",
-                use_container_width=True
-            )
+        
+        st.download_button(
+            label="📊 PDF",
+            data=apresentacao_html,
+            file_name=f"Apresentacao_Coleta_{mes_selecionado.title()}.html",
+            mime="text/html",
+            use_container_width=True
+        )
     
     with col_btn2:
-        if st.button("📋 Excel", use_container_width=True):
-            df_export = df[df["Total de Sacos"].notna()].copy()
-            csv_data = df_export.to_csv(index=False)
-            st.download_button(
-                "⬇️ Download",
-                csv_data,
-                f"coleta_dados_{datetime.now().strftime('%Y%m%d')}.csv",
-                "text/csv",
-                use_container_width=True
-            )
+        # Preparar dados CSV
+        df_export = df[df["Total de Sacos"].notna()].copy()
+        csv_data = df_export.to_csv(index=False)
+        
+        st.download_button(
+            label="📋 Excel", 
+            data=csv_data,
+            file_name=f"dados_coleta_{mes_selecionado}.csv",
+            mime="text/csv",
+            use_container_width=True
+        )
 
 # 📊 Processar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]

@@ -1,4 +1,118 @@
-import pandas as pd
+# 📈 Gráfico de evolução mensal - mantendo original
+st.markdown("### 📈 Evolução Temporal Completa")
+
+df_linha = df[df["Total de Sacos"].notna()].copy()
+df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+df_linha = df_linha.sort_values("Mes_cat")
+
+# Gráfico original com múltiplas métricas
+fig_evolucao = make_subplots(
+    rows=2, cols=1,
+    subplot_titles=("Volume de Coleta (Sacos)", "Distribuição AM/PM"),
+    vertical_spacing=0.1,
+    specs=[[{"secondary_y": True}], [{"secondary_y": False}]]
+)
+
+# Linha principal - Total de sacos
+fig_evolucao.add_trace(
+    go.Scatter(
+        x=df_linha["Mes"], 
+        y=df_linha["Total de Sacos"],
+        mode='lines+markers',
+        name='Total de Sacos',
+        line=dict(color='#9b30ff', width=4),
+        marker=dict(size=10, color='white', line=dict(color='#9b30ff', width=2))
+    ),
+    row=1, col=1
+)
+
+# Gráfico de barras empilhadas para AM/PM
+fig_evolucao.add_trace(
+    go.Bar(x=df_linha["Mes"], y=df_linha["Coleta AM"], name='AM', marker_color='#00FFFF'),
+    row=2, col=1
+)
+fig_evolucao.add_trace(
+    go.Bar(x=df_linha["Mes"], y=df_linha["Coleta PM"], name='PM', marker_color='#FF6B35'),
+    row=2, col=1
+)
+
+fig_evolucao.update_layout(
+    height=600,
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font_color="white",
+    title_font=dict(size=18, color="white"),
+    legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
+    barmode='stack'
+)
+
+fig_evolucao.update_xaxes(
+    showgrid=True, 
+    gridcolor="rgba(255,255,255,0.1)", 
+    color="white"
+)
+fig_evolucao.update_yaxes(
+    showgrid=True, 
+    gridcolor="rgba(255,255,255,0.1)", 
+    color="white"
+)
+
+st.plotly_chart(fig_evolucao, use_container_width=True)
+
+# 💡 Insights básicos
+st.markdown("## 💡 Insights e Recomendações")
+
+col_insight1, col_insight2, col_insight3 = st.columns(3)
+
+with col_insight1:
+    tendencia_texto = "crescente" if variacao > 0 else "decrescente" if variacao < 0 else "estável"
+    cor_tendencia = "trend-up" if variacao > 0 else "trend-down" if variacao < 0 else "trend-neutral"
+    
+    st.markdown(f"""
+    <div class="insight-card">
+        <h4>📊 Análise de Tendência</h4>
+        <p>Volume <span class="{cor_tendencia}">{tendencia_texto}</span> em relação ao mês anterior</p>
+        <p><strong>Variação:</strong> <span class="{cor_tendencia}">{variacao:+.1f}%</span></p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_insight2:
+    pico_coleta = "AM" if total_am > total_pm else "PM"
+    percentual_pico = max(total_am, total_pm) / (total_am + total_pm) * 100 if (total_am + total_pm) > 0 else 0
+    
+    st.markdown(f"""
+    <div class="insight-card">
+        <h4>⏰ Padrão de Coleta</h4>
+        <p>Maior volume no período da <strong>{pico_coleta}</strong></p>
+        <p><strong>Concentração:</strong> {percentual_pico:.1f}% do total</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_insight3:
+    projecao_proxima = total_sacos * 1.05  # Projeção simples
+    necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
+    cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
+    
+    st.markdown(f"""
+    <div class="insight-card">
+        <h4>🚛 Capacidade Coletora</h4>
+        <p>Status: <span class="{cor_necessidade}"><strong>{necessidade}</strong></span></p>
+        <p><strong>Projeção:</strong> {projecao_proxima:.0f} sacos</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+# 📋 Tabela original (colapsável)
+with st.expander("📋 Ver Dados Detalhados"):
+    df_display = df[df["Total de Sacos"].notna()].copy()
+    df_display["Mês"] = df_display["Mês"].str.title()
+    df_display["Peso Total (kg)"] = df_display["Total de Sacos"] * 20
+    df_display["% AM"] = (df_display["Coleta AM"] / df_display["Total de Sacos"] * 100).round(1)
+    df_display["% PM"] = (df_display["Coleta PM"] / df_display["Total de Sacos"] * 100).round(1)
+    
+    st.dataframe(
+        df_display[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]],
+        use_container_width=True
+    )import pandas as pd
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
@@ -46,22 +160,22 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Métricas aprimoradas com animação */
+        /* Métricas com tamanho reduzido */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 20px rgba(0,255,255,0.1);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
         .stMetric:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0,255,255,0.2);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(0,255,255,0.15);
         }
         
         .stMetric::before {
@@ -87,50 +201,43 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Radio buttons com hover aprimorado */
+        /* Radio buttons - design limpo e organizado */
         div[role="radiogroup"] > label {
             background: #1a1a2e !important;
-            padding: 12px 18px !important;
-            border-radius: 15px !important;
-            border: 2px solid #00FFFF !important;
-            margin: 6px 0 !important;
-            transition: all 0.3s ease !important;
+            padding: 8px 15px !important;
+            border-radius: 8px !important;
+            border: 1px solid #00FFFF !important;
+            margin: 3px 0 !important;
+            transition: all 0.2s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: normal !important;
             display: block !important;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        div[role="radiogroup"] > label::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.1), transparent);
-            transition: all 0.5s;
-        }
-        
-        div[role="radiogroup"] > label:hover::before {
-            left: 100%;
+            font-size: 0.9em !important;
         }
         
         div[role="radiogroup"] > label:hover {
-            background: #1a1a2e !important;
+            background: rgba(0,255,255,0.1) !important;
             color: white !important;
-            border: 2px solid #00FFFF !important;
-            box-shadow: 0 4px 15px rgba(0,255,255,0.3);
+            border: 1px solid #00FFFF !important;
         }
         
         div[role="radiogroup"] > label[data-selected="true"] {
-            background: #1a1a2e !important;
-            color: white !important;
-            font-weight: bold !important;
-            border: 2px solid #FF4444 !important;
-            box-shadow: 0 4px 15px rgba(255,68,68,0.3);
+            background: #00FFFF !important;
+            color: #000000 !important;
+            font-weight: 600 !important;
+            border: 1px solid #00FFFF !important;
+        }
+        
+        /* Radio circles - simplificados */
+        div[role="radiogroup"] > label > div {
+            border-color: #00FFFF !important;
+            background-color: transparent !important;
+        }
+        
+        div[role="radiogroup"] > label[data-selected="true"] > div {
+            border-color: #000000 !important;
+            background-color: #000000 !important;
         }
         
         /* Botões aprimorados com gradiente */
@@ -431,11 +538,11 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## 🎛️ Central de Controle")
     
-    # Filtro de período
+    # Filtro de período - design limpo
     meses_disponiveis = df[df["Total de Sacos"].notna()]["Mes"].unique().tolist()
     meses_display = df[df["Total de Sacos"].notna()]["Mês"].unique().tolist()
     
-    st.markdown("### 📅 Seleção de Período:")
+    st.markdown("### 📅 Período:")
     mes_selecionado = st.radio(
         "",
         options=meses_disponiveis,
@@ -444,42 +551,25 @@ with st.sidebar:
         index=0 if meses_disponiveis else 0
     )
     
-    # Configurações avançadas
-    st.markdown("### ⚙️ Configurações Avançadas")
+    # Configurações básicas
+    st.markdown("### 📊 Visualização")
+    mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
+    tipo_grafico = st.radio(
+        "Tipo de gráfico:",
+        ["Barras"],
+        horizontal=False
+    )
     
-    col_config1, col_config2 = st.columns(2)
-    with col_config1:
-        mostrar_comparativo = st.checkbox("📊 Comparar", True)
-        mostrar_previsoes = st.checkbox("🔮 Previsões", True)
+    # Export
+    st.markdown("### 📤 Exportar")
     
-    with col_config2:
-        mostrar_radar = st.checkbox("🎯 Radar", True)
-        modo_detalhado = st.checkbox("🔍 Detalhes", False)
+    col_btn1, col_btn2 = st.columns(2)
+    with col_btn1:
+        if st.button("📊 PDF", use_container_width=True):
+            st.success("✅ Relatório gerado!")
     
-    # Alertas personalizados
-    st.markdown("### 🚨 Configurar Alertas")
-    limite_volume = st.slider("Volume máximo (sacos)", 1000, 5000, 2500, 100)
-    limite_crescimento = st.slider("Crescimento máximo (%)", 0, 100, 50, 5)
-    
-    # Análise automática
-    st.markdown("### 🤖 Análise Automática")
-    auto_insights = st.toggle("Insights IA", True)
-    
-    # Export melhorado
-    st.markdown("### 📤 Exportação Avançada")
-    
-    col_exp1, col_exp2 = st.columns(2)
-    
-    with col_exp1:
-        # Relatório HTML interativo
-        if st.button("📊 Relatório", use_container_width=True):
-            with st.spinner("Gerando relatório..."):
-                # Aqui você pode gerar um relatório mais completo
-                st.success("✅ Relatório gerado!")
-    
-    with col_exp2:
-        # Dados Excel
-        if st.button("📋 Dados", use_container_width=True):
+    with col_btn2:
+        if st.button("📋 Excel", use_container_width=True):
             df_export = df[df["Total de Sacos"].notna()].copy()
             csv_data = df_export.to_csv(index=False)
             st.download_button(
@@ -512,418 +602,150 @@ if mes_idx > 0:
     total_anterior = int(df_anterior["Total de Sacos"].sum()) if not df_anterior.empty else 0
     variacao = ((total_sacos - total_anterior) / total_anterior * 100) if total_anterior > 0 else 0
 
-# 🎯 Métricas principais com design aprimorado
-st.markdown("## 📈 Painel de Indicadores Executivos")
+# 🎯 Métricas principais - design mais limpo
+st.markdown("## 📈 Indicadores Principais")
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
     st.metric(
-        "🧺 Volume Total", 
+        "🧺 Total de Sacos", 
         f"{total_sacos:,}".replace(',', '.'),
-        delta=delta_value,
-        help="Total de sacos coletados no período selecionado"
+        delta=delta_value
     )
 
 with col2:
     peso_delta = f"{variacao*20:+.0f} kg" if mostrar_comparativo and variacao != 0 else None
     st.metric(
-        "⚖️ Peso Estimado", 
+        "⚖️ Peso Total", 
         f"{peso_total:,} kg".replace(',', '.'),
-        delta=peso_delta,
-        help="Peso estimado baseado em 20kg por saco"
+        delta=peso_delta
     )
 
 with col3:
     eficiencia_am = (total_am / (total_am + total_pm) * 100) if (total_am + total_pm) > 0 else 0
     status_eficiencia = "Ótimo" if eficiencia_am > 30 else "Bom" if eficiencia_am > 20 else "Baixo"
     st.metric(
-        "📊 Distribuição AM", 
+        "📊 Eficiência AM", 
         f"{eficiencia_am:.1f}%",
-        delta=status_eficiencia,
-        help="Percentual de coleta matutina vs total"
+        delta=status_eficiencia
     )
 
 with col4:
-    # Previsão inteligente para novo coletor
-    previsao_proximo = tendencias['proximo_mes'] if mostrar_previsoes else total_sacos
-    necessidade = "URGENTE" if previsao_proximo > limite_volume else "MONITORAR" if previsao_proximo > limite_volume*0.8 else "ADEQUADO"
-    
+    # Necessidade de novo coletor
+    necessidade = "URGENTE" if total_sacos > 2500 else "MONITORAR" if total_sacos > 2000 else "ADEQUADO"
     cor_status = {"URGENTE": "🔴", "MONITORAR": "🟡", "ADEQUADO": "🟢"}
     st.metric(
-        "🚛 Status Frota", 
-        f"{cor_status[necessidade]} {necessidade}",
-        delta=f"Prev: {previsao_proximo:.0f}" if mostrar_previsoes else f"Atual: {total_sacos}",
-        help="Análise de necessidade de expansão da frota"
+        "🚛 Novo Coletor", 
+        f"{necessidade}",
+        delta=f"Vol: {total_sacos}"
     )
 
-# 📊 Seção de visualizações avançadas
-st.markdown("## 📊 Análises Visuais Avançadas")
+# 📊 Seção de gráficos - mantendo sua estrutura original
+st.markdown("## 📊 Análises Visuais")
 
-# Layout responsivo para gráficos
-if mostrar_radar:
-    col_main, col_radar = st.columns([2, 1])
-else:
-    col_main, col_radar = st.columns([3, 1]), None
+# Preparar dados para gráficos
+df_melt = df_filtrado.melt(
+    id_vars="Mes",
+    value_vars=["Coleta AM", "Coleta PM"],
+    var_name="Periodo",
+    value_name="Quantidade de Sacos"
+)
 
-with col_main:
-    # Subplots para múltiplas visualizações
-    fig_main = make_subplots(
-        rows=2, cols=2,
-        subplot_titles=(
-            f"📦 Coleta por Período - {mes_selecionado.title()}",
-            "🔄 Distribuição AM vs PM",
-            "📈 Tendência Temporal",
-            "📊 Análise Comparativa"
-        ),
-        specs=[
-            [{"type": "bar"}, {"type": "pie"}],
-            [{"colspan": 2, "type": "scatter"}, None]
-        ],
-        vertical_spacing=0.12,
-        horizontal_spacing=0.1
+# Cores originais
+cores = {
+    "Coleta AM": "#00FFFF",
+    "Coleta PM": "#FF6B35"
+}
+
+# Layout original (apenas barras)
+col_left, col_right = st.columns([2, 1])
+
+with col_left:
+    fig_main = px.bar(
+        df_melt,
+        x="Mes",
+        y="Quantidade de Sacos",
+        color="Periodo",
+        color_discrete_map=cores,
+        barmode="group",
+        title=f"📦 Coleta por Período - {mes_selecionado.title()}"
     )
     
-    # Gráfico de barras
-    if not df_filtrado.empty:
-        fig_main.add_trace(
-            go.Bar(x=["AM"], y=[total_am], name="Manhã", marker_color="#00FFFF", text=[total_am], textposition="auto"),
-            row=1, col=1
-        )
-        fig_main.add_trace(
-            go.Bar(x=["PM"], y=[total_pm], name="Tarde", marker_color="#FF6B35", text=[total_pm], textposition="auto"),
-            row=1, col=1
-        )
-    
-    # Gráfico pizza
-    if total_am + total_pm > 0:
-        fig_main.add_trace(
-            go.Pie(labels=["Manhã", "Tarde"], values=[total_am, total_pm], 
-                   marker=dict(colors=["#00FFFF", "#FF6B35"], line=dict(color="white", width=2)),
-                   hole=0.4, textinfo='label+percent'),
-            row=1, col=2
-        )
-    
-    # Linha temporal
-    df_temporal = df[df["Total de Sacos"].notna()].copy()
-    if not df_temporal.empty:
-        fig_main.add_trace(
-            go.Scatter(x=df_temporal["Mês"], y=df_temporal["Total de Sacos"],
-                      mode='lines+markers', name='Volume Total',
-                      line=dict(color='#9b30ff', width=3),
-                      marker=dict(size=8, color='white', line=dict(color='#9b30ff', width=2))),
-            row=2, col=1
-        )
-        
-        # Linha de tendência
-        if mostrar_previsoes and tendencias['tendencia'] != 0:
-            x_tend = list(range(len(df_temporal)))
-            y_tend = [tendencias['tendencia'] * i + df_temporal["Total de Sacos"].iloc[0] for i in x_tend]
-            fig_main.add_trace(
-                go.Scatter(x=df_temporal["Mês"], y=y_tend,
-                          mode='lines', name='Tendência',
-                          line=dict(color='#FFAA00', width=2, dash='dash')),
-                row=2, col=1
-            )
-    
-    # Styling do gráfico principal
+    # Styling original
     fig_main.update_layout(
-        height=600,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=18, color="white"),
-        legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
-        showlegend=True
+        title_font=dict(size=20, color="white"),
+        title_x=0.5,
+        xaxis=dict(
+            showgrid=True, 
+            gridcolor="rgba(255,255,255,0.1)",
+            color="white",
+            title_font=dict(color="white"),
+            tickfont=dict(color="white")
+        ),
+        yaxis=dict(
+            showgrid=True, 
+            gridcolor="rgba(255,255,255,0.1)",
+            color="white",
+            title_font=dict(color="white"),
+            tickfont=dict(color="white")
+        ),
+        legend=dict(
+            font=dict(color="white", size=12),
+            bgcolor="rgba(0,0,0,0.5)"
+        )
     )
     
-    fig_main.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-    fig_main.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
+    fig_main.update_traces(
+        textfont_color="white",
+        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<extra></extra>'
+    )
     
     st.plotly_chart(fig_main, use_container_width=True)
 
-# Gráfico radar (se habilitado)
-if mostrar_radar and col_radar:
-    with col_radar:
-        st.markdown("### 🎯 Performance Radar")
-        fig_radar = criar_radar_performance(df_filtrado)
-        st.plotly_chart(fig_radar, use_container_width=True)
+with col_right:
+    # Gráfico de pizza original
+    fig_pie = go.Figure(data=[go.Pie(
+        labels=["Coleta AM", "Coleta PM"],
+        values=[total_am, total_pm],
+        hole=0.4,
+        marker=dict(
+            colors=["#00FFFF", "#FF6B35"],
+            line=dict(color="white", width=3)
+        ),
+        textinfo='label+percent',
+        textfont=dict(color='white', size=14),
+        hovertemplate='%{label}: %{value} sacos<br>%{percent}<extra></extra>'
+    )])
+    
+    fig_pie.update_layout(
+        title=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
+        title_font=dict(size=16, color="white"),
+        title_x=0.5,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font_color="white",
+        legend=dict(
+            font=dict(color="white", size=12),
+            bgcolor="rgba(0,0,0,0.5)"
+        ),
+        height=400,
+        annotations=[dict(
+            text="",
+            x=0.5, y=0.5,
+            font_size=20,
+            showarrow=False,
+            font_color="white"
+        )]
+    )
+    
+    st.plotly_chart(fig_pie, use_container_width=True)
 
-# 🤖 Seção de insights inteligentes
-if auto_insights:
-    st.markdown("## 🤖 Insights Automáticos da IA")
-    
-    col_insight1, col_insight2, col_insight3 = st.columns(3)
-    
-    with col_insight1:
-        # Análise de tendência avançada
-        tendencia_texto = "crescente" if tendencias['crescimento_mensal'] > 5 else "decrescente" if tendencias['crescimento_mensal'] < -5 else "estável"
-        cor_tendencia = "trend-up" if tendencias['crescimento_mensal'] > 5 else "trend-down" if tendencias['crescimento_mensal'] < -5 else "trend-neutral"
-        
-        intensidade = abs(tendencias['crescimento_mensal'])
-        nivel_intensidade = "forte" if intensidade > 15 else "moderada" if intensidade > 5 else "leve"
-        
-        st.markdown(f"""
-        <div class="insight-card">
-            <h4>📊 Análise Preditiva</h4>
-            <p>Tendência <span class="{cor_tendencia}"><strong>{tendencia_texto}</strong></span> com intensidade <strong>{nivel_intensidade}</strong></p>
-            <p><strong>Taxa mensal:</strong> <span class="{cor_tendencia}">{tendencias['crescimento_mensal']:+.1f}%</span></p>
-            <p><strong>Previsão próximo mês:</strong> {tendencias['proximo_mes']:.0f} sacos</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_insight2:
-        # Análise de eficiência operacional
-        pico_coleta = "Manhã" if total_am > total_pm else "Tarde"
-        percentual_pico = max(total_am, total_pm) / (total_am + total_pm) * 100 if (total_am + total_pm) > 0 else 0
-        
-        # Recomendação baseada na distribuição
-        if percentual_pico > 70:
-            recomendacao = "Considerar redistribuição de horários"
-            cor_rec = "trend-neutral"
-        elif percentual_pico < 55:
-            recomendacao = "Distribuição equilibrada - ótimo!"
-            cor_rec = "trend-up"
-        else:
-            recomendacao = "Distribuição adequada"
-            cor_rec = "trend-up"
-        
-        st.markdown(f"""
-        <div class="insight-card">
-            <h4>⏰ Otimização Operacional</h4>
-            <p>Pico de coleta no período da <strong>{pico_coleta}</strong></p>
-            <p><strong>Concentração:</strong> {percentual_pico:.1f}% do volume</p>
-            <p><span class="{cor_rec}"><strong>{recomendacao}</strong></span></p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col_insight3:
-        # Análise de capacidade e alertas
-        projecao_3meses = tendencias['proximo_mes'] * 3 if tendencias['proximo_mes'] > 0 else total_sacos * 3
-        capacidade_utilizada = (total_sacos / limite_volume) * 100
-        
-        if capacidade_utilizada > 90:
-            status_capacidade = "CRÍTICO - Ação imediata"
-            cor_cap = "trend-down"
-        elif capacidade_utilizada > 70:
-            status_capacidade = "ATENÇÃO - Monitorar de perto"
-            cor_cap = "trend-neutral"
-        else:
-            status_capacidade = "NORMAL - Capacidade adequada"
-            cor_cap = "trend-up"
-        
-        st.markdown(f"""
-        <div class="insight-card">
-            <h4>🚛 Gestão de Capacidade</h4>
-            <p><span class="{cor_cap}"><strong>{status_capacidade}</strong></span></p>
-            <p><strong>Utilização atual:</strong> {capacidade_utilizada:.1f}%</p>
-            <p><strong>Projeção trimestral:</strong> {projecao_3meses:.0f} sacos</p>
-        </div>
-        """, unsafe_allow_html=True)
 
-# 📈 Análise comparativa avançada
-if mostrar_comparativo and len(df[df["Total de Sacos"].notna()]) > 1:
-    st.markdown("## 📈 Análise Comparativa Detalhada")
-    
-    # Criar dados para comparação
-    df_comparativo = df[df["Total de Sacos"].notna()].copy()
-    df_comparativo["Variação (%)"] = df_comparativo["Total de Sacos"].pct_change() * 100
-    df_comparativo["Média Móvel 2"] = df_comparativo["Total de Sacos"].rolling(window=2).mean()
-    df_comparativo["Peso (kg)"] = df_comparativo["Total de Sacos"] * 20
-    
-    col_comp1, col_comp2 = st.columns(2)
-    
-    with col_comp1:
-        # Gráfico de variação percentual
-        fig_variacao = go.Figure()
-        
-        fig_variacao.add_trace(go.Bar(
-            x=df_comparativo["Mês"].iloc[1:],
-            y=df_comparativo["Variação (%)"].iloc[1:],
-            marker_color=['#00FF88' if v > 0 else '#FF4444' for v in df_comparativo["Variação (%)"].iloc[1:]],
-            text=[f"{v:+.1f}%" for v in df_comparativo["Variação (%)"].iloc[1:] if not pd.isna(v)],
-            textposition="auto",
-            name="Variação Mensal"
-        ))
-        
-        fig_variacao.update_layout(
-            title="📊 Variação Percentual Mensal",
-            xaxis_title="Mês",
-            yaxis_title="Variação (%)",
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-            title_font=dict(color="white"),
-            height=400
-        )
-        
-        fig_variacao.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-        fig_variacao.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-        fig_variacao.add_hline(y=0, line_dash="dash", line_color="white", opacity=0.5)
-        
-        st.plotly_chart(fig_variacao, use_container_width=True)
-    
-    with col_comp2:
-        # Gráfico de média móvel
-        fig_media = go.Figure()
-        
-        fig_media.add_trace(go.Scatter(
-            x=df_comparativo["Mês"],
-            y=df_comparativo["Total de Sacos"],
-            mode='lines+markers',
-            name='Volume Real',
-            line=dict(color='#00FFFF', width=2),
-            marker=dict(size=6)
-        ))
-        
-        fig_media.add_trace(go.Scatter(
-            x=df_comparativo["Mês"],
-            y=df_comparativo["Média Móvel 2"],
-            mode='lines',
-            name='Média Móvel',
-            line=dict(color='#9b30ff', width=3, dash='dash')
-        ))
-        
-        fig_media.update_layout(
-            title="📈 Volume vs Média Móvel",
-            xaxis_title="Mês",
-            yaxis_title="Sacos",
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-            title_font=dict(color="white"),
-            legend=dict(font=dict(color="white"), bgcolor="rgba(0,0,0,0.5)"),
-            height=400
-        )
-        
-        fig_media.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-        fig_media.update_yaxes(showgrid=True, gridcolor="rgba(255,255,255,0.1)", color="white")
-        
-        st.plotly_chart(fig_media, use_container_width=True)
-
-# 🎯 Recomendações estratégicas
-st.markdown("## 🎯 Recomendações Estratégicas")
-
-col_rec1, col_rec2 = st.columns(2)
-
-with col_rec1:
-    st.markdown("### 📋 Ações Imediatas")
-    
-    recomendacoes_imediatas = []
-    
-    if capacidade_utilizada > 80:
-        recomendacoes_imediatas.append("🚨 **URGENTE**: Planejar expansão da frota")
-    
-    if percentual_pico > 75:
-        recomendacoes_imediatas.append("⏰ **OPERACIONAL**: Redistribuir horários de coleta")
-    
-    if tendencias['crescimento_mensal'] > 20:
-        recomendacoes_imediatas.append("📈 **PLANEJAMENTO**: Revisar projeções orçamentárias")
-    
-    if eficiencia_am < 25:
-        recomendacoes_imediatas.append("🌅 **LOGÍSTICA**: Otimizar rotas matutinas")
-    
-    if not recomendacoes_imediatas:
-        recomendacoes_imediatas.append("✅ **STATUS**: Operação dentro dos parâmetros normais")
-    
-    for rec in recomendacoes_imediatas:
-        st.markdown(f"- {rec}")
-
-with col_rec2:
-    st.markdown("### 🔮 Planejamento Futuro")
-    
-    recomendacoes_futuro = [
-        f"📊 **Monitoramento**: Acompanhar crescimento de {tendencias['crescimento_mensal']:.1f}% ao mês",
-        f"🚛 **Frota**: Preparar para volume de {tendencias['proximo_mes']:.0f} sacos/mês",
-        "📈 **Análise**: Implementar coleta de dados por setor",
-        "🎯 **KPIs**: Estabelecer metas de eficiência por período",
-        "💡 **Inovação**: Considerar otimização de rotas via IA"
-    ]
-    
-    for rec in recomendacoes_futuro:
-        st.markdown(f"- {rec}")
-
-# 📊 Tabela detalhada (modo expandido)
-if modo_detalhado:
-    st.markdown("## 📊 Análise Detalhada dos Dados")
-    
-    with st.expander("🔍 Ver Dados Completos e Estatísticas", expanded=True):
-        col_tab1, col_tab2 = st.columns([2, 1])
-        
-        with col_tab1:
-            # Preparar dados para exibição
-            df_display = df[df["Total de Sacos"].notna()].copy()
-            df_display["Mês"] = df_display["Mês"].str.title()
-            df_display["Peso Total (kg)"] = df_display["Total de Sacos"] * 20
-            df_display["% AM"] = (df_display["Coleta AM"] / df_display["Total de Sacos"] * 100).round(1)
-            df_display["% PM"] = (df_display["Coleta PM"] / df_display["Total de Sacos"] * 100).round(1)
-            df_display["Variação (%)"] = df_display["Total de Sacos"].pct_change().round(2) * 100
-            
-            # Adicionar formatação condicional
-            styled_df = df_display[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM", "Variação (%)"]].style.format({
-                "Variação (%)": "{:+.1f}%",
-                "% AM": "{:.1f}%",
-                "% PM": "{:.1f}%",
-                "Peso Total (kg)": "{:,.0f}",
-                "Total de Sacos": "{:,.0f}",
-                "Coleta AM": "{:,.0f}",
-                "Coleta PM": "{:,.0f}"
-            })
-            
-            st.dataframe(styled_df, use_container_width=True, height=300)
-        
-        with col_tab2:
-            st.markdown("#### 📈 Estatísticas Resumo")
-            
-            total_geral = df_display["Total de Sacos"].sum()
-            media_mensal = df_display["Total de Sacos"].mean()
-            desvio_padrao = df_display["Total de Sacos"].std()
-            coef_variacao = (desvio_padrao / media_mensal) * 100 if media_mensal > 0 else 0
-            
-            st.metric("📦 Volume Total", f"{total_geral:,.0f} sacos")
-            st.metric("📊 Média Mensal", f"{media_mensal:,.0f} sacos")
-            st.metric("📈 Desvio Padrão", f"{desvio_padrao:,.0f} sacos")
-            st.metric("📉 Coef. Variação", f"{coef_variacao:.1f}%")
-            
-            # Classificação da variabilidade
-            if coef_variacao < 15:
-                variabilidade = "📗 **Baixa** - Padrão estável"
-            elif coef_variacao < 30:
-                variabilidade = "📙 **Média** - Variação normal"
-            else:
-                variabilidade = "📕 **Alta** - Padrão irregular"
-            
-            st.markdown(f"**Variabilidade:** {variabilidade}")
-
-# 🚀 Funcionalidades extras
-st.markdown("## 🚀 Ferramentas Avançadas")
-
-col_extra1, col_extra2, col_extra3 = st.columns(3)
-
-with col_extra1:
-    if st.button("📊 Gerar Relatório Completo", use_container_width=True):
-        with st.spinner("🔄 Preparando relatório executivo..."):
-            # Simular processamento
-            import time
-            time.sleep(2)
-            
-            st.success("✅ Relatório gerado com sucesso!")
-            st.balloons()
-            
-            # Aqui você adicionaria a lógica real de geração do relatório
-
-with col_extra2:
-    if st.button("📧 Enviar Alertas", use_container_width=True):
-        if capacidade_utilizada > 70 or abs(variacao) > limite_crescimento:
-            st.warning("⚠️ Alertas detectados! Notificação seria enviada.")
-        else:
-            st.info("✅ Nenhum alerta crítico detectado.")
-
-with col_extra3:
-    if st.button("🔄 Atualizar Dados", use_container_width=True):
-        st.cache_data.clear()
-        st.rerun()
 
 # 🎯 Footer aprimorado
 st.markdown("---")

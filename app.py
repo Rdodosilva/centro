@@ -44,29 +44,50 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Métricas compactas */
+        /* Métricas compactas COM cores */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0,255,255,0.3);
-            border-radius: 8px;
-            padding: 12px;
-            box-shadow: 0 2px 12px rgba(0,255,255,0.08);
-            backdrop-filter: blur(8px);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 16px rgba(0,255,255,0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
             transition: all 0.2s ease;
         }
         
-        .stMetric:hover {
-            border-color: rgba(0,255,255,0.6);
-            box-shadow: 0 4px 16px rgba(0,255,255,0.12);
+        .stMetric::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #00FFFF, #9b30ff);
+            z-index: -1;
+            margin: -2px;
+            border-radius: inherit;
         }
         
-        /* Reduzir fonte das métricas */
+        .stMetric:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,255,255,0.15);
+        }
+        
+        /* Fonte das métricas menor */
         .stMetric [data-testid="metric-container"] > div:first-child {
-            font-size: 0.85em !important;
+            font-size: 0.8em !important;
+            font-weight: 500 !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:nth-child(2) {
-            font-size: 1.8em !important;
+            font-size: 1.6em !important;
+            font-weight: 700 !important;
+        }
+        
+        .stMetric [data-testid="metric-container"] > div:last-child {
+            font-size: 0.75em !important;
         }
         
         /* Sidebar styling */

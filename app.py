@@ -841,101 +841,50 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# Cores modernizadas - Azul e Laranja vibrantes
-cores = {
-    "Coleta AM": "#00D4FF",  # Azul ciano moderno
-    "Coleta PM": "#FF6B35"   # Laranja vibrante
+# Cores FUTURISTAS com gradientes e transparência
+cores_gradiente = {
+    "Coleta AM": "#00D4FF",  # Azul ciano futurista
+    "Coleta PM": "#FF6B35"   # Laranja neon
 }
 
-# Gráfico principal MODERNIZADO
+# Gráfico principal FUTURISTA
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
-    fig_main = px.bar(
-        df_melt,
-        x="Mes",
-        y="Quantidade de Sacos",
-        color="Periodo",
-        color_discrete_map=cores,
-        barmode="group",
-        title=f"📦 Coleta por Período - {mes_selecionado.title()}"
-    )
+    fig_main = go.Figure()
     
-    # Styling MODERNO para gráfico de barras
+    # Barras com efeito glassmorphism
+    fig_main.add_trace(go.Bar(
+        x=df_melt[df_melt["Periodo"] == "Coleta AM"]["Mes"],
+        y=df_melt[df_melt["Periodo"] == "Coleta AM"]["Quantidade de Sacos"],
+        name='Coleta AM',
+        marker=dict(
+            color='rgba(0, 212, 255, 0.7)',  # Transparência
+            line=dict(color='rgba(0, 212, 255, 1)', width=2),
+            pattern=dict(shape="/", fgcolor="rgba(0, 212, 255, 0.3)", bgcolor="rgba(0, 212, 255, 0.1)")
+        ),
+        hovertemplate='<b>AM:</b> %{y} sacos<br>%{x}<extra></extra>',
+        opacity=0.85
+    ))
+    
+    fig_main.add_trace(go.Bar(
+        x=df_melt[df_melt["Periodo"] == "Coleta PM"]["Mes"],
+        y=df_melt[df_melt["Periodo"] == "Coleta PM"]["Quantidade de Sacos"],
+        name='Coleta PM',
+        marker=dict(
+            color='rgba(255, 107, 53, 0.7)',  # Transparência
+            line=dict(color='rgba(255, 107, 53, 1)', width=2),
+            pattern=dict(shape="\\", fgcolor="rgba(255, 107, 53, 0.3)", bgcolor="rgba(255, 107, 53, 0.1)")
+        ),
+        hovertemplate='<b>PM:</b> %{y} sacos<br>%{x}<extra></extra>',
+        opacity=0.85
+    ))
+    
+    # Layout FUTURISTA
     fig_main.update_layout(
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font_color="white",
-        title_font=dict(size=20, color="white", family="Inter"),
-        title_x=0.5,
-        font_family="Inter",
-        showlegend=True,
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1,
-            font=dict(color="white", size=12),
-            bgcolor="rgba(0,0,0,0)"
-        ),
-        margin=dict(l=20, r=20, t=60, b=40),
-        xaxis=dict(
-            showgrid=False,
-            showline=True,
-            linewidth=1,
-            linecolor="rgba(255,255,255,0.2)",
-            color="white",
-            title_font=dict(color="white", size=14),
-            tickfont=dict(color="white", size=12),
-            categoryorder='array',
-            categoryarray=meses_disponiveis
-        ),
-        yaxis=dict(
-            showgrid=True,
-            gridwidth=1,
-            gridcolor="rgba(255,255,255,0.1)",
-            showline=False,
-            color="white",
-            title_font=dict(color="white", size=14),
-            tickfont=dict(color="white", size=12),
-            title="Quantidade de Sacos"
-        )
-    )
-    
-    # Barras com bordas arredondadas e efeitos modernos
-    fig_main.update_traces(
-        marker=dict(
-            line=dict(width=0),
-            opacity=0.9
-        ),
-        textfont_color="white",
-        textposition="outside",
-        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<br><extra></extra>'
-    )
-    
-    st.plotly_chart(fig_main, use_container_width=True)
-
-with col_right:
-    # Gráfico de pizza MODERNIZADO
-    fig_pie = go.Figure(data=[go.Pie(
-        labels=["Coleta AM", "Coleta PM"],
-        values=[total_am, total_pm],
-        hole=0.5,  # Maior buraco para look moderno
-        marker=dict(
-            colors=["#00D4FF", "#FF6B35"],
-            line=dict(color="rgba(255,255,255,0.2)", width=2)
-        ),
-        textinfo='label+percent',
-        textfont=dict(color='white', size=13, family="Inter"),
-        hovertemplate='%{label}<br>%{value} sacos<br>%{percent}<extra></extra>',
-        pull=[0.05, 0.05]  # Separar fatias levemente
-    )])
-    
-    fig_pie.update_layout(
         title=dict(
-            text=f"🔄 Distribuição AM vs PM<br>{mes_selecionado.title()}",
-            font=dict(size=16, color="white", family="Inter"),
+            text=f"🚀 Coleta por Período - {mes_selecionado.title()}",
+            font=dict(size=20, color="#00D4FF", family="Inter", weight="bold"),
             x=0.5,
             y=0.95
         ),
@@ -943,25 +892,110 @@ with col_right:
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
         font_family="Inter",
+        barmode="group",
+        bargap=0.3,
+        bargroupgap=0.1,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="center",
+            x=0.5,
+            font=dict(color="white", size=12),
+            bgcolor="rgba(26, 26, 46, 0.8)",
+            bordercolor="rgba(0, 212, 255, 0.5)",
+            borderwidth=1
+        ),
+        margin=dict(l=20, r=20, t=80, b=40),
+        height=450,
+        xaxis=dict(
+            showgrid=False,
+            showline=True,
+            linewidth=2,
+            linecolor="rgba(0, 212, 255, 0.3)",
+            color="white",
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=11),
+            categoryorder='array',
+            categoryarray=meses_disponiveis,
+            tickangle=0
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor="rgba(0, 212, 255, 0.1)",
+            showline=False,
+            color="white",
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=11),
+            title="Quantidade de Sacos",
+            zeroline=True,
+            zerolinecolor="rgba(0, 212, 255, 0.2)"
+        )
+    )
+    
+    st.plotly_chart(fig_main, use_container_width=True)
+
+with col_right:
+    # Gráfico pizza FUTURISTA com gradiente
+    fig_pie = go.Figure(data=[go.Pie(
+        labels=["Coleta AM", "Coleta PM"],
+        values=[total_am, total_pm],
+        hole=0.6,  # Buraco maior para efeito moderno
+        marker=dict(
+            colors=["#00D4FF", "#FF6B35"],
+            line=dict(color="rgba(255,255,255,0.1)", width=1),
+            opacity=0.9
+        ),
+        textinfo='percent',
+        textfont=dict(color='white', size=14, family="Inter", weight="bold"),
+        hovertemplate='<b>%{label}</b><br>%{value} sacos<br>%{percent}<extra></extra>',
+        pull=[0.02, 0.02],
+        direction='clockwise',
+        sort=False
+    )])
+    
+    # Adicionar efeito de brilho no centro
+    fig_pie.update_layout(
+        title=dict(
+            text=f"⚡ Distribuição AM vs PM<br>{mes_selecionado.title()}",
+            font=dict(size=15, color="#00D4FF", family="Inter", weight="bold"),
+            x=0.5,
+            y=0.95
+        ),
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font_color="white",
+        font_family="Inter",
+        showlegend=True,
         legend=dict(
             orientation="v",
             yanchor="middle",
-            y=0.5,
-            xanchor="left",
-            x=1.05,
-            font=dict(color="white", size=12),
-            bgcolor="rgba(0,0,0,0)"
+            y=0.2,
+            xanchor="center",
+            x=0.5,
+            font=dict(color="white", size=11),
+            bgcolor="rgba(26, 26, 46, 0.6)",
+            bordercolor="rgba(0, 212, 255, 0.3)",
+            borderwidth=1
         ),
-        height=400,
-        margin=dict(l=20, r=20, t=80, b=20),
-        annotations=[dict(
-            text=f"<b>{total_sacos:,}</b><br>Total",
-            x=0.5, y=0.5,
-            font_size=16,
-            font_color="white",
-            font_family="Inter",
-            showarrow=False
-        )]
+        height=450,
+        margin=dict(l=10, r=10, t=80, b=40),
+        annotations=[
+            dict(
+                text=f"<b style='color:#00D4FF'>{total_sacos:,}</b><br><span style='color:white; font-size:12px'>Total</span>",
+                x=0.5, y=0.5,
+                font_size=18,
+                font_color="white",
+                font_family="Inter",
+                showarrow=False,
+                bgcolor="rgba(26, 26, 46, 0.8)",
+                bordercolor="rgba(0, 212, 255, 0.5)",
+                borderwidth=2,
+                borderpad=10
+            )
+        ]
     )
     
     st.plotly_chart(fig_pie, use_container_width=True)
@@ -974,105 +1008,154 @@ df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponive
 df_linha = df_linha.sort_values("Mes_cat")
 
 # Criar gráfico de linha com múltiplas métricas
-# GRÁFICO DE EVOLUÇÃO MODERNIZADO
+# GRÁFICO DE EVOLUÇÃO FUTURISTA
 fig_evolucao = make_subplots(
     rows=2, cols=1,
-    subplot_titles=("📈 Volume de Coleta (Sacos)", "📊 Distribuição AM/PM"),
+    subplot_titles=("🌟 Volume de Coleta (Sacos)", "⚡ Distribuição AM/PM"),
     vertical_spacing=0.15,
     specs=[[{"secondary_y": True}], [{"secondary_y": False}]]
 )
 
-# Linha principal com design moderno
+# Linha principal com efeito NEON
 fig_evolucao.add_trace(
     go.Scatter(
         x=df_linha["Mes"], 
         y=df_linha["Total de Sacos"],
         mode='lines+markers',
         name='Total de Sacos',
-        line=dict(color='#9b30ff', width=3, shape='spline'),
+        line=dict(
+            color='rgba(155, 48, 255, 1)', 
+            width=4, 
+            shape='spline',
+            dash='solid'
+        ),
         marker=dict(
-            size=8, 
+            size=10, 
             color='white', 
-            line=dict(color='#9b30ff', width=2),
-            symbol='circle'
+            line=dict(color='#9b30ff', width=3),
+            symbol='circle-dot',
+            opacity=0.9
         ),
         fill='tonexty',
-        fillcolor='rgba(155,48,255,0.1)',
-        hovertemplate='<b>%{y}</b> sacos<br>%{x}<extra></extra>'
+        fillcolor='rgba(155, 48, 255, 0.15)',
+        hovertemplate='<b>%{y}</b> sacos<br>%{x}<br><extra></extra>'
     ),
     row=1, col=1
 )
 
-# Barras empilhadas modernas
+# Adicionar linha de sombra/glow
+fig_evolucao.add_trace(
+    go.Scatter(
+        x=df_linha["Mes"], 
+        y=df_linha["Total de Sacos"],
+        mode='lines',
+        line=dict(
+            color='rgba(155, 48, 255, 0.3)', 
+            width=8, 
+            shape='spline'
+        ),
+        showlegend=False,
+        hoverinfo='skip'
+    ),
+    row=1, col=1
+)
+
+# Barras com efeito GLASSMORPHISM
 fig_evolucao.add_trace(
     go.Bar(
         x=df_linha["Mes"], 
         y=df_linha["Coleta AM"], 
         name='AM', 
-        marker_color='#00D4FF',
-        marker=dict(opacity=0.8),
+        marker=dict(
+            color='rgba(0, 212, 255, 0.6)',
+            line=dict(color='rgba(0, 212, 255, 0.9)', width=1),
+            opacity=0.8
+        ),
         hovertemplate='<b>AM:</b> %{y} sacos<br>%{x}<extra></extra>'
     ),
     row=2, col=1
 )
+
 fig_evolucao.add_trace(
     go.Bar(
         x=df_linha["Mes"], 
         y=df_linha["Coleta PM"], 
         name='PM', 
-        marker_color='#FF6B35',
-        marker=dict(opacity=0.8),
+        marker=dict(
+            color='rgba(255, 107, 53, 0.6)',
+            line=dict(color='rgba(255, 107, 53, 0.9)', width=1),
+            opacity=0.8
+        ),
         hovertemplate='<b>PM:</b> %{y} sacos<br>%{x}<extra></extra>'
     ),
     row=2, col=1
 )
 
+# Layout FUTURISTA
 fig_evolucao.update_layout(
-    height=650,
+    height=700,
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
     font_family="Inter",
-    title_font=dict(size=18, color="white"),
+    title_font=dict(size=18, color="#00D4FF"),
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.15,
+        y=-0.12,
         xanchor="center",
         x=0.5,
         font=dict(color="white", size=12),
-        bgcolor="rgba(0,0,0,0)"
+        bgcolor="rgba(26, 26, 46, 0.8)",
+        bordercolor="rgba(0, 212, 255, 0.3)",
+        borderwidth=1
     ),
     barmode='stack',
-    margin=dict(l=40, r=40, t=80, b=80)
+    margin=dict(l=40, r=40, t=100, b=80)
 )
 
-# Styling dos eixos
+# Styling dos eixos FUTURISTA
 fig_evolucao.update_xaxes(
     showgrid=False,
     showline=True,
-    linewidth=1,
-    linecolor="rgba(255,255,255,0.2)",
+    linewidth=2,
+    linecolor="rgba(0, 212, 255, 0.3)",
     color="white",
     title_font=dict(color="white", size=12),
     tickfont=dict(color="white", size=10),
     categoryorder='array',
-    categoryarray=meses_disponiveis
+    categoryarray=meses_disponiveis,
+    mirror=True
 )
 
 fig_evolucao.update_yaxes(
     showgrid=True,
     gridwidth=1,
-    gridcolor="rgba(255,255,255,0.1)",
-    showline=False,
+    gridcolor="rgba(0, 212, 255, 0.1)",
+    showline=True,
+    linewidth=2,
+    linecolor="rgba(0, 212, 255, 0.3)",
     color="white",
     title_font=dict(color="white", size=12),
-    tickfont=dict(color="white", size=10)
+    tickfont=dict(color="white", size=10),
+    zeroline=True,
+    zerolinecolor="rgba(0, 212, 255, 0.2)",
+    mirror=True
 )
 
-# Personalizar títulos dos subplots
+# Personalizar títulos dos subplots com efeito NEON
 fig_evolucao.update_annotations(
-    font=dict(color="white", size=14, family="Inter")
+    font=dict(color="#00D4FF", size=16, family="Inter", weight="bold")
+)
+
+# Adicionar efeito de brilho no fundo
+fig_evolucao.add_shape(
+    type="rect",
+    xref="paper", yref="paper",
+    x0=0, y0=0, x1=1, y1=1,
+    fillcolor="rgba(0, 212, 255, 0.02)",
+    layer="below",
+    line_width=0,
 )
 
 st.plotly_chart(fig_evolucao, use_container_width=True)

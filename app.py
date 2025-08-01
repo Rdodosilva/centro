@@ -4,7 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
-from datetime import datetime
 
 # 🎯 Configuração da página
 st.set_page_config(
@@ -14,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 🎨 CSS personalizado
+# 🎨 CSS personalizado aprimorado
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -27,6 +26,7 @@ st.markdown("""
             padding: 0;
         }
         
+        /* Remove white borders and padding */
         .main .block-container {
             padding-top: 0rem;
             padding-bottom: 0rem;
@@ -35,26 +35,64 @@ st.markdown("""
             max-width: none;
         }
         
+        /* Remove default streamlit padding */
         .main {
             padding: 0;
         }
         
+        /* Hide streamlit header but keep sidebar toggle */
         header[data-testid="stHeader"] {
             height: 2.875rem;
             background: transparent;
         }
         
-        /* Métricas MUITO COMPACTAS */
+        /* Force full background */
+        .stApp {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
+        }
+        
+        /* Sidebar styling - clean theme */
+        .css-1d391kg {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        .sidebar .sidebar-content {
+            color: white !important;
+        }
+        
+        /* Sidebar text color - clean and simple */
+        .css-1v0mbdj {
+            color: white !important;
+        }
+        
+        section[data-testid="stSidebar"] {
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        }
+        
+        section[data-testid="stSidebar"] > div > div > div > div {
+            color: white !important;
+        }
+        
+        /* Sidebar headers styling */
+        section[data-testid="stSidebar"] h2, 
+        section[data-testid="stSidebar"] h3 {
+            color: white !important;
+            font-weight: normal !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        
+        /* Métricas menores mas com cores */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid transparent;
-            border-radius: 6px;
-            padding: 8px 12px;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.1);
-            backdrop-filter: blur(6px);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 10px 15px;
+            box-shadow: 0 6px 25px rgba(0,255,255,0.1);
+            backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            transition: all 0.2s ease;
         }
         
         .stMetric::before {
@@ -66,63 +104,40 @@ st.markdown("""
             bottom: 0;
             background: linear-gradient(45deg, #00FFFF, #9b30ff);
             z-index: -1;
-            margin: -1px;
+            margin: -2px;
             border-radius: inherit;
         }
         
-        .stMetric:hover {
-            box-shadow: 0 3px 12px rgba(0,255,255,0.15);
+        /* Radio button styling melhorado */
+        section[data-testid="stRadio"] > div {
+            background: transparent !important;
+            border: none !important;
+            padding: 0px !important;
         }
         
-        /* Fontes MUITO pequenas */
-        .stMetric [data-testid="metric-container"] > div:first-child {
-            font-size: 0.7em !important;
-            font-weight: 500 !important;
-            margin-bottom: 2px !important;
-        }
-        
-        .stMetric [data-testid="metric-container"] > div:nth-child(2) {
-            font-size: 1.3em !important;
-            font-weight: 700 !important;
-            margin: 2px 0 !important;
-        }
-        
-        .stMetric [data-testid="metric-container"] > div:last-child {
-            font-size: 0.65em !important;
-            margin-top: 2px !important;
-        }
-        
-        /* Sidebar styling */
-        section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-            border-right: 1px solid rgba(0,255,255,0.2);
-        }
-        
-        section[data-testid="stSidebar"] > div > div > div > div {
-            color: white !important;
-        }
-        
-        /* Radio buttons - design limpo e organizado */
+        /* Radio button labels - organizados */
         div[role="radiogroup"] > label {
             background: #1a1a2e !important;
-            padding: 8px 15px !important;
+            padding: 8px 14px !important;
             border-radius: 8px !important;
             border: 1px solid #00FFFF !important;
-            margin: 3px 0 !important;
+            margin: 4px 0 !important;
             transition: all 0.2s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: normal !important;
-            display: block !important;
             font-size: 0.9em !important;
+            display: block !important;
         }
         
+        /* Radio button hover effect */
         div[role="radiogroup"] > label:hover {
             background: rgba(0,255,255,0.1) !important;
             color: white !important;
             border: 1px solid #00FFFF !important;
         }
         
+        /* Radio button selected state */
         div[role="radiogroup"] > label[data-selected="true"] {
             background: #00FFFF !important;
             color: #000000 !important;
@@ -130,7 +145,7 @@ st.markdown("""
             border: 1px solid #00FFFF !important;
         }
         
-        /* Radio circles - simplificados */
+        /* Radio circles */
         div[role="radiogroup"] > label > div {
             border-color: #00FFFF !important;
             background-color: transparent !important;
@@ -141,36 +156,7 @@ st.markdown("""
             background-color: #000000 !important;
         }
         
-        /* Botões sidebar PADRONIZADOS */
-        .stButton > button, .stDownloadButton > button {
-            background: rgba(26, 26, 46, 0.8) !important;
-            border: 1px solid #00FFFF !important;
-            border-radius: 6px !important;
-            color: #00FFFF !important;
-            font-weight: 500 !important;
-            font-size: 0.85em !important;
-            padding: 8px 12px !important;
-            width: 100% !important;
-            height: 36px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            transition: all 0.2s ease !important;
-        }
-        
-        .stButton > button:hover, .stDownloadButton > button:hover {
-            background: rgba(0, 255, 255, 0.1) !important;
-            color: #FFFFFF !important;
-            border-color: #FFFFFF !important;
-        }
-        
-        /* Forçar mesmo tamanho para todos os botões */
-        section[data-testid="stSidebar"] button {
-            min-height: 36px !important;
-            max-height: 36px !important;
-        }
-        
-        /* Checkboxes */
+        /* Checkbox styling */
         .stCheckbox {
             color: white !important;
         }
@@ -178,6 +164,29 @@ st.markdown("""
         .stCheckbox > label {
             color: white !important;
             font-weight: normal;
+        }
+        
+        .stCheckbox:hover > label {
+            color: #00FFFF !important;
+        }
+        
+        /* Button styling - padronizado */
+        .stButton > button, .stDownloadButton > button {
+            background: rgba(26, 26, 46, 0.9) !important;
+            border: 1px solid #00FFFF !important;
+            border-radius: 6px !important;
+            color: #00FFFF !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            padding: 8px 14px !important;
+            font-size: 0.85em !important;
+            height: 36px !important;
+        }
+        
+        .stButton > button:hover, .stDownloadButton > button:hover {
+            background: rgba(0,255,255,0.1) !important;
+            color: white !important;
+            border-color: white !important;
         }
         
         /* Cards para insights */
@@ -188,43 +197,20 @@ st.markdown("""
             padding: 20px;
             margin: 10px 0;
             box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-            transition: all 0.3s ease;
         }
         
-        .insight-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0,255,255,0.2);
-            border-color: #9b30ff;
-        }
+        .trend-up { color: #00FF88; }
+        .trend-down { color: #FF4444; }
+        .trend-neutral { color: #FFAA00; }
         
-        /* Status indicators */
-        .trend-up { 
-            color: #00FF88; 
-            text-shadow: 0 0 10px rgba(0,255,136,0.5);
-        }
-        .trend-down { 
-            color: #FF4444; 
-            text-shadow: 0 0 10px rgba(255,68,68,0.5);
-        }
-        .trend-neutral { 
-            color: #FFAA00; 
-            text-shadow: 0 0 10px rgba(255,170,0,0.5);
-        }
-        
-        /* Animações */
+        /* Animation for charts */
         .stPlotlyChart {
-            animation: fadeInUp 0.8s ease-out;
+            animation: fadeIn 0.8s ease-in;
         }
         
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0; 
-                transform: translateY(30px); 
-            }
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         h1, h2, h3, label, span, div {
@@ -233,41 +219,26 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados
-@st.cache_data
-def carregar_dados():
-    """Carrega dados com cache para performance"""
-    try:
-        df = pd.read_excel("Coleta centro2.xlsx")
-        df.columns = df.columns.str.strip()
-        df["Mes"] = df["Mês"].str.lower().str.strip()
-        return df, False
-    except:
-        # Dados simulados para demonstração
-        meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio']
-        dados_simulados = []
-        
-        # Dados baseados no seu exemplo original
-        dados_exemplo = [
-            {'Mês': 'Janeiro', 'Mes': 'janeiro', 'Coleta AM': 295, 'Coleta PM': 760, 'Total de Sacos': 1055},
-            {'Mês': 'Fevereiro', 'Mes': 'fevereiro', 'Coleta AM': 1021, 'Coleta PM': 1636, 'Total de Sacos': 2657},
-            {'Mês': 'Março', 'Mes': 'março', 'Coleta AM': 408, 'Coleta PM': 793, 'Total de Sacos': 1201},
-            {'Mês': 'Abril', 'Mes': 'abril', 'Coleta AM': 1192, 'Coleta PM': 1606, 'Total de Sacos': 2798},
-            {'Mês': 'Maio', 'Mes': 'maio', 'Coleta AM': 1045, 'Coleta PM': 1461, 'Total de Sacos': 2506}
-        ]
-        
-        df = pd.DataFrame(dados_exemplo)
-        return df, True
+# 📥 Carregar dados (mantendo sua estrutura)
+try:
+    df = pd.read_excel("Coleta centro2.xlsx")
+    df.columns = df.columns.str.strip()
+    df["Mes"] = df["Mês"].str.lower().str.strip()
+except:
+    # Dados simulados para demonstração
+    st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
+    df = pd.DataFrame({
+        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'],
+        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio'],
+        'Coleta AM': [295, 1021, 408, 1192, 1045],
+        'Coleta PM': [760, 1636, 793, 1606, 1461],
+        'Total de Sacos': [1055, 2657, 1201, 2798, 2506]
+    })
 
-df, usando_simulados = carregar_dados()
-
-if usando_simulados:
-    st.info("💡 **Modo Demonstração** - Usando dados simulados. Coloque seu arquivo 'Coleta centro2.xlsx' na pasta para usar dados reais.")
-
-# 🏷️ Header
+# 🏷️ Header aprimorado
 st.markdown("""
-<div style='text-align: center; padding: 30px 0;'>
-    <div style='font-size: 3.5em; margin-bottom: 15px; font-weight: 700;'>
+<div style='text-align: center; padding: 20px 0;'>
+    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
         🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
     </div>
     <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
@@ -276,24 +247,24 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 🎛️ Sidebar com controles
+# 🎛️ Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período - design limpo
-    meses_disponiveis = df[df["Total de Sacos"].notna()]["Mes"].unique().tolist()
-    meses_display = df[df["Total de Sacos"].notna()]["Mês"].unique().tolist()
+    # Filtro de período melhorado
+    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
+    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
     
     st.markdown("### 📅 Período:")
     mes_selecionado = st.radio(
         "",
         options=meses_disponiveis,
-        format_func=lambda x: meses_display[meses_disponiveis.index(x)] if x in meses_disponiveis else x,
+        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
         horizontal=False,
-        index=0 if meses_disponiveis else 0
+        index=0
     )
     
-    # Configurações básicas
+    # Opções de visualização
     st.markdown("### 📊 Visualização")
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
     tipo_grafico = st.radio(
@@ -302,73 +273,46 @@ with st.sidebar:
         horizontal=False
     )
     
-    # Export
+    # Configurações de export
     st.markdown("### 📤 Exportar")
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        # Criar apresentação diretamente
-        apresentacao_html = f"""<!DOCTYPE html>
-<html lang="pt-BR">
+        # HTML da apresentação direto
+        apresentacao_html = """<!DOCTYPE html>
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise Coleta Centro - {mes_selecionado.title()}</title>
+    <title>Apresentação Coleta Centro</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-        body {{ 
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: white; line-height: 1.6; 
-        }}
-        .slide {{ 
-            min-height: 100vh; padding: 40px; display: flex; flex-direction: column; 
-            justify-content: center; page-break-after: always; 
-        }}
-        .slide-title {{ 
-            font-size: 2.8em; font-weight: 700; text-align: center;
-            background: linear-gradient(90deg, #00FFFF, #9b30ff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-        }}
-        .metric {{ font-size: 2.5em; font-weight: bold; color: #00FFFF; margin: 15px 0; }}
-        .card {{ 
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0, 255, 255, 0.3); border-radius: 12px;
-            padding: 25px; margin: 15px; box-shadow: 0 4px 20px rgba(0,255,255,0.1);
-        }}
-        .grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }}
-        .status-ok {{ color: #00FF88; }}
-        .status-warning {{ color: #FFAA00; }}
+        body { font-family: Arial; background: #1a1a2e; color: white; padding: 40px; }
+        .slide { margin-bottom: 50px; padding: 30px; background: linear-gradient(145deg, #1a1a2e, #0f0f23); border-radius: 15px; }
+        h1 { color: #00FFFF; font-size: 2.5em; text-align: center; }
+        h2 { color: #00FFFF; border-bottom: 2px solid #00FFFF; padding-bottom: 10px; }
+        .metric { font-size: 2em; color: #9b30ff; font-weight: bold; }
+        .highlight { background: rgba(0,255,255,0.1); padding: 15px; border-radius: 8px; margin: 15px 0; }
     </style>
 </head>
 <body>
     <div class="slide">
-        <div class="slide-title">🚛 Coleta Centro - {mes_selecionado.title()}</div>
-        <div class="grid">
-            <div class="card">
-                <h3 style="color: #00FFFF;">📊 Resumo Executivo</h3>
-                <div class="metric">{total_sacos:,}</div>
-                <p>sacos coletados em {mes_selecionado}</p>
-                <p><strong>Peso:</strong> {peso_total:,} kg</p>
-                <p><strong>Distribuição:</strong> {eficiencia_am:.1f}% AM | {100-eficiencia_am:.1f}% PM</p>
-            </div>
-            <div class="card">
-                <h3 style="color: #00FFFF;">📈 Análise Mensal</h3>
-                <p><strong>Coleta Matutina:</strong> {total_am:,} sacos</p>
-                <p><strong>Coleta Vespertina:</strong> {total_pm:,} sacos</p>
-                <p><strong>Variação:</strong> <span class="{'status-ok' if variacao >= 0 else 'status-warning'}">{variacao:+.1f}%</span></p>
-                <p><strong>Status:</strong> <span class="status-ok">Normal</span></p>
-            </div>
+        <h1>🚛 Coleta Centro</h1>
+        <p style="text-align: center; font-size: 1.2em;">Análise Mensal de Resíduos - 2025</p>
+    </div>
+    <div class="slide">
+        <h2>📊 Resumo Executivo</h2>
+        <p>Monitoramento mensal da coleta de resíduos no centro da cidade.</p>
+        <div class="highlight">
+            <p><strong>Objetivo:</strong> Acompanhar o crescimento do volume de resíduos</p>
+            <p><strong>Frequência:</strong> Análise mensal</p>
+            <p><strong>Períodos:</strong> Coleta matutina e vespertina</p>
         </div>
-        <div style="margin-top: 40px; padding: 20px; background: rgba(0,255,255,0.1); border-radius: 10px;">
-            <h3>💡 Principais Insights</h3>
-            <p>• Volume {'' if variacao >= 0 else 'de'}crescente em relação ao mês anterior ({variacao:+.1f}%)</p>
-            <p>• Maior concentração no período {'vespertino' if total_pm > total_am else 'matutino'}</p>
-            <p>• Operação {'dentro do esperado' if total_sacos < 2000 else 'em crescimento controlado'}</p>
-            <p>• {'Capacidade adequada' if total_sacos < 2500 else 'Monitorar evolução'}</p>
-        </div>
+    </div>
+    <div class="slide">
+        <h2>💡 Principais Insights</h2>
+        <p>• Monitoramento contínuo dos volumes de coleta</p>
+        <p>• Análise de distribuição entre períodos AM/PM</p>
+        <p>• Acompanhamento de tendências mensais</p>
+        <p>• Suporte à tomada de decisão operacional</p>
     </div>
 </body>
 </html>"""
@@ -376,46 +320,39 @@ with st.sidebar:
         st.download_button(
             label="📊 PDF",
             data=apresentacao_html,
-            file_name=f"Apresentacao_Coleta_{mes_selecionado.title()}.html",
+            file_name="Apresentacao_Coleta_Centro.html",
             mime="text/html",
             use_container_width=True
         )
     
     with col_btn2:
-        # Preparar dados CSV
-        df_export = df[df["Total de Sacos"].notna()].copy()
-        csv_data = df_export.to_csv(index=False)
-        
         st.download_button(
-            label="📋 Excel", 
-            data=csv_data,
-            file_name=f"dados_coleta_{mes_selecionado}.csv",
+            label="📋 Excel",
+            data=df.to_csv(index=False),
+            file_name="coleta_dados.csv",
             mime="text/csv",
             use_container_width=True
         )
 
-# 📊 Processar dados para o mês selecionado
+# 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
-# Calcular métricas
+# 📊 Calcular métricas principais
 total_sacos = int(df_filtrado["Total de Sacos"].sum()) if not df_filtrado.empty else 0
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum()) if not df_filtrado.empty else 0
 total_pm = int(df_filtrado["Coleta PM"].sum()) if not df_filtrado.empty else 0
 
-# Cálculos básicos
-meses_list = df[df["Total de Sacos"].notna()]["Mes"].unique().tolist()
-mes_idx = meses_list.index(mes_selecionado) if mes_selecionado in meses_list else -1
-
-# Comparação com mês anterior
-variacao = 0
-if mes_idx > 0:
-    mes_anterior = meses_list[mes_idx - 1]
-    df_anterior = df[df["Mes"] == mes_anterior]
+# Cálculos de comparação (mês anterior)
+mes_anterior_idx = meses_disponiveis.index(mes_selecionado) - 1 if mes_selecionado != "janeiro" else -1
+if mes_anterior_idx >= 0:
+    df_anterior = df[df["Mes"] == meses_disponiveis[mes_anterior_idx]]
     total_anterior = int(df_anterior["Total de Sacos"].sum()) if not df_anterior.empty else 0
     variacao = ((total_sacos - total_anterior) / total_anterior * 100) if total_anterior > 0 else 0
+else:
+    variacao = 0
 
-# 🎯 Métricas principais - design mais limpo
+# 🎯 Exibir métricas com design aprimorado
 st.markdown("## 📈 Indicadores Principais")
 
 col1, col2, col3, col4 = st.columns(4)
@@ -429,44 +366,39 @@ with col1:
     )
 
 with col2:
-    peso_delta = f"{variacao*20:+.0f} kg" if mostrar_comparativo and variacao != 0 else None
     st.metric(
         "⚖️ Peso Total", 
         f"{peso_total:,} kg".replace(',', '.'),
-        delta=peso_delta
+        delta=f"{variacao*20:+.0f} kg" if mostrar_comparativo and variacao != 0 else None
     )
 
 with col3:
-    eficiencia_am = (total_am / (total_am + total_pm) * 100) if (total_am + total_pm) > 0 else 0
-    status_eficiencia = "Ótimo" if eficiencia_am > 30 else "Bom" if eficiencia_am > 20 else "Baixo"
+    eficiencia = (total_am / (total_am + total_pm) * 100) if (total_am + total_pm) > 0 else 0
     st.metric(
         "📊 Eficiência AM", 
-        f"{eficiencia_am:.1f}%",
-        delta=status_eficiencia
+        f"{eficiencia:.1f}%",
+        delta="Ótimo" if eficiencia > 25 else "Baixa"
     )
 
 with col4:
     # Status informativo (não urgência)
     if total_sacos > 2500:
-        status_frota = "AVALIAR"
-        status_cor = "🟡"
+        status = "AVALIAR"
         status_info = "Alto volume"
     elif total_sacos > 2000:
-        status_frota = "MONITORAR"
-        status_cor = "🟠"
+        status = "MONITORAR" 
         status_info = "Volume crescente"
     else:
-        status_frota = "NORMAL"
-        status_cor = "🟢"
+        status = "NORMAL"
         status_info = "Dentro do esperado"
     
     st.metric(
         "📊 Status Operacional", 
-        f"{status_cor} {status_frota}",
+        f"🟢 {status}",
         delta=status_info
     )
 
-# 📊 Seção de gráficos - mantendo sua estrutura original
+# 📊 Seção de gráficos principais
 st.markdown("## 📊 Análises Visuais")
 
 # Preparar dados para gráficos
@@ -477,13 +409,13 @@ df_melt = df_filtrado.melt(
     value_name="Quantidade de Sacos"
 )
 
-# Cores originais
+# Cores aprimoradas
 cores = {
     "Coleta AM": "#00FFFF",
     "Coleta PM": "#FF6B35"
 }
 
-# Layout original (apenas barras)
+# Gráfico principal (apenas barras)
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
@@ -497,7 +429,7 @@ with col_left:
         title=f"📦 Coleta por Período - {mes_selecionado.title()}"
     )
     
-    # Styling original
+    # Styling comum para gráfico de barras
     fig_main.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -524,6 +456,7 @@ with col_left:
         )
     )
     
+    # Forçar texto branco nos elementos do gráfico
     fig_main.update_traces(
         textfont_color="white",
         hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<extra></extra>'
@@ -532,7 +465,7 @@ with col_left:
     st.plotly_chart(fig_main, use_container_width=True)
 
 with col_right:
-    # Gráfico de pizza original
+    # Gráfico de pizza aprimorado
     fig_pie = go.Figure(data=[go.Pie(
         labels=["Coleta AM", "Coleta PM"],
         values=[total_am, total_pm],
@@ -569,12 +502,14 @@ with col_right:
     
     st.plotly_chart(fig_pie, use_container_width=True)
 
-# 📈 Gráfico de evolução mensal - mantendo original
+# 📈 Gráfico de evolução mensal aprimorado
 st.markdown("### 📈 Evolução Temporal Completa")
 
 df_linha = df[df["Total de Sacos"].notna()].copy()
+df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+df_linha = df_linha.sort_values("Mes_cat")
 
-# Gráfico original com múltiplas métricas
+# Criar gráfico de linha com múltiplas métricas
 fig_evolucao = make_subplots(
     rows=2, cols=1,
     subplot_titles=("Volume de Coleta (Sacos)", "Distribuição AM/PM"),
@@ -618,29 +553,33 @@ fig_evolucao.update_layout(
 fig_evolucao.update_xaxes(
     showgrid=True, 
     gridcolor="rgba(255,255,255,0.1)", 
-    color="white"
+    color="white",
+    title_font=dict(color="white"),
+    tickfont=dict(color="white")
 )
 fig_evolucao.update_yaxes(
     showgrid=True, 
     gridcolor="rgba(255,255,255,0.1)", 
-    color="white"
+    color="white",
+    title_font=dict(color="white"),
+    tickfont=dict(color="white")
 )
 
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
-# 💡 Insights básicos
+# 💡 Seção de Insights Inteligentes
 st.markdown("## 💡 Insights e Recomendações")
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
 
 with col_insight1:
-    tendencia_texto = "crescente" if variacao > 0 else "decrescente" if variacao < 0 else "estável"
+    tendencia = "crescente" if variacao > 0 else "decrescente" if variacao < 0 else "estável"
     cor_tendencia = "trend-up" if variacao > 0 else "trend-down" if variacao < 0 else "trend-neutral"
     
     st.markdown(f"""
     <div class="insight-card">
         <h4>📊 Análise de Tendência</h4>
-        <p>Volume <span class="{cor_tendencia}">{tendencia_texto}</span> em relação ao mês anterior</p>
+        <p>Volume <span class="{cor_tendencia}">{tendencia}</span> em relação ao mês anterior</p>
         <p><strong>Variação:</strong> <span class="{cor_tendencia}">{variacao:+.1f}%</span></p>
     </div>
     """, unsafe_allow_html=True)
@@ -658,8 +597,6 @@ with col_insight2:
     """, unsafe_allow_html=True)
 
 with col_insight3:
-    projecao_proxima = total_sacos * 1.05  # Projeção simples
-    
     if total_sacos > 2500:
         status_capacidade = "AVALIAR EXPANSÃO"
         cor_cap = "trend-neutral"
@@ -682,7 +619,7 @@ with col_insight3:
     </div>
     """, unsafe_allow_html=True)
 
-# 📋 Tabela original (colapsável)
+# 📋 Tabela de dados detalhada (colapsável)
 with st.expander("📋 Ver Dados Detalhados"):
     df_display = df[df["Total de Sacos"].notna()].copy()
     df_display["Mês"] = df_display["Mês"].str.title()

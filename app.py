@@ -44,35 +44,29 @@ st.markdown("""
             background: transparent;
         }
         
-        /* Métricas com tamanho reduzido */
+        /* Métricas compactas */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 20px rgba(0,255,255,0.1);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(0,255,255,0.3);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 12px rgba(0,255,255,0.08);
+            backdrop-filter: blur(8px);
             transition: all 0.2s ease;
         }
         
         .stMetric:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 25px rgba(0,255,255,0.15);
+            border-color: rgba(0,255,255,0.6);
+            box-shadow: 0 4px 16px rgba(0,255,255,0.12);
         }
         
-        .stMetric::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #00FFFF, #9b30ff);
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
+        /* Reduzir fonte das métricas */
+        .stMetric [data-testid="metric-container"] > div:first-child {
+            font-size: 0.85em !important;
+        }
+        
+        .stMetric [data-testid="metric-container"] > div:nth-child(2) {
+            font-size: 1.8em !important;
         }
         
         /* Sidebar styling */
@@ -124,20 +118,23 @@ st.markdown("""
             background-color: #000000 !important;
         }
         
-        /* Botões aprimorados */
+        /* Botões da sidebar mais elegantes */
         .stButton > button, .stDownloadButton > button {
-            background: linear-gradient(45deg, #00FFFF, #0080FF) !important;
-            border: none !important;
-            border-radius: 8px !important;
-            color: black !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            padding: 10px 20px !important;
+            background: rgba(0,255,255,0.1) !important;
+            border: 1px solid #00FFFF !important;
+            border-radius: 6px !important;
+            color: #00FFFF !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            padding: 8px 16px !important;
+            font-size: 0.9em !important;
         }
         
         .stButton > button:hover, .stDownloadButton > button:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(0,255,255,0.4) !important;
+            background: #00FFFF !important;
+            color: #000000 !important;
+            transform: none !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
         
         /* Checkboxes */
@@ -278,7 +275,249 @@ with st.sidebar:
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         if st.button("📊 PDF", use_container_width=True):
-            st.success("✅ Relatório gerado!")
+            # Gerar HTML da apresentação
+            apresentacao_html = f"""<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise Coleta Centro - {mes_selecionado.title()}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            line-height: 1.6;
+        }}
+        
+        .slide {{
+            min-height: 100vh;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            page-break-after: always;
+        }}
+        
+        .slide-header {{
+            text-align: center;
+            margin-bottom: 40px;
+        }}
+        
+        .slide-title {{
+            font-size: 2.8em;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00FFFF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }}
+        
+        .slide-subtitle {{
+            font-size: 1.2em;
+            color: #00FFFF;
+            opacity: 0.9;
+        }}
+        
+        .content-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }}
+        
+        .card {{
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,255,255,0.1);
+        }}
+        
+        .card h3 {{
+            color: #00FFFF;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        
+        .metric {{
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #00FFFF;
+            margin: 15px 0;
+        }}
+        
+        .highlight {{
+            background: rgba(0, 255, 255, 0.1);
+            border-left: 3px solid #00FFFF;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }}
+        
+        .status-ok {{ color: #00FF88; }}
+        .status-warning {{ color: #FFAA00; }}
+        .status-alert {{ color: #FF4444; }}
+        
+        ul {{
+            list-style: none;
+            padding-left: 0;
+        }}
+        
+        li {{
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }}
+        
+        li:before {{
+            content: "▶";
+            color: #00FFFF;
+            position: absolute;
+            left: 0;
+        }}
+        
+        .slide-number {{
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.9em;
+        }}
+        
+        @media print {{
+            .slide {{
+                page-break-after: always;
+                min-height: auto;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Capa -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-title">🚛 Coleta Centro</div>
+            <div class="slide-subtitle">Análise Mensal de Resíduos - {mes_selecionado.title()} 2025</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h3>📊 Resumo Executivo</h3>
+                <p><strong>Período:</strong> {mes_selecionado.title()}</p>
+                <p><strong>Volume Total:</strong> {total_sacos:,} sacos</p>
+                <p><strong>Peso Estimado:</strong> {peso_total:,} kg</p>
+            </div>
+            
+            <div class="card">
+                <h3>📈 Principais Métricas</h3>
+                <div class="metric">{total_sacos:,}</div>
+                <p>sacos coletados no período</p>
+                <p>Distribuição: {eficiencia_am:.1f}% AM | {100-eficiencia_am:.1f}% PM</p>
+            </div>
+        </div>
+        
+        <div class="slide-number">01</div>
+    </div>
+    
+    <!-- Slide 2: Análise Detalhada -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-title">📊 Análise Detalhada</div>
+            <div class="slide-subtitle">Distribuição e Performance - {mes_selecionado.title()}</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h3>🌅 Coleta Matutina</h3>
+                <div class="metric">{total_am:,}</div>
+                <p>sacos coletados</p>
+                <p><strong>{eficiencia_am:.1f}%</strong> do volume total</p>
+                <p>Peso estimado: <strong>{total_am*20:,} kg</strong></p>
+            </div>
+            
+            <div class="card">
+                <h3>🌆 Coleta Vespertina</h3>
+                <div class="metric">{total_pm:,}</div>
+                <p>sacos coletados</p>
+                <p><strong>{100-eficiencia_am:.1f}%</strong> do volume total</p>
+                <p>Peso estimado: <strong>{total_pm*20:,} kg</strong></p>
+            </div>
+            
+            <div class="card">
+                <h3>📊 Análise Comparativa</h3>
+                <p><strong>Variação mensal:</strong> <span class="{'status-ok' if variacao >= 0 else 'status-alert'}">{variacao:+.1f}%</span></p>
+                <p><strong>Tendência:</strong> {'Crescimento' if variacao > 0 else 'Declínio' if variacao < 0 else 'Estável'}</p>
+                <p><strong>Status operacional:</strong> <span class="status-ok">Normal</span></p>
+            </div>
+        </div>
+        
+        <div class="slide-number">02</div>
+    </div>
+    
+    <!-- Slide 3: Insights e Recomendações -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-title">💡 Insights e Recomendações</div>
+            <div class="slide-subtitle">Análise Estratégica e Próximos Passos</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h3>📈 Principais Insights</h3>
+                <ul>
+                    <li>Volume {'maior' if pico_coleta == 'PM' else 'menor'} no período vespertino ({percentual_pico:.1f}%)</li>
+                    <li>Distribuição {'equilibrada' if abs(eficiencia_am - 50) < 15 else 'desbalanceada'} entre períodos</li>
+                    <li>Tendência {'positiva' if variacao > 0 else 'negativa' if variacao < 0 else 'estável'} em relação ao mês anterior</li>
+                    <li>Capacidade atual {'adequada' if total_sacos < 2000 else 'em monitoramento'}</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🎯 Recomendações</h3>
+                <ul>
+                    <li>Manter monitoramento mensal dos volumes</li>
+                    <li>{'Considerar redistribuição de horários' if percentual_pico > 70 else 'Manter distribuição atual'}</li>
+                    <li>Acompanhar tendência de crescimento</li>
+                    <li>{'Avaliar necessidade de expansão' if total_sacos > 2500 else 'Capacidade adequada no momento'}</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="highlight">
+            <h3>📊 Resumo Final</h3>
+            <p>O volume de {total_sacos:,} sacos em {mes_selecionado} representa {peso_total:,} kg de resíduos coletados. 
+            A operação está {'dentro do esperado' if total_sacos < 2000 else 'em crescimento controlado'}, 
+            com distribuição {'equilibrada' if abs(eficiencia_am - 50) < 15 else 'concentrada no período ' + pico_coleta} 
+            entre os períodos de coleta.</p>
+        </div>
+        
+        <div class="slide-number">03</div>
+    </div>
+</body>
+</html>"""
+            
+            st.download_button(
+                "⬇️ Baixar Apresentação",
+                apresentacao_html,
+                f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
+                "text/html",
+                use_container_width=True
+            )
     
     with col_btn2:
         if st.button("📋 Excel", use_container_width=True):
@@ -344,12 +583,24 @@ with col3:
     )
 
 with col4:
-    # Necessidade de novo coletor
-    necessidade = "URGENTE" if total_sacos > 2500 else "MONITORAR" if total_sacos > 2000 else "ADEQUADO"
+    # Status informativo (não urgência)
+    if total_sacos > 2500:
+        status_frota = "AVALIAR"
+        status_cor = "🟡"
+        status_info = "Alto volume"
+    elif total_sacos > 2000:
+        status_frota = "MONITORAR"
+        status_cor = "🟠"
+        status_info = "Volume crescente"
+    else:
+        status_frota = "NORMAL"
+        status_cor = "🟢"
+        status_info = "Dentro do esperado"
+    
     st.metric(
-        "🚛 Novo Coletor", 
-        f"{necessidade}",
-        delta=f"Vol: {total_sacos}"
+        "📊 Status Operacional", 
+        f"{status_cor} {status_frota}",
+        delta=status_info
     )
 
 # 📊 Seção de gráficos - mantendo sua estrutura original
@@ -545,14 +796,26 @@ with col_insight2:
 
 with col_insight3:
     projecao_proxima = total_sacos * 1.05  # Projeção simples
-    necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
-    cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
+    
+    if total_sacos > 2500:
+        status_capacidade = "AVALIAR EXPANSÃO"
+        cor_cap = "trend-neutral"
+        recomendacao = "Considerar aumento da frota"
+    elif total_sacos > 2000:
+        status_capacidade = "MONITORAR CRESCIMENTO"
+        cor_cap = "trend-neutral"
+        recomendacao = "Acompanhar evolução mensal"
+    else:
+        status_capacidade = "CAPACIDADE ADEQUADA"
+        cor_cap = "trend-up"
+        recomendacao = "Operação normal"
     
     st.markdown(f"""
     <div class="insight-card">
-        <h4>🚛 Capacidade Coletora</h4>
-        <p>Status: <span class="{cor_necessidade}"><strong>{necessidade}</strong></span></p>
-        <p><strong>Projeção:</strong> {projecao_proxima:.0f} sacos</p>
+        <h4>📊 Análise de Capacidade</h4>
+        <p><span class="{cor_cap}"><strong>{status_capacidade}</strong></span></p>
+        <p><strong>Volume atual:</strong> {total_sacos:,} sacos</p>
+        <p><strong>Recomendação:</strong> {recomendacao}</p>
     </div>
     """, unsafe_allow_html=True)
 

@@ -359,36 +359,83 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 🎛️ Sidebar com controles avançados
+# 🎛️ Sidebar com controles modernos
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período melhorado
+    # Filtro de período com botões customizados
+    st.markdown("### 📅 Período:")
+    
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio"]
     meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"]
     
-    st.markdown("### 📅 Período:")
-    mes_selecionado = st.radio(
-        "",
-        options=meses_disponiveis,
-        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
-        horizontal=False,
-        index=0
-    )
+    # Criar botões modernos customizados
+    if 'mes_selecionado' not in st.session_state:
+        st.session_state.mes_selecionado = "janeiro"
+    
+    for i, (mes, display) in enumerate(zip(meses_disponiveis, meses_display)):
+        is_selected = st.session_state.mes_selecionado == mes
+        
+        button_style = """
+        <div style="margin: 5px 0;">
+            <button onclick="selectMonth('{}', {})" style="
+                width: 100%;
+                padding: 12px 20px;
+                border: 2px solid {};
+                border-radius: 10px;
+                background: {};
+                color: {};
+                font-weight: {};
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 14px;
+                text-align: left;
+                display: flex;
+                align-items: center;
+            " onmouseover="this.style.background='{}'; this.style.color='black'"
+               onmouseout="this.style.background='{}'; this.style.color='{}'">
+                <span style="
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    background: {};
+                    margin-right: 10px;
+                    display: inline-block;
+                "></span>
+                {}
+            </button>
+        </div>
+        """.format(
+            mes, i,
+            "#00FFFF" if is_selected else "#666",
+            "rgba(0,255,255,0.1)" if is_selected else "transparent",
+            "#00FFFF" if is_selected else "white",
+            "bold" if is_selected else "normal",
+            "#00FFFF",
+            "rgba(0,255,255,0.1)" if is_selected else "transparent",
+            "#00FFFF" if is_selected else "white",
+            "#00FFFF" if is_selected else "#666",
+            display
+        )
+        
+        st.markdown(button_style, unsafe_allow_html=True)
+        
+        # Botão invisível para capturar clique
+        if st.button(f"_{display}", key=f"btn_{mes}", label_visibility="hidden"):
+            st.session_state.mes_selecionado = mes
+            st.rerun()
+    
+    mes_selecionado = st.session_state.mes_selecionado
     
     # Opções de visualização
     st.markdown("### 📊 Visualização")
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
-    tipo_grafico = st.radio(
-        "Tipo de gráfico:",
-        ["Barras"],
-        horizontal=False
-    )
+    tipo_grafico = st.selectbox("Tipo de gráfico:", ["Barras"])
     
-    # Configurações de export
+    # Configurações de export com botões modernos
     st.markdown("### 📤 Exportar")
     
-    # HTML da apresentação sem auto-print
+    # HTML da apresentação
     apresentacao_html = """<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -697,6 +744,53 @@ with st.sidebar:
     df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
     
     csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
+    
+    # Botões de export modernos
+    st.markdown("""
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <div style="flex: 1;">
+            <a href="data:text/html;charset=utf-8,{}" download="Apresentacao_Coleta_Centro.html" style="text-decoration: none;">
+                <div style="
+                    background: linear-gradient(135deg, #00FFFF, #0080FF);
+                    color: black;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    border: none;
+                    display: block;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,255,255,0.4)'"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    📊 PDF
+                </div>
+            </a>
+        </div>
+        <div style="flex: 1;">
+            <a href="data:text/csv;charset=utf-8,{}" download="Dados_Coleta_Centro.csv" style="text-decoration: none;">
+                <div style="
+                    background: linear-gradient(135deg, #00FFFF, #0080FF);
+                    color: black;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    text-align: center;
+                    font-weight: bold;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    border: none;
+                    display: block;
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,255,255,0.4)'"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    📋 Excel
+                </div>
+            </a>
+        </div>
+    </div>
+    """.format(
+        apresentacao_html.replace(' ', '%20').replace('\n', '%0A').replace('#', '%23'),
+        csv_data.replace(' ', '%20').replace('\n', '%0A')
+    ), unsafe_allow_html=True)ês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:

@@ -1048,7 +1048,7 @@ with col_left:
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=-0.15,
+            y=0.02,
             xanchor="center",
             x=0.5,
             font=dict(color="white", size=10),
@@ -1056,7 +1056,7 @@ with col_left:
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        margin=dict(l=50, r=50, t=80, b=90),
+        margin=dict(l=50, r=50, t=80, b=50),
         height=450,
         xaxis=dict(
             showgrid=False,

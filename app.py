@@ -1040,23 +1040,24 @@ with col_left:
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=18, color="#00D4FF", family="Inter", weight="bold"),
+        title_font=dict(size=16, color="#00D4FF", family="Inter", weight="bold"),
         title_x=0.5,
+        title_y=0.95,
         font_family="Inter",
         showlegend=True,
         legend=dict(
             orientation="h",
-            yanchor="bottom",
-            y=1.15,
+            yanchor="top",
+            y=0.88,
             xanchor="center",
             x=0.5,
-            font=dict(color="white", size=11),
+            font=dict(color="white", size=10),
             bgcolor="rgba(26, 26, 46, 0.8)",
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        margin=dict(l=50, r=50, t=140, b=80),
-        height=520,
+        margin=dict(l=50, r=50, t=80, b=50),
+        height=450,
         xaxis=dict(
             showgrid=False,
             showline=True,
@@ -1112,9 +1113,9 @@ with col_right:
     fig_pie.update_layout(
         title=dict(
             text=f"⚡ Distribuição AM vs PM<br>{mes_selecionado.title()}",
-            font=dict(size=14, color="#00D4FF", family="Inter", weight="bold"),
+            font=dict(size=13, color="#00D4FF", family="Inter", weight="bold"),
             x=0.5,
-            y=0.99
+            y=0.95
         ),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -1123,17 +1124,17 @@ with col_right:
         showlegend=True,
         legend=dict(
             orientation="v",
-            yanchor="middle",
-            y=0.1,
+            yanchor="bottom",
+            y=0.02,
             xanchor="center",
             x=0.5,
-            font=dict(color="white", size=10),
+            font=dict(color="white", size=9),
             bgcolor="rgba(26, 26, 46, 0.6)",
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        height=520,
-        margin=dict(l=30, r=30, t=110, b=80),
+        height=450,
+        margin=dict(l=20, r=20, t=70, b=50),
         annotations=[
             dict(
                 text=f"<b style='color:#00D4FF; font-size:18px'>{total_sacos:,}</b><br><span style='color:white; font-size:12px'>Total</span>",
@@ -1222,25 +1223,25 @@ fig_evolucao.add_trace(
 
 # Layout limpo
 fig_evolucao.update_layout(
-    height=750,
+    height=650,
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
     font_family="Inter",
-    title_font=dict(size=18, color="#00D4FF"),
+    title_font=dict(size=16, color="#00D4FF"),
     legend=dict(
         orientation="h",
-        yanchor="bottom",
-        y=-0.15,
+        yanchor="top",
+        y=-0.05,
         xanchor="center",
         x=0.5,
-        font=dict(color="white", size=11),
+        font=dict(color="white", size=10),
         bgcolor="rgba(26, 26, 46, 0.8)",
         bordercolor="rgba(0, 212, 255, 0.3)",
         borderwidth=1
     ),
     barmode='stack',
-    margin=dict(l=50, r=50, t=120, b=100)
+    margin=dict(l=50, r=50, t=80, b=70)
 )
 
 # Styling dos eixos

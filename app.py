@@ -802,6 +802,115 @@ with st.sidebar:
         
         <div class="slide-number">02</div>
     </div>
+    
+    <!-- Slide 3: Evolução Detalhada -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-title">📈 Evolução Mensal Detalhada</div>
+            <div class="slide-subtitle">Crescimento Consistente dos Resíduos</div>
+        </div>
+        
+        <div class="two-column">
+            <div>
+                <div class="card">
+                    <h3>📋 Dados Mensais Completos</h3>
+                    <div class="data-row">
+                        <span class="data-label">Janeiro:</span>
+                        <span class="data-value">1.055 sacos (21.100 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Fevereiro:</span>
+                        <span class="data-value">2.657 sacos (53.140 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Março:</span>
+                        <span class="data-value">1.201 sacos (24.020 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Abril:</span>
+                        <span class="data-value">2.798 sacos (55.960 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Maio:</span>
+                        <span class="data-value">2.506 sacos (50.120 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Junho:</span>
+                        <span class="data-value">2.230 sacos (44.600 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Julho:</span>
+                        <span class="data-value">2.870 sacos (57.400 kg)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="highlight-box">
+                    <div style="font-size: 1.6em; margin-bottom: 15px;">🚀 Crescimento de 172%</div>
+                    <div style="font-size: 1.2em;">Volume demonstra expansão significativa ao longo de 7 meses</div>
+                </div>
+                
+                <div class="card" style="margin-top: 25px;">
+                    <h3>⚡ Insights Principais</h3>
+                    <ul>
+                        <li>Pico em <strong>Julho (2.870 sacos)</strong></li>
+                        <li>Vale em <strong>Janeiro (1.055 sacos)</strong></li>
+                        <li>Crescimento médio de <strong>24.6% ao mês</strong></li>
+                        <li>Tendência de alta consistente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide-number">03</div>
+    </div>
+    
+    <!-- Slide 4: Análise & Recomendações -->
+    <div class="slide">
+        <div class="slide-header">
+            <div class="slide-title">💡 Análise & Recomendações</div>
+            <div class="slide-subtitle">Insights Estratégicos e Próximos Passos</div>
+        </div>
+        
+        <div class="highlight-box">
+            <div style="font-size: 1.8em; margin-bottom: 20px;">🎯 MONITORAMENTO INTELIGENTE</div>
+            <div style="font-size: 1.4em;">Volume cresceu 172% em 7 meses - Acompanhamento estratégico essencial</div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h3>📊 Principais Descobertas</h3>
+                <ul>
+                    <li>Crescimento de <strong>172% em 7 meses</strong></li>
+                    <li>Volume atual: <strong>2.870 sacos/mês (Julho)</strong></li>
+                    <li>Tendência: <strong>Crescimento acelerado</strong></li>
+                    <li>Padrão: <strong>62% tarde vs 38% manhã</strong></li>
+                    <li>Peso total: <strong>308.940 kg processados</strong></li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>🎯 Recomendações Estratégicas</h3>
+                <ul>
+                    <li><strong>Monitoramento contínuo</strong> mensal</li>
+                    <li><strong>Análises preditivas</strong> para planejamento</li>
+                    <li><strong>Dashboard interativo</strong> para decisões</li>
+                    <li><strong>Relatórios automatizados</strong></li>
+                    <li><strong>Avaliação trimestral</strong> de capacidade</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="recommendation success">
+            <h3>🚀 Considerações Finais</h3>
+            <p>O <strong>dashboard implementado</strong> fornece visibilidade completa sobre o crescimento dos resíduos. 
+            Os dados revelam um <strong>padrão de crescimento consistente</strong> que permite <strong>decisões baseadas em evidências</strong> 
+            e <strong>planejamento estratégico eficiente</strong> para a gestão urbana.</p>
+        </div>
+        
+        <div class="slide-number">04</div>
+    </div>
 </body>
 </html>"""
         

@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 🎨 CSS personalizado aprimorado
+# 🎨 CSS personalizado com layout de 2 colunas para os meses
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -119,6 +119,102 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
+        /* LAYOUT DE 2 COLUNAS PARA OS MESES */
+        .month-selector-grid {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            width: 100% !important;
+            margin: 10px 0 !important;
+        }
+        
+        /* Forçar grid layout no container dos radio buttons */
+        section[data-testid="stSidebar"] div[role="radiogroup"] {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+            width: 100% !important;
+        }
+        
+        /* ESTILO DOS BOTÕES DOS MESES EM GRID */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label {
+            background: #1a1a2e !important;
+            padding: 10px 12px !important;
+            border-radius: 8px !important;
+            border: 1px solid #00FFFF !important;
+            margin: 0 !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            color: white !important;
+            font-weight: 500 !important;
+            font-size: 0.85em !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            min-height: 42px !important;
+        }
+        
+        /* Hover dos botões dos meses */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
+            background: rgba(0,255,255,0.15) !important;
+            color: white !important;
+            border: 1px solid #00FFFF !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.2) !important;
+        }
+        
+        /* Botão selecionado - gradiente roxo */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+            color: white !important;
+            font-weight: 600 !important;
+            border: 1px solid #9b30ff !important;
+            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
+        }
+        
+        /* Esconder círculos dos radio buttons */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
+            display: none !important;
+        }
+        
+        /* Forçar aplicação em todos os elementos de radio */
+        .stRadio > div > div > div {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 8px !important;
+        }
+        
+        .stRadio > div > div > div > label {
+            background: #1a1a2e !important;
+            padding: 10px 12px !important;
+            border-radius: 8px !important;
+            border: 1px solid #00FFFF !important;
+            margin: 0 !important;
+            color: white !important;
+            font-weight: 500 !important;
+            font-size: 0.85em !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            min-height: 42px !important;
+        }
+        
+        .stRadio > div > div > div > label:hover {
+            background: rgba(0,255,255,0.15) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.2) !important;
+        }
+        
+        .stRadio > div > div > div > label[data-selected="true"] {
+            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+            border: 1px solid #9b30ff !important;
+            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
+        }
+        
         /* Métricas AINDA MENORES */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
@@ -160,74 +256,6 @@ st.markdown("""
             z-index: -1;
             margin: -2px;
             border-radius: inherit;
-        }
-        
-        /* Radio button styling - exact as your first image */
-        section[data-testid="stRadio"] > div {
-            background: transparent !important;
-            border: none !important;
-            padding: 0px !important;
-        }
-        
-        /* FORÇAR ESTILO DOS BOTÕES DOS MESES */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label {
-            background: #1a1a2e !important;
-            padding: 12px 16px !important;
-            border-radius: 8px !important;
-            border: 1px solid #00FFFF !important;
-            margin: 5px 0 !important;
-            transition: all 0.2s ease !important;
-            cursor: pointer !important;
-            color: white !important;
-            font-weight: 500 !important;
-            font-size: 0.9em !important;
-            display: block !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-        }
-        
-        /* Hover dos botões dos meses */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-            background: rgba(0,255,255,0.15) !important;
-            color: white !important;
-            border: 1px solid #00FFFF !important;
-            transform: translateX(3px) !important;
-        }
-        
-        /* Botão selecionado - gradiente roxo */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
-            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            border: 1px solid #9b30ff !important;
-            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
-        }
-        
-        /* Esconder círculos dos radio buttons */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
-            display: none !important;
-        }
-        
-        /* Forçar aplicação em todos os elementos de radio */
-        .stRadio > div > div > div > label {
-            background: #1a1a2e !important;
-            padding: 12px 16px !important;
-            border-radius: 8px !important;
-            border: 1px solid #00FFFF !important;
-            margin: 5px 0 !important;
-            color: white !important;
-            font-weight: 500 !important;
-        }
-        
-        .stRadio > div > div > div > label:hover {
-            background: rgba(0,255,255,0.15) !important;
-            transform: translateX(3px) !important;
-        }
-        
-        .stRadio > div > div > div > label[data-selected="true"] {
-            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            border: 1px solid #9b30ff !important;
-            box-shadow: 0 3px 12px rgba(155,48,255,0.4) !important;
         }
         
         /* Checkbox styling */
@@ -414,13 +442,15 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período - TODOS OS 12 MESES
+    # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
                         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
     meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     
     st.markdown("### 📅 Período:")
+    
+    # O CSS já cuida do layout em grid 2x6, apenas criamos o radio button normal
     mes_selecionado = st.radio(
         "",
         options=meses_disponiveis,
@@ -740,115 +770,6 @@ with st.sidebar:
         </div>
         
         <div class="slide-number">02</div>
-    </div>
-    
-    <!-- Slide 3: Evolução Detalhada -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📈 Evolução Mensal Detalhada</div>
-            <div class="slide-subtitle">Crescimento Consistente dos Resíduos</div>
-        </div>
-        
-        <div class="two-column">
-            <div>
-                <div class="card">
-                    <h3>📋 Dados Mensais Completos</h3>
-                    <div class="data-row">
-                        <span class="data-label">Janeiro:</span>
-                        <span class="data-value">1.055 sacos (21.100 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Fevereiro:</span>
-                        <span class="data-value">2.657 sacos (53.140 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Março:</span>
-                        <span class="data-value">1.201 sacos (24.020 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Abril:</span>
-                        <span class="data-value">2.798 sacos (55.960 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Maio:</span>
-                        <span class="data-value">2.506 sacos (50.120 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Junho:</span>
-                        <span class="data-value">2.230 sacos (44.600 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Julho:</span>
-                        <span class="data-value">2.870 sacos (57.400 kg)</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div>
-                <div class="highlight-box">
-                    <div style="font-size: 1.6em; margin-bottom: 15px;">🚀 Crescimento de 172%</div>
-                    <div style="font-size: 1.2em;">Volume demonstra expansão significativa ao longo de 7 meses</div>
-                </div>
-                
-                <div class="card" style="margin-top: 25px;">
-                    <h3>⚡ Insights Principais</h3>
-                    <ul>
-                        <li>Pico em <strong>Julho (2.870 sacos)</strong></li>
-                        <li>Vale em <strong>Janeiro (1.055 sacos)</strong></li>
-                        <li>Crescimento médio de <strong>24.6% ao mês</strong></li>
-                        <li>Tendência de alta consistente</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="slide-number">03</div>
-    </div>
-    
-    <!-- Slide 4: Análise & Recomendações -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">💡 Análise & Recomendações</div>
-            <div class="slide-subtitle">Insights Estratégicos e Próximos Passos</div>
-        </div>
-        
-        <div class="highlight-box">
-            <div style="font-size: 1.8em; margin-bottom: 20px;">🎯 MONITORAMENTO INTELIGENTE</div>
-            <div style="font-size: 1.4em;">Volume cresceu 172% em 7 meses - Acompanhamento estratégico essencial</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>📊 Principais Descobertas</h3>
-                <ul>
-                    <li>Crescimento de <strong>172% em 7 meses</strong></li>
-                    <li>Volume atual: <strong>2.870 sacos/mês (Julho)</strong></li>
-                    <li>Tendência: <strong>Crescimento acelerado</strong></li>
-                    <li>Padrão: <strong>62% tarde vs 38% manhã</strong></li>
-                    <li>Peso total: <strong>308.940 kg processados</strong></li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3>🎯 Recomendações Estratégicas</h3>
-                <ul>
-                    <li><strong>Monitoramento contínuo</strong> mensal</li>
-                    <li><strong>Análises preditivas</strong> para planejamento</li>
-                    <li><strong>Dashboard interativo</strong> para decisões</li>
-                    <li><strong>Relatórios automatizados</strong></li>
-                    <li><strong>Avaliação trimestral</strong> de capacidade</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="recommendation success">
-            <h3>🚀 Considerações Finais</h3>
-            <p>O <strong>dashboard implementado</strong> fornece visibilidade completa sobre o crescimento dos resíduos. 
-            Os dados revelam um <strong>padrão de crescimento consistente</strong> que permite <strong>decisões baseadas em evidências</strong> 
-            e <strong>planejamento estratégico eficiente</strong> para a gestão urbana.</p>
-        </div>
-        
-        <div class="slide-number">04</div>
     </div>
 </body>
 </html>"""

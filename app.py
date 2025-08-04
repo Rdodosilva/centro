@@ -386,14 +386,16 @@ try:
     df.columns = df.columns.str.strip()
     df["Mes"] = df["Mês"].str.lower().str.strip()
 except:
-    # Dados simulados para demonstração - ADICIONANDO JUNHO E JULHO
+    # Dados simulados - TODOS OS 12 MESES
     st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
     df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'],
-        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho'],
-        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150],
-        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720],
-        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870]
+        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
+               'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+               'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320],
+        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100],
+        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
     })
 
 # 🏷️ Header aprimorado
@@ -412,9 +414,11 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
-    # Filtro de período melhorado - ADICIONANDO JUNHO E JULHO
-    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho"]
-    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho"]
+    # Filtro de período - TODOS OS 12 MESES
+    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
+                        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
+    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     
     st.markdown("### 📅 Período:")
     mes_selecionado = st.radio(

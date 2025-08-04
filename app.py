@@ -1040,23 +1040,23 @@ with col_left:
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
-        title_font=dict(size=20, color="#00D4FF", family="Inter", weight="bold"),
+        title_font=dict(size=18, color="#00D4FF", family="Inter", weight="bold"),
         title_x=0.5,
         font_family="Inter",
         showlegend=True,
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.02,
+            y=1.08,
             xanchor="center",
             x=0.5,
-            font=dict(color="white", size=12),
+            font=dict(color="white", size=11),
             bgcolor="rgba(26, 26, 46, 0.8)",
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        margin=dict(l=20, r=20, t=80, b=40),
-        height=450,
+        margin=dict(l=40, r=40, t=100, b=60),
+        height=480,
         xaxis=dict(
             showgrid=False,
             showline=True,
@@ -1112,9 +1112,9 @@ with col_right:
     fig_pie.update_layout(
         title=dict(
             text=f"⚡ Distribuição AM vs PM<br>{mes_selecionado.title()}",
-            font=dict(size=15, color="#00D4FF", family="Inter", weight="bold"),
+            font=dict(size=14, color="#00D4FF", family="Inter", weight="bold"),
             x=0.5,
-            y=0.95
+            y=0.98
         ),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -1124,16 +1124,16 @@ with col_right:
         legend=dict(
             orientation="v",
             yanchor="middle",
-            y=0.2,
+            y=0.15,
             xanchor="center",
             x=0.5,
-            font=dict(color="white", size=11),
+            font=dict(color="white", size=10),
             bgcolor="rgba(26, 26, 46, 0.6)",
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        height=450,
-        margin=dict(l=10, r=10, t=80, b=40),
+        height=480,
+        margin=dict(l=20, r=20, t=90, b=60),
         annotations=[
             dict(
                 text=f"<b style='color:#00D4FF; font-size:18px'>{total_sacos:,}</b><br><span style='color:white; font-size:12px'>Total</span>",

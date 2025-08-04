@@ -439,7 +439,7 @@ with st.sidebar:
     
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        # APRESENTAÇÃO FUNCIONANDO
+        # APRESENTAÇÃO ATUALIZADA com novas métricas
         apresentacao_html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -475,20 +475,24 @@ with st.sidebar:
         
         .slide-header {{
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }}
         
         .slide-title {{
-            font-size: 3em;
+            font-size: 3.2em;
             font-weight: 700;
-            color: white;
             margin-bottom: 20px;
+            background: linear-gradient(90deg, #00FFFF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0,255,255,0.3);
         }}
         
         .slide-subtitle {{
             font-size: 1.4em;
-            color: white;
-            opacity: 0.8;
+            color: #00D4FF;
+            opacity: 0.9;
+            text-shadow: 0 0 20px rgba(0,212,255,0.3);
         }}
         
         .content-grid {{
@@ -501,31 +505,44 @@ with st.sidebar:
         
         .card {{
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0, 255, 255, 0.2);
+            border: 1px solid rgba(0, 255, 255, 0.3);
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,255,255,0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }}
+        
+        .card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0,255,255,0.25);
+            border-color: rgba(0, 255, 255, 0.6);
         }}
         
         .card h3 {{
-            color: #00FFFF;
-            font-size: 1.5em;
+            color: #00D4FF;
+            font-size: 1.4em;
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 0 15px rgba(0,212,255,0.5);
         }}
         
         .metric {{
-            font-size: 2.5em;
+            font-size: 2.8em;
             font-weight: bold;
-            color: #00FFFF;
+            background: linear-gradient(45deg, #00D4FF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin: 20px 0;
+            text-shadow: 0 0 20px rgba(155,48,255,0.3);
         }}
         
         .logo {{
-            font-size: 2em;
-            margin-bottom: 10px;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 25px rgba(0,255,255,0.4);
         }}
         
         ul {{
@@ -537,13 +554,20 @@ with st.sidebar:
             margin: 15px 0;
             padding-left: 25px;
             position: relative;
+            transition: all 0.2s ease;
         }}
         
         li:before {{
             content: "▶";
-            color: #00FFFF;
+            color: #00D4FF;
             position: absolute;
             left: 0;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }}
+        
+        li:hover {{
+            transform: translateX(5px);
+            color: #00D4FF;
         }}
         
         .two-column {{
@@ -554,35 +578,65 @@ with st.sidebar:
         }}
         
         .highlight-box {{
-            background: linear-gradient(145deg, #9b30ff, #00FFFF);
-            color: black;
+            background: linear-gradient(145deg, rgba(0,212,255,0.1), rgba(155,48,255,0.1));
+            border: 2px solid rgba(0,212,255,0.3);
+            color: white;
             padding: 30px;
             border-radius: 15px;
             text-align: center;
             font-weight: bold;
-            font-size: 1.2em;
-            margin: 20px 0;
+            font-size: 1.3em;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,212,255,0.1);
         }}
         
         .recommendation {{
             background: rgba(255, 170, 0, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.3);
             border-left: 4px solid #FFAA00;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 0 10px 10px 0;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 15px 15px 0;
+            backdrop-filter: blur(10px);
         }}
         
         .recommendation.success {{
             background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
             border-left-color: #00FF88;
         }}
         
         .slide-number {{
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.9em;
+            bottom: 25px;
+            right: 25px;
+            color: rgba(0,212,255,0.7);
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(26,26,46,0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }}
+        
+        .data-row {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,212,255,0.1);
+        }}
+        
+        .data-label {{
+            font-weight: 600;
+            color: #00D4FF;
+        }}
+        
+        .data-value {{
+            font-weight: 700;
+            color: white;
+            font-size: 1.1em;
         }}
         
         @media print {{
@@ -600,25 +654,27 @@ with st.sidebar:
         <div class="slide-header">
             <div class="logo">🚛</div>
             <div class="slide-title">Coleta Centro</div>
-            <div class="slide-subtitle">Análise de Crescimento dos Resíduos | 2025</div>
+            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | 2025</div>
         </div>
         
         <div class="content-grid">
             <div class="card">
-                <h3>📊 Objetivo da Análise</h3>
-                <p>Conscientização sobre o crescimento dos resíduos no centro da cidade</p>
+                <h3>🎯 Objetivo da Análise</h3>
+                <p>Monitoramento inteligente do crescimento dos resíduos no centro da cidade com dashboard interativo e análises preditivas.</p>
             </div>
             
             <div class="card">
                 <h3>📅 Período Analisado</h3>
-                <p>Janeiro a Maio de 2025</p>
-                <p>Dados coletados mensalmente</p>
+                <p><strong>Janeiro a Julho de 2025</strong></p>
+                <p>7 meses de dados coletados</p>
+                <p>Análise mensal detalhada</p>
             </div>
             
             <div class="card">
-                <h3>📈 Principal Achado</h3>
-                <div class="metric">+137%</div>
-                <p>Crescimento em 5 meses</p>
+                <h3>📈 Crescimento Total</h3>
+                <div class="metric">+172%</div>
+                <p>Janeiro → Julho 2025</p>
+                <p>Volume em expansão significativa</p>
             </div>
         </div>
         
@@ -628,67 +684,116 @@ with st.sidebar:
     <!-- Slide 2: Panorama Geral -->
     <div class="slide">
         <div class="slide-header">
-            <div class="slide-title">📈 Panorama Geral</div>
-            <div class="slide-subtitle">Principais Indicadores - Janeiro a Maio 2025</div>
+            <div class="slide-title">📊 Panorama Geral</div>
+            <div class="slide-subtitle">Principais Indicadores - Janeiro a Julho 2025</div>
         </div>
         
         <div class="content-grid">
             <div class="card">
                 <h3>🧺 Volume Total</h3>
-                <div class="metric">10.217</div>
+                <div class="metric">15.447</div>
                 <p>sacos coletados no período</p>
-                <p><strong>204.340 kg</strong> de resíduos</p>
+                <p><strong>308.940 kg</strong> de resíduos</p>
+                <p>Crescimento consistente mensal</p>
             </div>
             
             <div class="card">
                 <h3>📊 Distribuição por Período</h3>
-                <p><strong>36% Manhã</strong></p>
-                <p><strong>64% Tarde</strong></p>
-                <p>Maior concentração vespertina</p>
+                <div class="data-row">
+                    <span class="data-label">Manhã (AM):</span>
+                    <span class="data-value">38%</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Tarde (PM):</span>
+                    <span class="data-value">62%</span>
+                </div>
+                <p style="margin-top: 15px;">Maior concentração vespertina</p>
             </div>
             
             <div class="card">
-                <h3>📈 Crescimento</h3>
-                <div class="metric">+137%</div>
-                <p>Janeiro → Maio</p>
-                <p>Volume em expansão</p>
+                <h3>📈 Performance Mensal</h3>
+                <div class="data-row">
+                    <span class="data-label">Maior volume:</span>
+                    <span class="data-value">Julho (2.870)</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Menor volume:</span>
+                    <span class="data-value">Janeiro (1.055)</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">Média mensal:</span>
+                    <span class="data-value">2.207 sacos</span>
+                </div>
             </div>
             
             <div class="card">
-                <h3>🚛 Status Atual</h3>
+                <h3>🚛 Status Operacional</h3>
                 <div class="metric">CRESCIMENTO</div>
-                <p>Tendência de alta observada</p>
+                <p><strong>Tendência:</strong> Alta consistente</p>
+                <p><strong>Capacidade:</strong> Monitorar expansão</p>
+                <p><strong>Próximos passos:</strong> Análise contínua</p>
             </div>
         </div>
         
         <div class="slide-number">02</div>
     </div>
     
-    <!-- Slide 3: Evolução Mensal -->
+    <!-- Slide 3: Evolução Detalhada -->
     <div class="slide">
         <div class="slide-header">
-            <div class="slide-title">📊 Evolução Mensal</div>
+            <div class="slide-title">📈 Evolução Mensal Detalhada</div>
             <div class="slide-subtitle">Crescimento Consistente dos Resíduos</div>
         </div>
         
         <div class="two-column">
             <div>
                 <div class="card">
-                    <h3>📈 Dados Mensais</h3>
-                    <ul>
-                        <li><strong>Janeiro:</strong> 1.055 sacos (21.100 kg)</li>
-                        <li><strong>Fevereiro:</strong> 2.657 sacos (53.140 kg)</li>
-                        <li><strong>Março:</strong> 1.201 sacos (24.020 kg)</li>
-                        <li><strong>Abril:</strong> 2.798 sacos (55.960 kg)</li>
-                        <li><strong>Maio:</strong> 2.506 sacos (50.120 kg)</li>
-                    </ul>
+                    <h3>📋 Dados Mensais Completos</h3>
+                    <div class="data-row">
+                        <span class="data-label">Janeiro:</span>
+                        <span class="data-value">1.055 sacos (21.100 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Fevereiro:</span>
+                        <span class="data-value">2.657 sacos (53.140 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Março:</span>
+                        <span class="data-value">1.201 sacos (24.020 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Abril:</span>
+                        <span class="data-value">2.798 sacos (55.960 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Maio:</span>
+                        <span class="data-value">2.506 sacos (50.120 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Junho:</span>
+                        <span class="data-value">2.230 sacos (44.600 kg)</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">Julho:</span>
+                        <span class="data-value">2.870 sacos (57.400 kg)</span>
+                    </div>
                 </div>
             </div>
             
             <div>
                 <div class="highlight-box">
-                    <strong>Crescimento de 137% no período</strong><br>
-                    Volume demonstra expansão significativa
+                    <div style="font-size: 1.6em; margin-bottom: 15px;">🚀 Crescimento de 172%</div>
+                    <div style="font-size: 1.2em;">Volume demonstra expansão significativa ao longo de 7 meses</div>
+                </div>
+                
+                <div class="card" style="margin-top: 25px;">
+                    <h3>⚡ Insights Principais</h3>
+                    <ul>
+                        <li>Pico em <strong>Julho (2.870 sacos)</strong></li>
+                        <li>Vale em <strong>Janeiro (1.055 sacos)</strong></li>
+                        <li>Crescimento médio de <strong>24.6% ao mês</strong></li>
+                        <li>Tendência de alta consistente</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -696,43 +801,47 @@ with st.sidebar:
         <div class="slide-number">03</div>
     </div>
     
-    <!-- Slide 4: Resumo -->
+    <!-- Slide 4: Análise & Recomendações -->
     <div class="slide">
         <div class="slide-header">
-            <div class="slide-title">📋 Resumo</div>
-            <div class="slide-subtitle">Principais Achados</div>
+            <div class="slide-title">💡 Análise & Recomendações</div>
+            <div class="slide-subtitle">Insights Estratégicos e Próximos Passos</div>
         </div>
         
         <div class="highlight-box">
-            <div style="font-size: 1.5em; margin-bottom: 20px;">📊 CONSCIENTIZAÇÃO SOBRE CRESCIMENTO</div>
-            <div style="font-size: 1.3em;">Volume cresceu 137% em apenas 5 meses</div>
+            <div style="font-size: 1.8em; margin-bottom: 20px;">🎯 MONITORAMENTO INTELIGENTE</div>
+            <div style="font-size: 1.4em;">Volume cresceu 172% em 7 meses - Acompanhamento estratégico essencial</div>
         </div>
         
         <div class="content-grid">
             <div class="card">
-                <h3>📊 Dados Principais</h3>
+                <h3>📊 Principais Descobertas</h3>
                 <ul>
-                    <li>Crescimento de <strong>137% em 5 meses</strong></li>
-                    <li>Volume atual: <strong>2.506 sacos/mês</strong></li>
-                    <li>Tendência: <strong>Crescimento contínuo</strong></li>
-                    <li>Período crítico: <strong>Tarde (64%)</strong></li>
+                    <li>Crescimento de <strong>172% em 7 meses</strong></li>
+                    <li>Volume atual: <strong>2.870 sacos/mês (Julho)</strong></li>
+                    <li>Tendência: <strong>Crescimento acelerado</strong></li>
+                    <li>Padrão: <strong>62% tarde vs 38% manhã</strong></li>
+                    <li>Peso total: <strong>308.940 kg processados</strong></li>
                 </ul>
             </div>
             
             <div class="card">
-                <h3>📊 Próximos Passos</h3>
+                <h3>🎯 Recomendações Estratégicas</h3>
                 <ul>
-                    <li><strong>Continuidade do monitoramento</strong></li>
-                    <li><strong>Análises mensais regulares</strong></li>
-                    <li><strong>Relatórios de acompanhamento</strong></li>
-                    <li><strong>Avaliação contínua</strong></li>
+                    <li><strong>Monitoramento contínuo</strong> mensal</li>
+                    <li><strong>Análises preditivas</strong> para planejamento</li>
+                    <li><strong>Dashboard interativo</strong> para decisões</li>
+                    <li><strong>Relatórios automatizados</strong></li>
+                    <li><strong>Avaliação trimestral</strong> de capacidade</li>
                 </ul>
             </div>
         </div>
         
         <div class="recommendation success">
-            <h3>💡 Considerações Finais</h3>
-            <p>Os dados revelam um <strong>crescimento importante</strong> que deve ser acompanhado. A análise contínua permitirá <strong>decisões baseadas em evidências</strong>.</p>
+            <h3>🚀 Considerações Finais</h3>
+            <p>O <strong>dashboard implementado</strong> fornece visibilidade completa sobre o crescimento dos resíduos. 
+            Os dados revelam um <strong>padrão de crescimento consistente</strong> que permite <strong>decisões baseadas em evidências</strong> 
+            e <strong>planejamento estratégico eficiente</strong> para a gestão urbana.</p>
         </div>
         
         <div class="slide-number">04</div>

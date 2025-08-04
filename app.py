@@ -1047,7 +1047,7 @@ with col_left:
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.08,
+            y=1.15,
             xanchor="center",
             x=0.5,
             font=dict(color="white", size=11),
@@ -1055,8 +1055,8 @@ with col_left:
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        margin=dict(l=40, r=40, t=100, b=60),
-        height=480,
+        margin=dict(l=50, r=50, t=140, b=80),
+        height=520,
         xaxis=dict(
             showgrid=False,
             showline=True,
@@ -1114,7 +1114,7 @@ with col_right:
             text=f"⚡ Distribuição AM vs PM<br>{mes_selecionado.title()}",
             font=dict(size=14, color="#00D4FF", family="Inter", weight="bold"),
             x=0.5,
-            y=0.98
+            y=0.99
         ),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -1124,7 +1124,7 @@ with col_right:
         legend=dict(
             orientation="v",
             yanchor="middle",
-            y=0.15,
+            y=0.1,
             xanchor="center",
             x=0.5,
             font=dict(color="white", size=10),
@@ -1132,8 +1132,8 @@ with col_right:
             bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
         ),
-        height=480,
-        margin=dict(l=20, r=20, t=90, b=60),
+        height=520,
+        margin=dict(l=30, r=30, t=110, b=80),
         annotations=[
             dict(
                 text=f"<b style='color:#00D4FF; font-size:18px'>{total_sacos:,}</b><br><span style='color:white; font-size:12px'>Total</span>",
@@ -1222,7 +1222,7 @@ fig_evolucao.add_trace(
 
 # Layout limpo
 fig_evolucao.update_layout(
-    height=700,
+    height=750,
     plot_bgcolor="rgba(0,0,0,0)",
     paper_bgcolor="rgba(0,0,0,0)",
     font_color="white",
@@ -1231,16 +1231,16 @@ fig_evolucao.update_layout(
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.12,
+        y=-0.15,
         xanchor="center",
         x=0.5,
-        font=dict(color="white", size=12),
+        font=dict(color="white", size=11),
         bgcolor="rgba(26, 26, 46, 0.8)",
         bordercolor="rgba(0, 212, 255, 0.3)",
         borderwidth=1
     ),
     barmode='stack',
-    margin=dict(l=40, r=40, t=100, b=80)
+    margin=dict(l=50, r=50, t=120, b=100)
 )
 
 # Styling dos eixos

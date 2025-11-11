@@ -469,7 +469,9 @@ st.markdown("""
             color: white !important;
         }
     </style>
-""", unsafe_allow_# 📥 Carregar dados (mantendo sua estrutura)
+""", unsafe_allow_html=True)
+
+# 📥 Carregar dados (mantendo sua estrutura)
 try:
     df_base = pd.read_excel("Coleta centro2.xlsx")
     df_base.columns = df_base.columns.str.strip()

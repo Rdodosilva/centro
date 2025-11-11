@@ -169,7 +169,24 @@ st.markdown("""
         }
         
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+        /* Estilo para o botão de ano selecionado (azul/ciano) - Novo */
+        /* O st.radio de ano é o primeiro na sidebar (stRadio:nth-child(2)) */
+        section[data-testid="stSidebar"] .stRadio:nth-child(2) > div > div > div > label[data-selected="true"] {
+            background: linear-gradient(135deg, #00FFFF, #00D4FF) !important; /* Azul/Ciano */
+            color: #1a1a2e !important; /* Texto escuro para contraste */
+            font-weight: 700 !important;
+            border: 2px solid #00FFFF !important;
+            box-shadow: 
+                0 0 20px rgba(0,255,255,0.5),
+                0 4px 15px rgba(0,255,255,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            transform: scale(1.05) !important;
+            animation: none !important; /* Remove a animação de pulso para diferenciar */
+        }
+        
+        /* Estilo para o botão de mês selecionado (roxo) - Mantido */
+        /* O st.radio de mês é o segundo na sidebar (stRadio:nth-child(3)) */
+        section[data-testid="stSidebar"] .stRadio:nth-child(3) div[role="radiogroup"] > label[data-selected="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             color: white !important;
             font-weight: 600 !important;
@@ -244,6 +261,21 @@ st.markdown("""
                 inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
             animation: pulse-glow 2s infinite !important;
+        }
+        
+        /* Estilo para o botão de ano selecionado (azul/ciano) - Novo */
+        /* O st.radio de ano é o primeiro na sidebar (stRadio:nth-child(2)) */
+        section[data-testid="stSidebar"] .stRadio:nth-child(2) > div > div > div > label[data-selected="true"] {
+            background: linear-gradient(135deg, #00FFFF, #00D4FF) !important; /* Azul/Ciano */
+            color: #1a1a2e !important; /* Texto escuro para contraste */
+            font-weight: 700 !important;
+            border: 2px solid #00FFFF !important;
+            box-shadow: 
+                0 0 20px rgba(0,255,255,0.5),
+                0 4px 15px rgba(0,255,255,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2) !important;
+            transform: scale(1.05) !important;
+            animation: none !important; /* Remove a animação de pulso para diferenciar */
         }
         
         /* Métricas AINDA MENORES */
@@ -437,17 +469,15 @@ st.markdown("""
             color: white !important;
         }
     </style>
-""", unsafe_allow_html=True)
-
-# 📥 Carregar dados (mantendo sua estrutura)
+""", unsafe_allow_# 📥 Carregar dados (mantendo sua estrutura)
 try:
-    df = pd.read_excel("Coleta centro2.xlsx")
-    df.columns = df.columns.str.strip()
-    df["Mes"] = df["Mês"].str.lower().str.strip()
+    df_base = pd.read_excel("Coleta centro2.xlsx")
+    df_base.columns = df_base.columns.str.strip()
+    df_base["Mes"] = df_base["Mês"].str.lower().str.strip()
 except:
-    # Dados simulados - TODOS OS 12 MESES
-    st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
-    df = pd.DataFrame({
+    # Dados simulados - TODOS OS 12 MESES (Dados de 2025)
+    st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração (Dados de 2025).")
+    df_base = pd.DataFrame({
         'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
         'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
@@ -457,11 +487,43 @@ except:
         'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
     })
 
-# 🏷️ Header aprimorado
-st.markdown("""
-<div style='text-align: center; padding: 20px 0;'>
-    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
-        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
+# 🔄 Lógica de filtragem por ano
+if ano_selecionado == "2026":
+    # Cria um DataFrame zerado para 2026
+    df = pd.DataFrame({
+        'Mês': df_base['Mês'],
+        'Mes': df_base['Mes'],
+        'Coleta AM': [0] * len(df_base),
+        'Coleta PM': [0] * len(df_base),
+        'Total de Sacos': [0] * len(df_base)
+    })
+else:
+    # Usa os dados de 2025
+    df = df_base.copy()
+
+# 🔄 Filtragem de dados para o mês selecionado
+df_mes = df[df["Mes"] == mes_selecionado].iloc[0]
+
+# 📊 Cálculo das métricas
+total_sacos = df_mes["Total de Sacos"]
+total_am = df_mes["Coleta AM"]
+total_pm = df_mes["Coleta PM"],
+        'Mes': df_base['Mes'],
+        'Coleta AM': [0] * len(df_base),
+        'Coleta PM': [0] * len(df_base),
+        'Total de Sacos': [0] * len(df_base)
+    })
+else:
+    # Usa os dados de 2025
+    df = df_base.copy()
+
+# 🔄 Filtragem de dados para o mês selecionado
+df_mes = df[df["Mes"] == mes_selecionado].iloc[0]
+
+# 📊 Cálculo das métricas
+total_sacos = df_mes["Total de Sacos"]
+total_am = df_mes["Coleta AM"]
+total_pm = df_mes["Coleta PM"]t(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
     </div>
     <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
         📊 Monitoramento de Crescimento de Resíduos | {ano_selecionado}

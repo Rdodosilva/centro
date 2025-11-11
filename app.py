@@ -464,7 +464,7 @@ st.markdown("""
         🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
     </div>
     <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
-        📊 Monitoramento de Crescimento de Resíduos | 2025
+        📊 Monitoramento de Crescimento de Resíduos | {ano_selecionado}
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -480,6 +480,14 @@ with st.sidebar:
                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     
     st.markdown("### 📅 Período:")
+
+    # Novo filtro de ano
+    ano_selecionado = st.radio(
+        "Ano:",
+        options=["2025", "2026"], # Adicionando 2026
+        index=0,
+        horizontal=True
+    )
     
     # O CSS já cuida do layout em grid 2x6, apenas criamos o radio button normal
     mes_selecionado = st.radio(
@@ -719,7 +727,7 @@ with st.sidebar:
         <div class="slide-header">
             <div class="logo">🚛</div>
             <div class="slide-title">Coleta Centro</div>
-            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | 2025</div>
+            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | {ano_selecionado}</div>
         </div>
         
         <div class="content-grid">
@@ -730,7 +738,7 @@ with st.sidebar:
             
             <div class="card">
                 <h3>📅 Período Analisado</h3>
-                <p><strong>Janeiro a Julho de 2025</strong></p>
+                <p><strong>Janeiro a Julho de {ano_selecionado}</strong></p>
                 <p>7 meses de dados coletados</p>
                 <p>Análise mensal detalhada</p>
             </div>
@@ -738,7 +746,7 @@ with st.sidebar:
             <div class="card">
                 <h3>📈 Crescimento Total</h3>
                 <div class="metric">+172%</div>
-                <p>Janeiro → Julho 2025</p>
+                <p>Janeiro → Julho {ano_selecionado}</p>
                 <p>Volume em expansão significativa</p>
             </div>
         </div>
@@ -750,7 +758,7 @@ with st.sidebar:
     <div class="slide">
         <div class="slide-header">
             <div class="slide-title">📊 Panorama Geral</div>
-            <div class="slide-subtitle">Principais Indicadores - Janeiro a Julho 2025</div>
+            <div class="slide-subtitle">Principais Indicadores - Janeiro a Julho {ano_selecionado}</div>
         </div>
         
         <div class="content-grid">
@@ -917,7 +925,7 @@ with st.sidebar:
         st.download_button(
             label="📊 PDF",
             data=apresentacao_html,
-            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
+            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_{ano_selecionado}.html",
             mime="text/html",
             use_container_width=True
         )
@@ -935,7 +943,7 @@ with st.sidebar:
         st.download_button(
             label="📋 Excel",
             data=csv_data,
-            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
+            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_{ano_selecionado}.csv",
             mime="text/csv",
             use_container_width=True
         )

@@ -507,29 +507,7 @@ df_mes = df[df["Mes"] == mes_selecionado].iloc[0]
 # 📊 Cálculo das métricas
 total_sacos = df_mes["Total de Sacos"]
 total_am = df_mes["Coleta AM"]
-total_pm = df_mes["Coleta PM"],
-        'Mes': df_base['Mes'],
-        'Coleta AM': [0] * len(df_base),
-        'Coleta PM': [0] * len(df_base),
-        'Total de Sacos': [0] * len(df_base)
-    })
-else:
-    # Usa os dados de 2025
-    df = df_base.copy()
-
-# 🔄 Filtragem de dados para o mês selecionado
-df_mes = df[df["Mes"] == mes_selecionado].iloc[0]
-
-# 📊 Cálculo das métricas
-total_sacos = df_mes["Total de Sacos"]
-total_am = df_mes["Coleta AM"]
-total_pm = df_mes["Coleta PM"]t(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
-    </div>
-    <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
-        📊 Monitoramento de Crescimento de Resíduos | {ano_selecionado}
-    </div>
-</div>
-""", unsafe_allow_html=True)
+total_pm = df_mes["Coleta PM"]
 
 # 🎛️ Sidebar com controles avançados
 with st.sidebar:

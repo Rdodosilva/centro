@@ -169,7 +169,7 @@ st.markdown("""
         }
         
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             color: white !important;
             font-weight: 600 !important;

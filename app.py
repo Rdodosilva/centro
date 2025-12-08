@@ -199,39 +199,93 @@ st.markdown("""
         .stCheckbox {
             color: white !important;
         }
-        
         .stCheckbox > label {
             color: white !important;
             font-weight: normal;
         }
-        
         .stCheckbox:hover > label {
             color: #00FFFF !important;
         }
-        
-        /* ... resto do seu CSS permanece igual ... */
+
+        /* BOTÕES SIDEBAR PADRONIZADOS */
+        .stButton > button, .stDownloadButton > button, 
+        button[data-testid*="stDownloadButton"], 
+        div[data-testid="stDownloadButton"] button {
+            background: #00FFFF !important;
+            border: none !important;
+            border-radius: 6px !important;
+            color: black !important;
+            font-weight: bold !important;
+            transition: all 0.3s ease !important;
+            padding: 8px 16px !important;
+            height: 36px !important;
+            font-size: 0.85em !important;
+        }
+
+        .stButton > button:hover, .stDownloadButton > button:hover,
+        button[data-testid*="stDownloadButton"]:hover,
+        div[data-testid="stDownloadButton"] button:hover {
+            background: #0080FF !important;
+            color: black !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
+        }
+
+        /* Selectbox styling */
+        .stSelectbox > div > div {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            border: 2px solid #00FFFF;
+            border-radius: 10px;
+        }
+
+        /* Cards para insights */
+        .insight-card {
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            border: 1px solid #00FFFF;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
+        }
+
+        .trend-up { color: #00FF88; }
+        .trend-down { color: #FF4444; }
+        .trend-neutral { color: #FFAA00; }
+
+        /* Animation for charts */
+        .stPlotlyChart {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2, h3, label, span, div {
+            color: white !important;
+        }
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados (mantendo sua estrutura)
+# 📥 Carregar dados
 try:
     df = pd.read_excel("Coleta centro2.xlsx")
     df.columns = df.columns.str.strip()
     df["Mes"] = df["Mês"].str.lower().str.strip()
 except:
-    # Dados simulados - TODOS OS 12 MESES
     st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
     df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-               'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-               'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
-        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320],
-        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100],
-        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
+        'Mês': ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        'Mes': ['janeiro','fevereiro','março','abril','maio','junho',
+                'julho','agosto','setembro','outubro','novembro','dezembro'],
+        'Coleta AM':[295,1021,408,1192,1045,850,1150,980,1240,1080,950,1320],
+        'Coleta PM':[760,1636,793,1606,1461,1380,1720,1520,1890,1640,1480,2100],
+        'Total de Sacos':[1055,2657,1201,2798,2506,2230,2870,2500,3130,2720,2430,3420]
     })
 
-# 🏷️ Header aprimorado
+# 🏷️ Header
 st.markdown("""
 <div style='text-align: center; padding: 20px 0;'>
     <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
@@ -245,74 +299,9 @@ st.markdown("""
 
 # 🔖 Abas para 2025 e 2026
 aba2025, aba2026 = st.tabs(["2025", "2026"])
-
-with aba2025:
-    # 🎛️ Sidebar com controles avançados - 2025
-    with st.sidebar:
-        st.markdown("## 🎛️ Filtros - 2025")
-        
-        meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
-                            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
-        meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-        
-        st.markdown("### 📅 Período:")
-        mes_selecionado = st.radio(
-            "",
-            options=meses_disponiveis,
-            format_func=lambda x: meses_display[meses_disponiveis.index(x)],
-            horizontal=False,
-            index=0
-        )
-        
-        st.markdown("### 📊 Visualização")
-        mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
-        tipo_grafico = st.radio(
-            "Tipo de gráfico:",
-            ["Barras"],
-            horizontal=False
-        )
-        
-        st.markdown("### 📤 Exportar")
-        col_btn1, col_btn2 = st.columns(2)
-        with col_btn1:
-            # ... apresentação HTML permanece igual ...
-            pass
-        with col_btn2:
-            # ... exportação CSV permanece igual ...
-            pass
-
-with aba2026:
-    # 🎛️ Sidebar com controles avançados - 2026
-    with st.sidebar:
-        st.markdown("## 🎛️ Filtros - 2026")
-        
-        meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
-                            "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
-        meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-                        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-        
-        try:
-            df2026 = pd.read_excel("Coleta centro2.xlsx", sheet_name="2026")
-            df2026.columns = df2026.columns.str.strip()
-            df2026["Mes"] = df2026["Mês"].str.lower().str.strip()
-        except:
-            st.warning("⚠️ Aba 2026 não encontrada na planilha. Usando dados simulados.")
-            df2026 = df.copy()
-            df2026["Ano"] = 2026
-        
-        st.markdown("### 📅 Período:")
-        mes_selecionado_2026 = st.radio(
-            "",
-            options=meses_disponiveis,
-            format_func=lambda x: meses_display[meses_disponiveis.index(x)],
-            horizontal=False,
-            index=0,
-            key="radio2026"
-        )
-        with col_btn1:
-            # APRESENTAÇÃO ATUALIZADA com novas métricas
-            apresentacao_html = f"""<!DOCTYPE html>
+with col_btn1:
+    # APRESENTAÇÃO ATUALIZADA com novas métricas
+    apresentacao_html = f"""<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -320,14 +309,14 @@ with aba2026:
     <title>Apresentação - Coleta Centro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
+
         body {{
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
             line-height: 1.6;
         }}
-        
+
         .slide {{
             min-height: 100vh;
             padding: 40px;
@@ -338,7 +327,7 @@ with aba2026:
             border-bottom: 1px solid rgba(255,255,255,0.1);
             break-after: page;
         }}
-        
+
         .slide-title {{
             font-size: 3.2em;
             font-weight: 700;
@@ -348,14 +337,14 @@ with aba2026:
             -webkit-text-fill-color: transparent;
             text-shadow: 0 0 30px rgba(0,255,255,0.3);
         }}
-        
+
         .slide-subtitle {{
             font-size: 1.4em;
             color: #00D4FF;
             opacity: 0.9;
             text-shadow: 0 0 20px rgba(0,212,255,0.3);
         }}
-        
+
         .card {{
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 1px solid rgba(0, 255, 255, 0.3);
@@ -363,7 +352,7 @@ with aba2026:
             padding: 30px;
             box-shadow: 0 8px 32px rgba(0,255,255,0.15);
         }}
-        
+
         .metric {{
             font-size: 2.8em;
             font-weight: bold;
@@ -381,7 +370,7 @@ with aba2026:
         <div class="slide-title">Coleta Centro</div>
         <div class="slide-subtitle">Dashboard Executivo de Monitoramento | 2025</div>
     </div>
-    
+
     <!-- Slide 2: Panorama Geral -->
     <div class="slide">
         <div class="slide-title">📊 Panorama Geral</div>
@@ -389,32 +378,32 @@ with aba2026:
     </div>
 </body>
 </html>"""
-            
-            st.download_button(
-                label="📄 PDF",
-                data=apresentacao_html,
-                file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
-                mime="text/html",
-                use_container_width=True
-            )
-        
-        with col_btn2:
-            # Criar dados para Excel
-            df_export = df[df["Total de Sacos"].notna()].copy()
-            df_export["Mês"] = df_export["Mês"].str.title()
-            df_export["Peso Total (kg)"] = df_export["Total de Sacos"] * 20
-            df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
-            df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
-            
-            csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
-            
-            st.download_button(
-                label="📊 Excel",
-                data=csv_data,
-                file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
-                mime="text/csv",
-                use_container_width=True
-            )
+
+    st.download_button(
+        label="📄 PDF",
+        data=apresentacao_html,
+        file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
+        mime="text/html",
+        use_container_width=True
+    )
+
+with col_btn2:
+    # Criar dados para Excel
+    df_export = df[df["Total de Sacos"].notna()].copy()
+    df_export["Mês"] = df_export["Mês"].str.title()
+    df_export["Peso Total (kg)"] = df_export["Total de Sacos"] * 20
+    df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
+    df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
+
+    csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
+
+    st.download_button(
+        label="📊 Excel",
+        data=csv_data,
+        file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
+        mime="text/csv",
+        use_container_width=True
+    )
 # 📊 Filtrar dados para o mês selecionado (2025)
 df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
 
@@ -499,7 +488,7 @@ fig_evolucao.add_trace(go.Bar(x=df_linha["Mes"], y=df_linha["Coleta AM"], name='
 fig_evolucao.add_trace(go.Bar(x=df_linha["Mes"], y=df_linha["Coleta PM"], name='PM',
                               marker=dict(color='rgba(255, 107, 53, 0.7)')), row=2, col=1)
 st.plotly_chart(fig_evolucao, use_container_width=True)
-# 📊 Insights e Recomendações
+# 💡 Insights e Recomendações
 st.markdown("## 💡 Insights e Recomendações")
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
@@ -539,7 +528,7 @@ with col_insight3:
     </div>
     """, unsafe_allow_html=True)
 
-# 📊 Tabela de dados detalhada
+# 📑 Tabela de dados detalhada
 with st.expander("📑 Ver Dados Detalhados"):
     df_display = df[df["Total de Sacos"].notna()].copy()
     df_display["Mês"] = df_display["Mês"].str.title()

@@ -8,7 +8,7 @@ import numpy as np
 # ?? Configuração da página
 st.set_page_config(
     page_title="Coleta Centro - Dashboard Executivo", 
-    page_icon="??", 
+    page_icon="??", # Usando um emoji de foguete para o ícone da página
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -457,9 +457,13 @@ st.markdown("""
 
 # ?? Carregar dados (mantendo sua estrutura)
 try:
-    df = pd.read_excel("Coleta centro2.xlsx", sheet_name=ano_selecionado)
+    df = pd.read_excel("/home/ubuntu/Coletacentro2.xlsx", sheet_name=ano_selecionado)
     df.columns = df.columns.str.strip()
-    df["Mes"] = df["Mês"].str.lower().str.strip()
+    if "Mês" in df.columns:
+        df["Mes"] = df["Mês"].str.lower().str.strip()
+    else:
+        st.error(f"A aba '{ano_selecionado}' não contém a coluna 'Mês'. Verifique a planilha.")
+        df = pd.DataFrame() # Cria um DataFrame vazio para evitar erros subsequentes
 except:
     # Dados simulados - TODOS OS 12 MESES
     st.warning("?? Arquivo não encontrado. Usando dados simulados para demonstração.")
@@ -966,13 +970,23 @@ with st.sidebar:
         )
 
 # ?? Filtrar dados para o mês selecionado
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
+df_filtrado = df[df["Mes"] == mes_selecionado]
+    if not df_filtrado.empty:
+        df_filtrado = df_filtrado.iloc[0]
+    else:
+        st.warning(f"Não há dados para o mês de {mes_selecionado.title()} no ano de {ano_selecionado}. Exibindo dados zerados.")
+        df_filtrado = pd.Series({
+            "Coleta AM": 0,
+            "Coleta PM": 0,
+            "Total de Sacos": 0,
+            "Mês": mes_selecionado.title()
+        })
 
 # ?? Calcular métricas principais
-total_sacos = int(df_filtrado["Total de Sacos"].sum()) if not df_filtrado.empty else 0
+total_sacos = int(df_filtrado["Total de Sacos"])
 peso_total = total_sacos * 20
-total_am = int(df_filtrado["Coleta AM"].sum()) if not df_filtrado.empty else 0
-total_pm = int(df_filtrado["Coleta PM"].sum()) if not df_filtrado.empty else 0
+total_am = int(df_filtrado["Coleta AM"])
+total_pm = int(df_filtrado["Coleta PM"])
 
 # Cálculos de comparação (mês anterior)
 mes_anterior_idx = meses_disponiveis.index(mes_selecionado) - 1 if mes_selecionado != "janeiro" else -1
@@ -1302,7 +1316,7 @@ fig_evolucao.update_annotations(
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
 # ?? Seção de Insights Inteligentes
-st.markdown("## ?? Insights e Recomendações")
+st.markdown("## ?? Insights e Recomendações")},{find:
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
 

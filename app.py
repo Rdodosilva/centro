@@ -971,16 +971,16 @@ with st.sidebar:
 
 # ?? Filtrar dados para o mês selecionado
 df_filtrado = df[df["Mes"] == mes_selecionado]
-    if not df_filtrado.empty:
-        df_filtrado = df_filtrado.iloc[0]
-    else:
-        st.warning(f"Não há dados para o mês de {mes_selecionado.title()} no ano de {ano_selecionado}. Exibindo dados zerados.")
-        df_filtrado = pd.Series({
-            "Coleta AM": 0,
-            "Coleta PM": 0,
-            "Total de Sacos": 0,
-            "Mês": mes_selecionado.title()
-        })
+if not df_filtrado.empty:
+    df_filtrado = df_filtrado.iloc[0]
+else:
+    st.warning(f"Não há dados para o mês de {mes_selecionado.title()} no ano de {ano_selecionado}. Exibindo dados zerados.")
+    df_filtrado = pd.Series({
+        "Coleta AM": 0,
+        "Coleta PM": 0,
+        "Total de Sacos": 0,
+        "Mês": mes_selecionado.title()
+    })
 
 # ?? Calcular métricas principais
 total_sacos = int(df_filtrado["Total de Sacos"])

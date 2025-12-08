@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-#  Configuração da página
+# ?? Configuração da página
 st.set_page_config(
     page_title="Coleta Centro - Dashboard Executivo", 
     page_icon="??", # Usando um emoji de foguete para o ícone da página
@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-#  CSS personalizado com layout de 2 colunas para os meses
+# ?? CSS personalizado com layout de 2 colunas para os meses
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -455,29 +455,20 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-#  Carregar dados (mantendo sua estrutura)
+# ?? Carregar dados (mantendo sua estrutura)
 try:
-    df = pd.read_excel("/home/ubuntu/Coletacentro2.xlsx", sheet_name=ano_selecionado)
+    df = pd.read_excel("Coleta centro2.xlsx", sheet_name=ano_selecionado)
     df.columns = df.columns.str.strip()
     if "Mês" in df.columns:
         df["Mes"] = df["Mês"].str.lower().str.strip()
     else:
         st.error(f"A aba '{ano_selecionado}' não contém a coluna 'Mês'. Verifique a planilha.")
         df = pd.DataFrame() # Cria um DataFrame vazio para evitar erros subsequentes
-except:
-    # Dados simulados - TODOS OS 12 MESES
-    st.warning("?? Arquivo não encontrado. Usando dados simulados para demonstração.")
-    df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
-               'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-               'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
-        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320],
-        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100],
-        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
-    })
+except Exception as e:
+    st.error(f"Erro ao carregar a planilha 'Coleta centro2.xlsx' na aba '{ano_selecionado}'. Verifique se o arquivo está no diretório correto e se a aba existe. Detalhes do erro: {e}")
+    df = pd.DataFrame() # Cria um DataFrame vazio para evitar erros subsequentes
 
-#  Header aprimorado
+# ??? Header aprimorado
 st.markdown("""
 <div style='text-align: center; padding: 20px 0;'>
     <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
@@ -489,7 +480,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-#  Sidebar com controles avançados
+# ??? Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## ??? Filtros")
 

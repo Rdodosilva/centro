@@ -15,10 +15,11 @@ st.set_page_config(
 
 # 🎨 CSS personalizado com layout de 2 colunas para os meses
 # <-- ALTERAÇÃO: inclui contorno vermelho translúcido no botão selecionado
+# Correção: usar aria-checked="true" em vez de data-selected
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
+
         html, body, .stApp {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
@@ -26,7 +27,7 @@ st.markdown("""
             margin: 0;
             padding: 0;
         }
-        
+
         /* Remove white borders and padding */
         .main .block-container {
             padding-top: 0rem;
@@ -35,24 +36,24 @@ st.markdown("""
             padding-right: 1rem;
             max-width: none;
         }
-        
+
         /* Remove default streamlit padding */
         .main {
             padding: 0;
         }
-        
+
         /* Hide streamlit header but keep sidebar toggle */
         header[data-testid="stHeader"] {
             height: 2.875rem;
             background: transparent;
         }
-        
+
         /* Show sidebar toggle button - force visibility */
         .css-14xtw13 {
             display: block !important;
             visibility: visible !important;
         }
-        
+
         /* Style sidebar toggle button */
         .css-14xtw13 > button {
             background: rgba(26, 26, 46, 0.9) !important;
@@ -61,7 +62,7 @@ st.markdown("""
             color: white !important;
             padding: 6px 8px !important;
         }
-        
+
         /* Alternative selector for sidebar button */
         button[data-testid="baseButton-header"] {
             display: block !important;
@@ -71,45 +72,45 @@ st.markdown("""
             border-radius: 6px !important;
             color: white !important;
         }
-        
+
         /* Make sure sidebar toggle icon is white */
         .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
             fill: white !important;
             color: white !important;
         }
-        
+
         /* Hide other header elements but keep functionality */
         header[data-testid="stHeader"] > div {
             background: transparent;
         }
-        
+
         /* Force full background */
         .stApp {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
         }
-        
+
         /* Sidebar styling - clean theme */
         .css-1d391kg {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
-        
+
         .sidebar .sidebar-content {
             color: white !important;
         }
-        
+
         /* Sidebar text color - clean and simple */
         .css-1v0mbdj {
             color: white !important;
         }
-        
+
         section[data-testid="stSidebar"] {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
-        
+
         section[data-testid="stSidebar"] > div > div > div > div {
             color: white !important;
         }
-        
+
         /* Sidebar headers styling */
         section[data-testid="stSidebar"] h2, 
         section[data-testid="stSidebar"] h3 {
@@ -119,7 +120,7 @@ st.markdown("""
             padding-bottom: 8px;
             margin-bottom: 16px;
         }
-        
+
         /* LAYOUT DE 2 COLUNAS PARA OS MESES */
         .month-selector-grid {
             display: grid !important;
@@ -128,7 +129,7 @@ st.markdown("""
             width: 100% !important;
             margin: 10px 0 !important;
         }
-        
+
         /* Forçar grid layout no container dos radio buttons */
         section[data-testid="stSidebar"] div[role="radiogroup"] {
             display: grid !important;
@@ -136,7 +137,7 @@ st.markdown("""
             gap: 6px !important;
             width: 100% !important;
         }
-        
+
         /* BOTÕES DOS MESES - TAMANHO PADRONIZADO E COMPACTO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label {
             background: #1a1a2e !important;
@@ -159,7 +160,7 @@ st.markdown("""
             min-height: 32px !important;
             max-height: 32px !important;
         }
-        
+
         /* Hover dos botões dos meses com efeito suave */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
             background: rgba(0,255,255,0.15) !important;
@@ -168,9 +169,9 @@ st.markdown("""
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
-        
+
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL: roxo original + contorno VERMELHO translúcido */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             color: white !important;
             font-weight: 600 !important;
@@ -182,7 +183,7 @@ st.markdown("""
             transform: scale(1.05) !important;
             animation: pulse-glow-red 2s infinite !important;
         }
-        
+
         /* Animação pulsante com predominância vermelha */
         @keyframes pulse-glow-red {
             0%, 100% {
@@ -198,19 +199,19 @@ st.markdown("""
                     inset 0 1px 0 rgba(255,255,255,0.3);
             }
         }
-        
+
         /* Esconder círculos dos radio buttons */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
             display: none !important;
         }
-        
+
         /* Forçar aplicação em todos os elementos de radio */
         .stRadio > div > div > div {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
             gap: 6px !important;
         }
-        
+
         .stRadio > div > div > div > label {
             background: #1a1a2e !important;
             padding: 8px 6px !important;
@@ -229,24 +230,24 @@ st.markdown("""
             max-height: 32px !important;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         }
-        
+
         .stRadio > div > div > div > label:hover {
             background: rgba(0,255,255,0.15) !important;
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
-        
-        .stRadio > div > div > div > label[data-selected="true"] {
+
+        .stRadio > div > div > div > label[aria-checked="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            border: 2px solid #9b30ff !important;
+            border: 2px solid rgba(255,0,0,0.55) !important;
             box-shadow: 
-                0 0 20px rgba(155,48,255,0.5),
-                0 4px 15px rgba(155,48,255,0.3),
+                0 0 14px rgba(255,0,0,0.45),
+                0 4px 15px rgba(155,48,255,0.35),
                 inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
-            animation: pulse-glow 2s infinite !important;
+            animation: pulse-glow-red 2s infinite !important;
         }
-        
+
         /* Métricas AINDA MENORES */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
@@ -258,25 +259,25 @@ st.markdown("""
             position: relative;
             overflow: hidden;
         }
-        
+
         /* Fonte dos cards MUITO MENOR */
         .stMetric [data-testid="metric-container"] > div:first-child {
             font-size: 0.7em !important;
             font-weight: 500 !important;
             margin-bottom: 2px !important;
         }
-        
+
         .stMetric [data-testid="metric-container"] > div:nth-child(2) {
             font-size: 1.2em !important;
             font-weight: 700 !important;
             margin: 2px 0 !important;
         }
-        
+
         .stMetric [data-testid="metric-container"] > div:last-child {
             font-size: 0.65em !important;
             margin-top: 2px !important;
         }
-        
+
         .stMetric::before {
             content: '';
             position: absolute;
@@ -289,21 +290,21 @@ st.markdown("""
             margin: -2px;
             border-radius: inherit;
         }
-        
+
         /* Checkbox styling */
         .stCheckbox {
             color: white !important;
         }
-        
+
         .stCheckbox > label {
             color: white !important;
             font-weight: normal;
         }
-        
+
         .stCheckbox:hover > label {
             color: #00FFFF !important;
         }
-        
+
         /* BOTÕES SIDEBAR PADRONIZADOS */
         .stButton > button, .stDownloadButton > button, 
         button[data-testid*="stDownloadButton"], 
@@ -318,7 +319,7 @@ st.markdown("""
             height: 36px !important;
             font-size: 0.85em !important;
         }
-        
+
         .stButton > button:hover, .stDownloadButton > button:hover,
         button[data-testid*="stDownloadButton"]:hover,
         div[data-testid="stDownloadButton"] button:hover {
@@ -327,7 +328,7 @@ st.markdown("""
             transform: translateY(-1px) !important;
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
-        
+
         /* Force styling on all buttons in sidebar */
         section[data-testid="stSidebar"] button {
             background: #00FFFF !important;
@@ -340,21 +341,21 @@ st.markdown("""
             height: 36px !important;
             font-size: 0.85em !important;
         }
-        
+
         section[data-testid="stSidebar"] button:hover {
             background: #0080FF !important;
             color: black !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
-        
+
         /* Selectbox styling */
         .stSelectbox > div > div {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid #00FFFF;
             border-radius: 10px;
         }
-        
+
         /* Style the menu dropdown - clean dark background */
         .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
             background: #2c2c54 !important;
@@ -363,13 +364,13 @@ st.markdown("""
             color: white !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
-        
+
         /* Force dark background on all menu containers */
         .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
             background: #2c2c54 !important;
             color: white !important;
         }
-        
+
         /* Style dropdown items with white text and hover effect */
         .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
         .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
@@ -380,36 +381,36 @@ st.markdown("""
             border-radius: 6px !important;
             transition: all 0.2s ease !important;
         }
-        
+
         .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
             background: #00FFFF !important;
             color: black !important;
             border-radius: 6px !important;
         }
-        
+
         /* Force white text on all menu elements */
         .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
             color: white !important;
             background: transparent !important;
         }
-        
+
         /* Override any white backgrounds in dropdowns */
         div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
             background: #2c2c54 !important;
             color: white !important;
         }
-        
+
         div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
             background: transparent !important;
             color: white !important;
         }
-        
+
         /* Hover effect for menu items */
         div[role="menu"] button:hover, div[role="listbox"] button:hover {
             background: #00FFFF !important;
             color: black !important;
         }
-        
+
         /* Cards para insights */
         .insight-card {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
@@ -419,21 +420,21 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 8px 32px rgba(0,255,255,0.1);
         }
-        
+
         .trend-up { color: #00FF88; }
         .trend-down { color: #FF4444; }
         .trend-neutral { color: #FFAA00; }
-        
+
         /* Animation for charts */
         .stPlotlyChart {
             animation: fadeIn 0.8s ease-in;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         h1, h2, h3, label, span, div {
             color: white !important;
         }
@@ -449,7 +450,7 @@ try:
     # pegar nomes de abas/anos
     sheet_names = xls.sheet_names
     # opcional: ordenar para aparecer 2025 antes de 2026 se necessário
-    sheet_names_sorted = sorted(sheet_names, key=lambda s: s)  # mantém ordem alfabética/numeric
+    sheet_names_sorted = sorted(sheet_names, key=lambda s: s)
     # seletor de ano na sidebar
     with st.sidebar:
         st.markdown("## 🎛️ Filtros")
@@ -466,7 +467,7 @@ try:
             df = pd.DataFrame(columns=["Mês", "Coleta AM", "Coleta PM", "Total de Sacos"])
             df["Mes"] = []
     except Exception as e_inner:
-        # se erro ao ler aba específica, fallback para df vazio
+        # se erro ao ler aba específica, fallback para df vazio com zeros
         df = pd.DataFrame({
             'Mês': ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
             'Mes': ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
@@ -505,13 +506,13 @@ st.markdown(f"""
 with st.sidebar:
     # Se já colocamos o ano, não queremos duplicar o cabeçalho; mostrar só controles de mês/visualização/export
     st.markdown("### 📅 Período:")
-    
+
     # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS (fixos)
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
                         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
     meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-    
+
     # Caso a planilha tenha alguns meses só com NaN, mantemos as opções visuais pra você selecionar
     mes_selecionado = st.radio(
         "",
@@ -520,7 +521,7 @@ with st.sidebar:
         horizontal=False,
         index=0
     )
-    
+
     # Opções de visualização
     st.markdown("### 📊 Visualização")
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
@@ -529,14 +530,14 @@ with st.sidebar:
         ["Barras"],
         horizontal=False
     )
-    
+
     # Configurações de export
     st.markdown("### 📤 Exportar")
-    
+
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         # APRESENTAÇÃO ATUALIZADA com novas métricas
-        apresentacao_html = f"""<!DOCTYPE html>
+        apresentacao_html = f\"\"\"<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -557,8 +558,8 @@ with st.sidebar:
         <!-- Conteúdo resumido -->
     </div>
 </body>
-</html>"""
-        
+</html>\"\"\"
+
         st.download_button(
             label="📊 PDF",
             data=apresentacao_html,
@@ -566,7 +567,7 @@ with st.sidebar:
             mime="text/html",
             use_container_width=True
         )
-    
+
     with col_btn2:
         # Criar dados para Excel
         df_export = df[df.get("Total de Sacos", pd.Series()).notna()].copy() if not df.empty else pd.DataFrame()
@@ -579,7 +580,7 @@ with st.sidebar:
             csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
         else:
             csv_data = pd.DataFrame(columns=["Mês","Coleta AM","Coleta PM","Total de Sacos"]).to_csv(index=False)
-        
+
         st.download_button(
             label="📋 Excel",
             data=csv_data,
@@ -655,7 +656,7 @@ with col4:
     else:
         status = "NORMAL"
         info = "Dentro do esperado"
-    
+
     st.metric(
         "📊 Status Operacional", 
         status,
@@ -669,7 +670,7 @@ st.markdown("## 📊 Análises Visuais")
 # Se df_filtrado estiver vazio, criamos uma linha com zeros para evitar erros nos gráficos
 if df_filtrado.empty:
     df_melt = pd.DataFrame({
-        "Mes": [mes_selecionado],
+        "Mes": [mes_selecionado, mes_selecionado],
         "Periodo": ["Coleta AM","Coleta PM"],
         "Quantidade de Sacos": [0,0]
     })
@@ -700,7 +701,7 @@ with col_left:
         barmode="group",
         title=f"🚀 Coleta por Período - {mes_selecionado.title()}"
     )
-    
+
     # Styling futurista SIMPLES
     fig_main.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
@@ -748,7 +749,7 @@ with col_left:
             zerolinecolor="rgba(0, 212, 255, 0.2)"
         )
     )
-    
+
     # Barras com transparência simples
     fig_main.update_traces(
         marker=dict(
@@ -757,7 +758,7 @@ with col_left:
         ),
         hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<br><extra></extra>'
     )
-    
+
     st.plotly_chart(fig_main, use_container_width=True)
 
 with col_right:
@@ -775,7 +776,7 @@ with col_right:
         hovertemplate='<b>%{label}</b><br>%{value} sacos<br>%{percent}<extra></extra>',
         pull=[0.02, 0.02]
     )])
-    
+
     fig_pie.update_layout(
         title=dict(
             text=f"⚡ Distribuição AM vs PM<br>{mes_selecionado.title()}",
@@ -814,7 +815,7 @@ with col_right:
             )
         ]
     )
-    
+
     st.plotly_chart(fig_pie, use_container_width=True)
 
 # 📈 Gráfico de evolução mensal aprimorado
@@ -963,7 +964,7 @@ col_insight1, col_insight2, col_insight3 = st.columns(3)
 with col_insight1:
     tendencia = "crescente" if variacao > 0 else "decrescente" if variacao < 0 else "estável"
     cor_tendencia = "trend-up" if variacao > 0 else "trend-down" if variacao < 0 else "trend-neutral"
-    
+
     st.markdown(f"""
     <div class="insight-card">
         <h4>📊 Análise de Tendência</h4>
@@ -975,7 +976,7 @@ with col_insight1:
 with col_insight2:
     pico_coleta = "AM" if total_am > total_pm else "PM"
     percentual_pico = max(total_am, total_pm) / (total_am + total_pm) * 100 if (total_am + total_pm) > 0 else 0
-    
+
     st.markdown(f"""
     <div class="insight-card">
         <h4>⏰ Padrão de Coleta</h4>
@@ -989,7 +990,7 @@ with col_insight3:
     projecao_proxima = total_sacos * (1 + (variacao/100)) if variacao != 0 else total_sacos * 1.05
     necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
     cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
-    
+
     st.markdown(f"""
     <div class="insight-card">
         <h4>🚛 Capacidade Coletora</h4>

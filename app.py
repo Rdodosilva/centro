@@ -1316,7 +1316,7 @@ fig_evolucao.update_annotations(
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
 # ?? Seção de Insights Inteligentes
-st.markdown("## ?? Insights e Recomendações")},{find:
+st.markdown("## ?? Insights e Recomendações")
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
 

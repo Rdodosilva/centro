@@ -168,35 +168,34 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
         
-        /* BOTÃO SELECIONADO - EFEITO ESPECIAL */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
-            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            border: 2px solid #9b30ff !important;
-            box-shadow: 
-                0 0 20px rgba(155,48,255,0.5),
-                0 4px 15px rgba(155,48,255,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.2) !important;
-            transform: scale(1.05) !important;
-            animation: pulse-glow 2s infinite !important;
-        }
-        
-        /* Animação pulsante para o botão selecionado */
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 
-                    0 0 20px rgba(155,48,255,0.5),
-                    0 4px 15px rgba(155,48,255,0.3),
-                    inset 0 1px 0 rgba(255,255,255,0.2);
-            }
-            50% {
-                box-shadow: 
-                    0 0 30px rgba(155,48,255,0.7),
-                    0 6px 20px rgba(155,48,255,0.4),
-                    inset 0 1px 0 rgba(255,255,255,0.3);
-            }
-        }
+       /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+    background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(255,0,0,0.5)) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 2px solid rgba(255,0,0,0.6) !important;
+    box-shadow: 
+        0 0 20px rgba(255,0,0,0.5),
+        0 4px 15px rgba(255,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    transform: scale(1.05) !important;
+    animation: pulse-red 2s infinite !important;
+}
+
+@keyframes pulse-red {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(255,0,0,0.5),
+            0 4px 15px rgba(255,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(255,0,0,0.7),
+            0 6px 20px rgba(255,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
+    }
+}
         
         /* Esconder círculos dos radio buttons */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {

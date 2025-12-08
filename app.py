@@ -169,35 +169,31 @@ st.markdown("""
         }
         
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
-    background: #330000 !important; /* fundo escuro avermelhado */
-    color: white !important;
-    font-weight: 700 !important;
-    border: 2px solid rgba(255,0,0,0.6) !important; /* borda vermelha translúcida */
-    
-    box-shadow:
-        0 0 15px rgba(255,0,0,0.5),
-        0 0 25px rgba(255,0,0,0.4),
-        inset 0 0 10px rgba(255,0,0,0.3) !important;
-
-    transform: scale(1.06) !important;
-
-    animation: red-pulse 1.8s infinite ease-in-out !important;
+   section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+    background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(255,0,0,0.5)) !important;
+    border: 2px solid rgba(255,0,0,0.6) !important;
+    box-shadow: 
+        0 0 20px rgba(255,0,0,0.5),
+        0 4px 15px rgba(255,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    transform: scale(1.05) !important;
+    animation: pulse-red 2s infinite !important;
 }
 
-@keyframes red-pulse {
-    0% {
-        box-shadow:
-            0 0 15px rgba(255,0,0,0.4),
-            0 0 25px rgba(255,0,0,0.3),
-            inset 0 0 8px rgba(255,0,0,0.2);
+@keyframes pulse-red {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(255,0,0,0.5),
+            0 4px 15px rgba(255,0,0,0.3),
+            inset 0 1px 0 rgba(255,255,255,0.2);
     }
     50% {
-        box-shadow:
-            0 0 25px rgba(255,0,0,0.7),
-            0 0 35px rgba(255,0,0,0.5),
-            inset 0 0 12px rgba(255,0,0,0.4);
+        box-shadow: 
+            0 0 30px rgba(255,0,0,0.7),
+            0 6px 20px rgba(255,0,0,0.4),
+            inset 0 1px 0 rgba(255,255,255,0.3);
     }
+}
     100% {
         box-shadow:
             0 0 15px rgba(255,0,0,0.4),

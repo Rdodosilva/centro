@@ -169,33 +169,37 @@ st.markdown("""
         }
         
        /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
-section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
-    background: linear-gradient(135deg, rgba(255,0,0,0.3), rgba(255,0,0,0.5)) !important;
+/* Botão selecionado com brilho vermelho translúcido */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
+    background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+    border: 2px solid rgba(255,0,0,0.55) !important;
     color: white !important;
-    font-weight: 600 !important;
-    border: 2px solid rgba(255,0,0,0.6) !important;
-    box-shadow: 
-        0 0 20px rgba(255,0,0,0.5),
-        0 4px 15px rgba(255,0,0,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.2) !important;
-    transform: scale(1.05) !important;
-    animation: pulse-red 2s infinite !important;
+    transform: scale(1.06) !important;
+    box-shadow:
+        0 0 18px rgba(255,0,0,0.45),
+        0 0 25px rgba(155,48,255,0.45),
+        inset 0 0 10px rgba(255,0,0,0.25) !important;
+    animation: pulse-red 1.8s infinite ease-in-out !important;
 }
 
 @keyframes pulse-red {
-    0%, 100% {
-        box-shadow: 
-            0 0 20px rgba(255,0,0,0.5),
-            0 4px 15px rgba(255,0,0,0.3),
-            inset 0 1px 0 rgba(255,255,255,0.2);
+    0% {
+        box-shadow:
+            0 0 14px rgba(255,0,0,0.35),
+            inset 0 0 8px rgba(255,0,0,0.2);
     }
     50% {
-        box-shadow: 
-            0 0 30px rgba(255,0,0,0.7),
-            0 6px 20px rgba(255,0,0,0.4),
-            inset 0 1px 0 rgba(255,255,255,0.3);
+        box-shadow:
+            0 0 25px rgba(255,0,0,0.65),
+            inset 0 0 14px rgba(255,0,0,0.35);
+    }
+    100% {
+        box-shadow:
+            0 0 14px rgba(255,0,0,0.35),
+            inset 0 0 8px rgba(255,0,0,0.2);
     }
 }
+
         
         /* Esconder círculos dos radio buttons */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {

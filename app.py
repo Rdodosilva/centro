@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import numpy as np
 
-# ?? Configuração da página
+#  Configuração da página
 st.set_page_config(
     page_title="Coleta Centro - Dashboard Executivo", 
     page_icon="??", # Usando um emoji de foguete para o ícone da página
@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ?? CSS personalizado com layout de 2 colunas para os meses
+#  CSS personalizado com layout de 2 colunas para os meses
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -455,7 +455,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ?? Carregar dados (mantendo sua estrutura)
+#  Carregar dados (mantendo sua estrutura)
 try:
     df = pd.read_excel("/home/ubuntu/Coletacentro2.xlsx", sheet_name=ano_selecionado)
     df.columns = df.columns.str.strip()
@@ -477,7 +477,7 @@ except:
         'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
     })
 
-# ??? Header aprimorado
+#  Header aprimorado
 st.markdown("""
 <div style='text-align: center; padding: 20px 0;'>
     <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
@@ -489,7 +489,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ??? Sidebar com controles avançados
+#  Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## ??? Filtros")
 

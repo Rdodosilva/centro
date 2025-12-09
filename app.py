@@ -183,17 +183,20 @@ section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"]:n
     transform: translateY(-1px) scale(1.02) !important;
 }
 
-/* ======= HOVER ESPECIAL APENAS QUANDO O BOTÃO ESTÁ SELECIONADO (VERMELHO TRANSLÚCIDO) ======= */
-section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover,
-section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"]:hover {
-    background: linear-gradient(135deg, rgba(255,40,40,0.36), rgba(255,40,40,0.18)) !important;
-    border: 2px solid rgba(255,40,40,0.50) !important;
+/* BOTÃO SELECIONADO - VERMELHO TRANSLÚCIDO DEFINITIVO */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"],
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
+    background: linear-gradient(135deg, rgba(255,0,0,0.42), rgba(255,0,0,0.25)) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 2px solid rgba(255,0,0,0.55) !important;
     box-shadow:
-        0 0 18px rgba(255,40,40,0.38),
-        0 6px 22px rgba(155,20,20,0.28),
-        inset 0 0 8px rgba(255,255,255,0.06) !important;
+        0 0 18px rgba(255,0,0,0.40),
+        0 0 26px rgba(255,0,0,0.38),
+        inset 0 0 12px rgba(255,0,0,0.20) !important;
     transform: scale(1.06) !important;
 }
+
 
 
         /* Fallback para alguns renderers que usam role="option" */

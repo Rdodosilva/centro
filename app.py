@@ -159,14 +159,16 @@ st.markdown("""
             max-height: 32px !important;
         }
         
-        /* Hover dos botões dos meses com efeito suave */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
-            background: rgba(0,255,255,0.15) !important;
-            color: white !important;
-            border: 1px solid #00FFFF !important;
-            transform: translateY(-1px) scale(1.02) !important;
-            box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
-        }
+        /* Hover especial para botão já selecionado - vermelho translúcido */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover {
+    background: linear-gradient(135deg, rgba(255,0,0,0.45), rgba(255,0,0,0.25)) !important;
+    border: 2px solid rgba(255,0,0,0.55) !important;
+    box-shadow:
+        0 0 18px rgba(255,0,0,0.45),
+        0 0 25px rgba(255,0,0,0.45),
+        inset 0 0 10px rgba(255,0,0,0.25) !important;
+    transform: scale(1.06) !important;
+}
         
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL (USANDO aria-checked) */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {

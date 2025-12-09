@@ -471,6 +471,19 @@ st.markdown(
 
         h1, h2, h3, label, span, div {
             color: white !important;
+       /* PRIORIDADE ABSOLUTA PARA O MÊS SELECIONADO */
+div[role="radiogroup"] label[aria-checked="true"],
+div[role="radiogroup"] label[role="option"][aria-checked="true"] {
+    background: linear-gradient(135deg, rgba(255,40,40,0.60), rgba(180,0,0,0.35)) !important;
+    border: 2px solid rgba(255,60,60,0.55) !important;
+    box-shadow:
+        0 0 20px rgba(255,40,40,0.50),
+        0 4px 15px rgba(220,0,0,0.30),
+        inset 0 1px 0 rgba(255,40,40,0.20) !important;
+    transform: scale(1.05) !important;
+    color: white !important;
+}
+
         }
     </style>
     """,

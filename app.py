@@ -170,7 +170,10 @@ st.markdown(
         }
 
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
+        /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"],
+        /* Seletor mais robusto para o mês selecionado */
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             color: white !important;
             font-weight: 700 !important;
@@ -183,6 +186,7 @@ st.markdown(
             animation: pulse-glow-red 2s infinite !important; /* Adiciona animação de brilho */
         }
 
+        /* Fallback para alguns renderers que usam role="option" */
         /* Fallback para alguns renderers que usam role="option" */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
@@ -229,7 +233,9 @@ st.markdown(
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
 
-        .stRadio > div > div > div > label[aria-checked="true"] {
+        .stRadio > div > div > div > label[aria-checked="true"],
+        /* Seletor mais robusto para o ano selecionado */
+        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:

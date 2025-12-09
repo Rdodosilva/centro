@@ -160,24 +160,46 @@ st.markdown(
             max-height: 32px !important;
         }
 
-        /* Hover dos botões */
+        /* Hover dos botões dos meses com efeito suave (mantém azul) */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
             background: rgba(0,255,255,0.15) !important;
+            color: white !important;
+            border: 1px solid #00FFFF !important;
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
 
-        /* BOTÃO SELECIONADO (CORRIGIDO — SEM CONFLITO) */
+        /* BOTÃO SELECIONADO AGORA VERMELHO TRANSLÚCIDO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
-            background: rgba(255, 0, 0, 0.28) !important;
+            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
+            color: white !important;
+            font-weight: 700 !important;
             border: 2px solid rgba(255,60,60,0.55) !important;
-            box-shadow: 0 0 12px rgba(255, 0, 0, 0.45) !important;
+            box-shadow:
+                0 0 20px rgba(255,40,40,0.50),
+                0 4px 15px rgba(220,0,0,0.30),
+                inset 0 1px 0 rgba(255,40,40,0.20) !important;
             transform: scale(1.05) !important;
         }
 
-        /* Esconder círculos */
+        /* Fallback para alguns renderers que usam role="option" */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
+            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
+            border: 2px solid rgba(255,60,60,0.55) !important;
+            box-shadow: 0 0 20px rgba(255,40,40,0.50) !important;
+            transform: scale(1.05) !important;
+        }
+
+        /* Esconder círculos dos radio buttons */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child {
             display: none !important;
+        }
+
+        /* Forçar aplicação em todos os elementos de radio */
+        .stRadio > div > div > div {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 6px !important;
         }
 
         .stRadio > div > div > div > label {
@@ -194,7 +216,11 @@ st.markdown(
             justify-content: center !important;
             text-align: center !important;
             height: 32px !important;
-            min-height: 32px !importa
+            min-height: 32px !important;
+            max-height: 32px !important;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
         .stRadio > div > div > div > label:hover {
             background: rgba(0,255,255,0.15) !important;
             transform: translateY(-1px) scale(1.02) !important;
@@ -202,9 +228,12 @@ st.markdown(
         }
 
         .stRadio > div > div > div > label[aria-checked="true"] {
-            background: rgba(255, 0, 0, 0.28) !important;
+            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
             border: 2px solid rgba(255,60,60,0.55) !important;
-            box-shadow: 0 0 12px rgba(255, 0, 0, 0.45) !important;
+            box-shadow:
+                0 0 20px rgba(255,40,40,0.50),
+                0 4px 15px rgba(220,0,0,0.30),
+                inset 0 1px 0 rgba(255,40,40,0.20) !important;
             transform: scale(1.05) !important;
         }
 
@@ -289,6 +318,7 @@ st.markdown(
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
 
+        /* Force styling on all buttons in sidebar */
         section[data-testid="stSidebar"] button {
             background: #00FFFF !important;
             border: none !important;
@@ -303,8 +333,9 @@ st.markdown(
 
         section[data-testid="stSidebar"] button:hover {
             background: #0080FF !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
+            color: black !important;
             transform: translateY(-1px) !important;
+            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
 
         /* Selectbox styling */
@@ -314,7 +345,7 @@ st.markdown(
             border-radius: 10px;
         }
 
-        /* Style dropdown items */
+        /* Style the menu dropdown - clean dark background */
         .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
             background: #2c2c54 !important;
             border: 1px solid rgba(255,255,255,0.2) !important;
@@ -323,18 +354,53 @@ st.markdown(
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
 
+        /* Force dark background on all menu containers */
         .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
             background: #2c2c54 !important;
             color: white !important;
         }
 
-        /* Hover effect for dropdown */
+        /* Style dropdown items with white text and hover effect */
+        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
+        .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
+            color: white !important;
+            background: transparent !important;
+            font-weight: normal !important;
+            padding: 10px 15px !important;
+            border-radius: 6px !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
+            background: #00FFFF !important;
+            color: black !important;
+            border-radius: 6px !important;
+        }
+
+        /* Force white text on all menu elements */
+        .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
+            color: white !important;
+            background: transparent !important;
+        }
+
+        /* Override any white backgrounds in dropdowns */
+        div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
+            background: #2c2c54 !important;
+            color: white !important;
+        }
+
+        div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
+            background: transparent !important;
+            color: white !important;
+        }
+
+        /* Hover effect for menu items */
         div[role="menu"] button:hover, div[role="listbox"] button:hover {
             background: #00FFFF !important;
             color: black !important;
         }
 
-        /* Insights cards */
+        /* Cards para insights */
         .insight-card {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 1px solid #00FFFF;
@@ -348,6 +414,16 @@ st.markdown(
         .trend-down { color: #FF4444; }
         .trend-neutral { color: #FFAA00; }
 
+        /* Animation for charts */
+        .stPlotlyChart {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h1, h2, h3, label, span, div {
             color: white !important;
         }
@@ -356,14 +432,13 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ================================
-#   CARREGAR PLANILHA
-# ================================
+# ?? Carregar dados (mantendo sua estrutura) - suporte a múltiplas abas (anos)
 EXCEL_FILENAME = "Coleta centro2.xlsx"
 
 try:
     all_sheets = pd.read_excel(EXCEL_FILENAME, sheet_name=None)
     sheet_names = list(all_sheets.keys())
+    # pega a primeira aba por default
     df = all_sheets[sheet_names[0]].copy()
     df.columns = df.columns.str.strip()
     if "Mês" in df.columns:
@@ -371,24 +446,75 @@ try:
     elif "Mes" in df.columns:
         df["Mes"] = df["Mes"].astype(str).str.lower().str.strip()
     else:
+        # tenta primeiro coluna como mês
         df.columns = [c if i != 0 else "Mês" for i, c in enumerate(df.columns)]
         df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
 except Exception:
-    st.warning("❗ Arquivo não encontrado ou erro na leitura. Dados simulados.")
+    st.warning("?? Arquivo não encontrado ou erro na leitura. Usando dados simulados para demonstração.")
     all_sheets = None
     sheet_names = []
     df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fev', 'Mar'],
-        'Mes': ['janeiro', 'fevereiro', 'março'],
-        'Coleta AM': [295, 1021, 408]()
+        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+               'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        'Mes': ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+               'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320],
+        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100],
+        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420]
+    })
+
+# ??? Sidebar com controles avançados
+with st.sidebar:
+    st.markdown("## ??? Filtros")
+
+    # Seletor de ano/aba (se a planilha tiver múltiplas abas)
+    year_selected = None
+    try:
+        if sheet_names:
+            st.markdown("### ??? Ano / Aba:")
+            year_selected = st.selectbox("", options=sheet_names, index=0)
+            # atualiza df para a aba selecionada
+            if all_sheets is not None and year_selected in all_sheets:
+                df = all_sheets[year_selected].copy()
+                df.columns = df.columns.str.strip()
+                if "Mês" in df.columns:
+                    df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
+                elif "Mes" in df.columns:
+                    df["Mes"] = df["Mes"].astype(str).str.lower().str.strip()
+                else:
+                    df["Mes"] = df.iloc[:, 0].astype(str).str.lower().str.strip()
+    except Exception:
+        # se algo falhar no selectbox, mantemos o df carregado anteriormente
+        year_selected = sheet_names[0] if sheet_names else None
+
+    # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS
+    meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
+    meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+
+    st.markdown("### ?? Período:")
+
+    # O CSS já cuida do layout em grid 2x6, apenas criamos o radio button normal
+    mes_selecionado = st.radio(
+        "",
+        options=meses_disponiveis,
+        format_func=lambda x: meses_display[meses_disponiveis.index(x)],
+        horizontal=False,
+        index=0
+    )
+
+    # Opções de visualização
+    st.markdown("### ?? Visualização")
+    mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
     tipo_grafico = st.radio(
         "Tipo de gráfico:",
         ["Barras"],
         horizontal=False
     )
 
-    # EXPORTAÇÃO
-    st.markdown("### 📤 Exportar")
+    # Configurações de export
+    st.markdown("### ?? Exportar")
 
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
@@ -399,22 +525,28 @@ except Exception:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação - Coleta Centro</title>
     <style>
-        body { font-family: 'Inter', sans-serif;
-               background: linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 50%,#16213e 100%);
-               color: white; }
-        .slide { min-height: 100vh; padding: 40px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg,#0c0c0c 0%,#1a1a2e 50%,#16213e 100%); color: white; }
+        .slide { min-height: 100vh; padding: 40px; display:flex; flex-direction:column; justify-content:center; border-bottom:1px solid rgba(255,255,255,0.1); }
+        .slide-title { font-size:2.6em; font-weight:700; background: linear-gradient(90deg,#00FFFF,#9b30ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .card { background: linear-gradient(145deg,#1a1a2e,#0f0f23); border:1px solid rgba(0,212,255,0.15); border-radius:12px; padding:20px; margin:10px 0; }
     </style>
 </head>
 <body>
     <div class="slide">
-        <h1>Coleta Centro</h1>
-        <p>Resumo Exportado</p>
+        <div style="text-align:center;">
+            <div class="slide-title">Coleta Centro</div>
+            <div style="color:#00D4FF; margin-top:10px;">Monitoramento de Crescimento de Resíduos</div>
+        </div>
+        <div style="margin-top:30px;">
+            <div class="card"><h3>Resumo</h3><p>Apresentação exportada do dashboard Coleta Centro.</p></div>
+        </div>
     </div>
 </body>
 </html>
 """
         st.download_button(
-            label="📁 PDF",
+            label="?? PDF",
             data=apresentacao_html,
             file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_{year_selected if year_selected else ''}.html",
             mime="text/html",
@@ -422,6 +554,7 @@ except Exception:
         )
 
     with col_btn2:
+        # Criar dados para Excel
         df_export = df[df["Total de Sacos"].notna()].copy() if "Total de Sacos" in df.columns else df.copy()
         if "Mês" in df_export.columns:
             df_export["Mês"] = df_export["Mês"].astype(str).str.title()
@@ -432,58 +565,54 @@ except Exception:
         if "Coleta PM" in df_export.columns and "Total de Sacos" in df_export.columns:
             df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
 
-        cols_to_keep = [c for c in ["Mês","Coleta AM","Coleta PM","Total de Sacos","Peso Total (kg)","% AM","% PM"]
-                        if c in df_export.columns]
+        # escolher colunas disponíveis
+        cols_to_keep = [c for c in ["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"] if c in df_export.columns]
         csv_data = df_export[cols_to_keep].to_csv(index=False, encoding="utf-8")
-
         st.download_button(
-            label="📊 Excel",
+            label="?? Excel",
             data=csv_data,
             file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_{year_selected if year_selected else ''}.csv",
             mime="text/csv",
             use_container_width=True
         )
 
-# ==========================================================
-# TITULO PRINCIPAL (com espaçador extra para aparecer)
-# ==========================================================
-st.write("")  
-st.write("")  # <-- isto resolve título escondido
-
+# ---------------------------
+# Header (agora usa year_selected dinamicamente)
+# ---------------------------
 display_year = year_selected if year_selected else (sheet_names[0] if sheet_names else "2025")
 st.markdown(
     f"""
-<div style='text-align: center; padding-top: 20px;'>
-    <div style='font-size: 3.5em; font-weight: 700;'>
-        🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
+<div style='text-align: center; padding: 20px 0;'>
+    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
+        ?? <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> ??
     </div>
-    <div style='color: #00FFFF; font-size: 1.1em;'>
-        📊 Monitoramento de Crescimento de Resíduos | {display_year}
+    <div style='color: #00FFFF; font-size: 1.1em; opacity: 0.9;'>
+        ?? Monitoramento de Crescimento de Resíduos | {display_year}
     </div>
 </div>
 """,
     unsafe_allow_html=True,
 )
 
-# ==========================================================
-# FILTRO DE MÊS, CÁLCULOS
-# ==========================================================
+# ---------------------------
+# Filtrar dados para o mês selecionado
+# ---------------------------
+# Normaliza colunas caso falte algum nome
 if "Mes" not in df.columns:
     if "Mês" in df.columns:
         df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
     else:
         df["Mes"] = df.iloc[:, 0].astype(str).str.lower().str.strip()
 
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df.get("Total de Sacos").notna())] \
-    if "Total de Sacos" in df.columns else df[df["Mes"] == mes_selecionado]
+df_filtrado = df[(df["Mes"] == mes_selecionado) & (df.get("Total de Sacos") .notna())] if "Total de Sacos" in df.columns else df[df["Mes"] == mes_selecionado]
 
+# ?? Calcular métricas principais
 total_sacos = int(df_filtrado["Total de Sacos"].sum()) if (not df_filtrado.empty and "Total de Sacos" in df_filtrado.columns) else 0
 peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum()) if (not df_filtrado.empty and "Coleta AM" in df_filtrado.columns) else 0
 total_pm = int(df_filtrado["Coleta PM"].sum()) if (not df_filtrado.empty and "Coleta PM" in df_filtrado.columns) else 0
 
+# Cálculos de comparação (mês anterior)
 mes_anterior_idx = meses_disponiveis.index(mes_selecionado) - 1 if mes_selecionado != "janeiro" else -1
 if mes_anterior_idx >= 0:
     df_anterior = df[df["Mes"] == meses_disponiveis[mes_anterior_idx]]
@@ -492,24 +621,22 @@ if mes_anterior_idx >= 0:
 else:
     variacao = 0
 
-# ==========================================================
-# MÉTRICAS PRINCIPAIS
-# ==========================================================
-st.markdown("## 📌 Indicadores Principais")
+# ?? Exibir métricas com design aprimorado
+st.markdown("## ?? Indicadores Principais")
 
 col1, col2, col3, col4 = st.columns(4)
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
     st.metric(
-        "🧮 Total de Sacos",
+        "?? Total de Sacos",
         f"{total_sacos:,}".replace(',', '.'),
         delta=delta_value
     )
 
 with col2:
     st.metric(
-        "⚖️ Peso Total",
+        "?? Peso Total",
         f"{peso_total:,} kg".replace(',', '.'),
         delta=f"{variacao*20:+.0f} kg" if mostrar_comparativo and variacao != 0 else None
     )
@@ -517,9 +644,9 @@ with col2:
 with col3:
     eficiencia = (total_am / (total_am + total_pm) * 100) if (total_am + total_pm) > 0 else 0
     st.metric(
-        "📈 Eficiência AM",
+        "?? Eficiência AM",
         f"{eficiencia:.1f}%",
-        delta="Ótima" if eficiencia > 25 else "Baixa"
+        delta="Ótimal" if eficiencia > 25 else "Baixa"
     )
 
 with col4:
@@ -534,16 +661,15 @@ with col4:
         info = "Dentro do esperado"
 
     st.metric(
-        "🚨 Status",
+        "?? Status Operacional",
         status,
         delta=info
     )
 
-# ==========================================================
-# GRÁFICOS PRINCIPAIS
-# ==========================================================
-st.markdown("## 📊 Análises Visuais")
+# ?? Seção de gráficos principais
+st.markdown("## ?? Análises Visuais")
 
+# Preparar dados para gráficos (fallback seguro quando não houver linhas no mês selecionado)
 if df_filtrado.empty or not {"Coleta AM", "Coleta PM"}.issubset(df_filtrado.columns):
     df_melt = pd.DataFrame({
         "Mes": [mes_selecionado, mes_selecionado],
@@ -558,12 +684,15 @@ else:
         value_name="Quantidade de Sacos"
     )
 
+# Cores futuristas simples e limpas
 cores_futuristas = {
     "Coleta AM": "#00D4FF",
     "Coleta PM": "#FF6B35"
 }
 
+# Gráfico principal LIMPO e futurista
 col_left, col_right = st.columns([2, 1])
+
 with col_left:
     fig_main = px.bar(
         df_melt,
@@ -572,493 +701,314 @@ with col_left:
         color="Periodo",
         color_discrete_map=cores_futuristas,
         barmode="group",
-        title=f"📦 Coleta por Período - {mes_selecionado.title()}"
+        title=f"?? Coleta por Período - {mes_selecionado.title()}"
     )
+
     fig_main.update_layout(
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        font_color="white",
+        title_font=dict(size=16, color="#00D4FF", family="Inter", weight="bold"),
+        title_x=0.5,
+        title_y=0.95,
+        font_family="Inter",
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=0.02,
+            xanchor="center",
+            x=0.5,
+            font=dict(color="white", size=10),
+            bgcolor="rgba(26, 26, 46, 0.8)",
+            bordercolor="rgba(0, 212, 255, 0.3)",
+            borderwidth=1
+        ),
+        margin=dict(l=50, r=50, t=80, b=50),
         height=450,
+        xaxis=dict(
+            showgrid=False,
+            showline=True,
+            linewidth=2,
+            linecolor="rgba(0, 212, 255, 0.3)",
+            color="white",
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=11),
+            categoryorder='array',
+            categoryarray=meses_disponiveis
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridwidth=1,
+            gridcolor="rgba(0, 212, 255, 0.1)",
+            showline=False,
+            color="white",
+            title_font=dict(color="white", size=14),
+            tickfont=dict(color="white", size=11),
+            title="Quantidade de Sacos",
+            zeroline=True,
+            zerolinecolor="rgba(0, 212, 255, 0.2)"
+        )
+    )
+
+    fig_main.update_traces(
+        marker=dict(
+            opacity=0.8,
+            line=dict(color="rgba(255,255,255,0.1)", width=1)
+        ),
+        hovertemplate='<b>%{y}</b> sacos<br>%{fullData.name}<br><extra></extra>'
+    )
+
+    st.plotly_chart(fig_main, use_container_width=True)
+
+with col_right:
+    fig_pie = go.Figure(data=[go.Pie(
+        labels=["Coleta AM", "Coleta PM"],
+        values=[total_am, total_pm],
+        hole=0.6,
+        marker=dict(
+            colors=["rgba(0, 212, 255, 0.8)", "rgba(255, 107, 53, 0.8)"],
+            line=dict(color="rgba(255,255,255,0.1)", width=1)
+        ),
+        textinfo='percent',
+        textfont=dict(color='white', size=14, family="Inter"),
+        hovertemplate='<b>%{label}</b><br>%{value} sacos<br>%{percent}<extra></extra>',
+        pull=[0.02, 0.02]
+    )])
+
+    fig_pie.update_layout(
+        title=dict(
+            text=f"? Distribuição AM vs PM<br>{mes_selecionado.title()}",
+            font=dict(size=13, color="#00D4FF", family="Inter", weight="bold"),
+            x=0.5,
+            y=0.95
+        ),
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
         font_color="white",
         font_family="Inter",
         showlegend=True,
-        title_font=dict(size=20),
         legend=dict(
-            orientation="h",
-            yanchor="top",
-            y=-0.1,
-            xanchor="center",
-            x=0.5,
-            bgcolor="rgba(0,0,0,0.6)",
-            bordercolor="rgba(0,212,255,0.3)",
-            borderwidth=1,
-        )
-    )
-    fig_main.update_xaxes(showgrid=False, linewidth=1, linecolor="gray")
-    fig_main.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(0,212,255,0.1)")
-
-    st.plotly_chart(fig_main, use_container_width=True)
-
-with col_right:
-    st.markdown("### 📈 Proporções")
-    if total_sacos > 0:
-        fig_pie = px.pie(
-            df_melt,
-            values="Quantidade de Sacos",
-            names="Periodo",
-            color="Periodo",
-            color_discrete_map=cores_futuristas,
-            hole=0.6
-        )
-        fig_pie.update_layout(
-            height=450,
-            title="Distribuição AM vs PM",
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white"
-        )
-        st.plotly_chart(fig_pie, use_container_width=True)
-
-# ==========================================================
-# GRÁFICO EVOLUÇÃO
-# ==========================================================
-st.markdown("## 📅 Evolução Mensal")
-
-df_validos = df[df["Total de Sacos"].notna()]
-
-if not df_validos.empty and {"Mes", "Coleta AM", "Coleta PM"}.issubset(df_validos.columns):
-    df_evol = df_validos.copy()
-    df_evol["Mes"] = pd.Categorical(df_evol["Mes"], categories=meses_disponiveis, ordered=True)
-    df_evol = df_evol.sort_values("Mes")
-
-    df_bar = df_evol[["Mes", "Coleta AM", "Coleta PM"]].copy()
-    df_bar = df_bar.melt(
-        id_vars="Mes",
-        value_vars=["Coleta AM", "Coleta PM"],
-        var_name="Periodo",
-        value_name="Quantidade"
-    )
-
-    fig_evolucao = px.bar(
-        df_bar,
-        x="Mes",
-        y="Quantidade",
-        color="Periodo",
-        color_discrete_map=cores_futuristas,
-        barmode="stack",
-        title=f"🚛 Evolução Mensal | {display_year}"
-    )
-
-    fig_evolucao.update_layout(
-        height=450,
-        plot_bgcolor="rgba(0,0,0,0)",
-        paper_bgcolor="rgba(0,0,0,0)",
-        font_color="white",
-        font_family="Inter",
-        legend=dict(
-            orientation="h",
+            orientation="v",
             yanchor="bottom",
-            y=-0.2,
+            y=0.02,
             xanchor="center",
             x=0.5,
-            bgcolor="rgba(0,0,0,0.5)",
-            bordercolor="rgba(0,212,255,0.3)",
+            font=dict(color="white", size=9),
+            bgcolor="rgba(26, 26, 46, 0.6)",
+            bordercolor="rgba(0, 212, 255, 0.3)",
             borderwidth=1
-        )
+        ),
+        height=450,
+        margin=dict(l=20, r=20, t=70, b=50),
+        annotations=[
+            dict(
+                text=f"<b style='color:#00D4FF; font-size:18px'>{total_sacos:,}</b><br><span style='color:white; font-size:12px'>Total</span>",
+                x=0.5, y=0.5,
+                font_family="Inter",
+                showarrow=False,
+                bgcolor="rgba(26, 26, 46, 0.8)",
+                bordercolor="rgba(0, 212, 255, 0.3)",
+                borderwidth=1,
+                borderpad=8
+            )
+        ]
     )
-    fig_evolucao.update_xaxes(showgrid=False)
-    fig_evolucao.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(0,212,255,0.1)")
 
-    st.plotly_chart(fig_evolucao, use_container_width=True)
+    st.plotly_chart(fig_pie, use_container_width=True)
 
-# ==========================================================
-# INSIGHTS
-# ==========================================================
-st.markdown("## 💡 Insights Inteligentes")
+# ?? Gráfico de evolução mensal aprimorado
+st.markdown("### ?? Evolução Temporal Completa")
 
-col_ins1, col_ins2, col_ins3 = st.columns(3)
+df_linha = df[df.get("Total de Sacos").notna()].copy() if "Total de Sacos" in df.columns else df.copy()
+df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+df_linha = df_linha.sort_values("Mes_cat")
 
-with col_ins1:
+fig_evolucao = make_subplots(
+    rows=2, cols=1,
+    subplot_titles=("?? Volume de Coleta (Sacos)", "? Distribuição AM/PM"),
+    vertical_spacing=0.15,
+    specs=[[{"secondary_y": True}], [{"secondary_y": False}]]
+)
+
+if "Total de Sacos" in df_linha.columns:
+    fig_evolucao.add_trace(
+        go.Scatter(
+            x=df_linha["Mes"],
+            y=df_linha["Total de Sacos"],
+            mode='lines+markers',
+            name='Total de Sacos',
+            line=dict(
+                color='#9b30ff',
+                width=4,
+                shape='spline'
+            ),
+            marker=dict(
+                size=10,
+                color='white',
+                line=dict(color='#9b30ff', width=3),
+                symbol='circle'
+            ),
+            fill='tonexty',
+            fillcolor='rgba(155, 48, 255, 0.15)',
+            hovertemplate='<b>%{y}</b> sacos<br>%{x}<br><extra></extra>'
+        ),
+        row=1, col=1
+    )
+
+if "Coleta AM" in df_linha.columns:
+    fig_evolucao.add_trace(
+        go.Bar(
+            x=df_linha["Mes"],
+            y=df_linha["Coleta AM"],
+            name='AM',
+            marker=dict(
+                color='rgba(0, 212, 255, 0.7)',
+                line=dict(color='rgba(0, 212, 255, 0.9)', width=1)
+            ),
+            hovertemplate='<b>AM:</b> %{y} sacos<br>%{x}<extra></extra>'
+        ),
+        row=2, col=1
+    )
+
+if "Coleta PM" in df_linha.columns:
+    fig_evolucao.add_trace(
+        go.Bar(
+            x=df_linha["Mes"],
+            y=df_linha["Coleta PM"],
+            name='PM',
+            marker=dict(
+                color='rgba(255, 107, 53, 0.7)',
+                line=dict(color='rgba(255, 107, 53, 0.9)', width=1)
+            ),
+            hovertemplate='<b>PM:</b> %{y} sacos<br>%{x}<extra></extra>'
+        ),
+        row=2, col=1
+    )
+
+fig_evolucao.update_layout(
+    height=650,
+    plot_bgcolor="rgba(0,0,0,0)",
+    paper_bgcolor="rgba(0,0,0,0)",
+    font_color="white",
+    font_family="Inter",
+    title_font=dict(size=16, color="#00D4FF"),
+    legend=dict(
+        orientation="h",
+        yanchor="top",
+        y=-0.05,
+        xanchor="center",
+        x=0.5,
+        font=dict(color="white", size=10),
+        bgcolor="rgba(26, 26, 46, 0.8)",
+        bordercolor="rgba(0, 212, 255, 0.3)",
+        borderwidth=1
+    ),
+    barmode='stack',
+    margin=dict(l=50, r=50, t=80, b=70)
+)
+
+fig_evolucao.update_xaxes(
+    showgrid=False,
+    showline=True,
+    linewidth=2,
+    linecolor="rgba(0, 212, 255, 0.3)",
+    color="white",
+    title_font=dict(color="white", size=12),
+    tickfont=dict(color="white", size=10),
+    categoryorder='array',
+    categoryarray=meses_disponiveis
+)
+
+fig_evolucao.update_yaxes(
+    showgrid=True,
+    gridwidth=1,
+    gridcolor="rgba(0, 212, 255, 0.1)",
+    showline=True,
+    linewidth=2,
+    linecolor="rgba(0, 212, 255, 0.3)",
+    color="white",
+    title_font=dict(color="white", size=12),
+    tickfont=dict(color="white", size=10)
+)
+
+fig_evolucao.update_annotations(
+    font=dict(color="#00D4FF", size=16, family="Inter")
+)
+
+st.plotly_chart(fig_evolucao, use_container_width=True)
+
+# ?? Seção de Insights Inteligentes
+st.markdown("## ?? Insights e Recomendações")
+
+col_insight1, col_insight2, col_insight3 = st.columns(3)
+
+with col_insight1:
     tendencia = "crescente" if variacao > 0 else "decrescente" if variacao < 0 else "estável"
     cor_tendencia = "trend-up" if variacao > 0 else "trend-down" if variacao < 0 else "trend-neutral"
+
     st.markdown(f"""
     <div class="insight-card">
-        <h4>📊 Análise de Tendência</h4>
+        <h4>?? Análise de Tendência</h4>
         <p>Volume <span class="{cor_tendencia}">{tendencia}</span> em relação ao mês anterior</p>
         <p><strong>Variação:</strong> <span class="{cor_tendencia}">{variacao:+.1f}%</span></p>
     </div>
     """, unsafe_allow_html=True)
 
-with col_ins2:
-    pico = "AM" if total_am > total_pm else "PM"
-    perc = max(total_am, total_pm) / (total_am + total_pm) * 100 if (total_am + total_pm) > 0 else 0
-    st.markdown(f"""
-    <div class="insight-card">
-        <h4>📦 Pico de Coleta</h4>
-        <p>Maior volume na período: <strong>{pico}</strong></p>
-        <p><strong>Concentração:</strong> {perc:.1f}%</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col_ins3:
-    if peso_total > 60000:
-        risco = "⚠️ Alto"
-        cor = "trend-down"
-    elif peso_total > 45000:
-        risco = "⚠️ Médio"
-        cor = "trend-neutral"
-    else:
-        risco = "OK"
-        cor = "trend-up"
+with col_insight2:
+    pico_coleta = "AM" if total_am > total_pm else "PM"
+    percentual_pico = max(total_am, total_pm) / (total_am + total_pm) * 100 if (total_am + total_pm) > 0 else 0
 
     st.markdown(f"""
     <div class="insight-card">
-        <h4>🚛 Risco de Saturação</h4>
-        <p>Status: <span class="{cor}"><strong>{risco}</strong></span></p>
-        <p><strong>Peso estimado:</strong> {peso_total} kg</p>
+        <h4>? Padrão de Coleta</h4>
+        <p>Maior volume no período da <strong>{pico_coleta}</strong></p>
+        <p><strong>Concentração:</strong> {percentual_pico:.1f}% do total</p>
     </div>
     """, unsafe_allow_html=True)
 
-# ==========================================================
-# TABELA DETALHADA
-# ==========================================================
-with st.expander("📋 Ver dados completos"):
-    df_show = df[df["Total de Sacos"].notna()].copy() if "Total de Sacos" in df.columns else df.copy()
+with col_insight3:
+    projecao_proxima = total_sacos * (1 + (variacao/100)) if variacao != 0 else total_sacos * 1.05
+    necessidade = "URGENTE" if projecao_proxima > 2500 else "MONITORAR" if projecao_proxima > 2000 else "ADEQUADO"
+    cor_necessidade = "trend-down" if necessidade == "URGENTE" else "trend-neutral" if necessidade == "MONITORAR" else "trend-up"
 
-    if "Mês" in df_show.columns:
-        df_show["Mês"] = df_show["Mês"].astype(str).str.title()
-    if "Total de Sacos" in df_show.columns:
-        df_show["Peso Total (kg)"] = df_show["Total de Sacos"] * 20
-    if "Coleta AM" in df_show.columns and "Total de Sacos" in df_show.columns:
-        df_show["% AM"] = (df_show["Coleta AM"] / df_show["Total de Sacos"] * 100).round(1)
-    if "Coleta PM" in df_show.columns and "Total de Sacos" in df_show.columns:
-        df_show["% PM"] = (df_show["Coleta PM"] / df_show["Total de Sacos"] * 100).round(1)
-
-    st.dataframe(
-        df_show[[c for c in ["Mês", "Coleta AM", "Coleta PM", "Total de Sacos",
-                             "Peso Total (kg)", "% AM", "% PM"] if c in df_show.columns]],
-        use_container_width=True
-    )
-# ==========================================================
-# COMPARAÇÃO MENSAL (CASO ATIVADO)
-# ==========================================================
-if mostrar_comparativo and mes_anterior_idx >= 0:
-
-    seca = meses_disponiveis[mes_anterior_idx]
-    st.markdown(f"### 📉 Comparativo com {seca.title()}")
-
-    df_comp = df[df["Mes"].isin([mes_selecionado, seca])]
-    if (not df_comp.empty and {"Mes","Coleta AM","Coleta PM"}.issubset(df_comp.columns)):
-
-        df_comp_plot = df_comp[["Mes","Coleta AM","Coleta PM"]].copy()
-        df_comp_plot = df_comp_plot.melt(
-            id_vars="Mes",
-            value_vars=["Coleta AM","Coleta PM"],
-            var_name="Periodo",
-            value_name="Quantidade"
-        )
-
-        fig_comp = px.bar(
-            df_comp_plot,
-            x="Mes",
-            y="Quantidade",
-            color="Periodo",
-            color_discrete_map=cores_futuristas,
-            barmode="group",
-        )
-
-        fig_comp.update_layout(
-            height=400,
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-            font_family="Inter",
-            legend=dict(
-                orientation="h",
-                yanchor="top",
-                y=-0.2,
-                xanchor="center",
-                x=0.5,
-                bgcolor="rgba(0,0,0,0.6)",
-                bordercolor="rgba(0,212,255,0.3)",
-                borderwidth=1
-            )
-        )
-        fig_comp.update_xaxes(showgrid=False)
-        fig_comp.update_yaxes(showgrid=True, gridwidth=1, gridcolor="rgba(0,212,255,0.1)")
-        st.plotly_chart(fig_comp, use_container_width=True)
-
-# ==========================================================
-# RANK DE MAIORES/ MENORES (CASO POSSÍVEL)
-# ==========================================================
-st.markdown("## 🏆 Ranking Mensal")
-
-df_rank = df[df["Total de Sacos"].notna()] if "Total de Sacos" in df.columns else df.copy()
-if not df_rank.empty and "Total de Sacos" in df_rank.columns:
-
-    df_rank_show = df_rank[["Mes", "Total de Sacos"]].copy()
-    df_rank_show = df_rank_show.groupby("Mes").sum().reset_index()
-    df_rank_show["Mes"] = pd.Categorical(df_rank_show["Mes"], categories=meses_disponiveis, ordered=True)
-    df_rank_show = df_rank_show.sort_values("Mes")
-
-    df_rank_show["Ranking"] = df_rank_show["Total de Sacos"].rank(ascending=False, method="dense").astype(int)
-
-    st.dataframe(
-        df_rank_show.rename(columns={
-            "Mes": "Mês",
-            "Total de Sacos": "Quantidade Total",
-            "Ranking": "Posição"
-        }),
-        use_container_width=True,
-    )
-
-# ==========================================================
-# RELATÓRIO FINAL
-# ==========================================================
-st.markdown("---")
-
-st.markdown(
-    f"""
-<div style='text-align: center; padding-bottom: 10px;'>
-    <div style='font-size: 2em; font-weight: bold;'>
-        🚛 <span style='background: linear-gradient(90deg,#00FFFF,#9b30ff);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
+    st.markdown(f"""
+    <div class="insight-card">
+        <h4>?? Capacidade Coletora</h4>
+        <p>Status: <span class="{cor_necessidade}"><strong>{necessidade}</strong></span></p>
+        <p><strong>Projeção:</strong> {projecao_proxima:.0f} sacos</p>
+        <p>({projecao_proxima*20:.0f} kg)</p>
     </div>
-    <div style='color: #00FFFF; font-size: 1.1em;'>Gerenciamento Inteligente</div>
-</div>
-""",
-    unsafe_allow_html=True
-)
+    """, unsafe_allow_html=True)
 
-# ==========================================================
-# EXTRA - COLORIR BOTÃO SELECIONADO (CORREÇÃO FINAL)
-# ==========================================================
-# (GARANTIA QUE FUNCIONA 100%)
-st.markdown(
-    f"""
-<style>
-/* Default hover (azul translúcido) */
-.stRadio > div > div > div > label:hover {{
-    background: rgba(0,255,255,0.15) !important;
-}}
+# ?? Tabela de dados detalhada (colapsável)
+with st.expander("?? Ver Dados Detalhados"):
+    df_display = df[df.get("Total de Sacos").notna()].copy() if "Total de Sacos" in df.columns else df.copy()
+    if "Mês" in df_display.columns:
+        df_display["Mês"] = df_display["Mês"].astype(str).str.title()
+    if "Total de Sacos" in df_display.columns:
+        df_display["Peso Total (kg)"] = df_display["Total de Sacos"] * 20
+    if {"Coleta AM", "Total de Sacos"}.issubset(df_display.columns):
+        df_display["% AM"] = (df_display["Coleta AM"] / df_display["Total de Sacos"] * 100).round(1)
+    if {"Coleta PM", "Total de Sacos"}.issubset(df_display.columns):
+        df_display["% PM"] = (df_display["Coleta PM"] / df_display["Total de Sacos"] * 100).round(1)
 
-/* Selecionado (VERMELHO TRANSLÚCIDO) */
-.stRadio > div > div > div > label[aria-checked="true"] {{
-    background: rgba(255, 0, 0, 0.35) !important;
-    border: 1px solid rgba(255, 0, 0, 0.75) !important;
-    box-shadow: 0 0 12px rgba(255, 0, 0, 0.45) !important;
-    transform: scale(1.04) !important;
-}}
-</style>
-""",
-    unsafe_allow_html=True
-)
-# ==========================================================
-# 🔍 ANÁLISES EXTRA – DETECÇÃO DE OUTLIERS
-# ==========================================================
-st.markdown("## 📌 Comportamentos Atípicos (Outliers)")
+    cols_to_show = [c for c in ["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"] if c in df_display.columns]
+    st.dataframe(df_display[cols_to_show], use_container_width=True)
 
-df_out = df[df.get("Total de Sacos").notna()].copy() if "Total de Sacos" in df.columns else df.copy()
-
-if not df_out.empty and "Total de Sacos" in df_out.columns:
-
-    # Detecta outliers simples usando média ± 2 desvios
-    media = df_out["Total de Sacos"].mean()
-    desvio = df_out["Total de Sacos"].std()
-    limite_sup = media + (2 * desvio)
-    limite_inf = media - (2 * desvio)
-
-    df_out["Classificacao"] = df_out["Total de Sacos"].apply(
-        lambda x: "Acima do Esperado" if x > limite_sup else 
-                  "Abaixo do Esperado" if x < limite_inf else 
-                  "Dentro do Padrão"
-    )
-
-    df_out["Mes"] = pd.Categorical(df_out["Mes"], categories=meses_disponiveis, ordered=True)
-    df_out = df_out.sort_values("Mes")
-
-    st.dataframe(
-        df_out[["Mes", "Total de Sacos", "Classificacao"]],
-        use_container_width=True
-    )
-
-    # Exibe faixas calculadas
-    st.info(
-        f"""
-        📊 **Faixa Normal estimada**  
-        - Limite inferior: **{limite_inf:.0f} sacos**  
-        - Limite superior: **{limite_sup:.0f} sacos**
-        """
-    )
-
-# ==========================================================
-# 🔁 PROJEÇÃO FUTURA SIMPLES (TREND)
-# ==========================================================
-st.markdown("## 📈 Projeção Próximos Meses (Tendência Linear)")
-
-df_proj = df[df.get("Total de Sacos").notna()].copy() if "Total de Sacos" in df.columns else df.copy()
-
-if not df_proj.empty and "Total de Sacos" in df_proj.columns:
-
-    try:
-        # Conversão ordenada de meses para número
-        df_proj["Mes_idx"] = df_proj["Mes"].apply(lambda x: meses_disponiveis.index(x))
-
-        coef = np.polyfit(df_proj["Mes_idx"], df_proj["Total de Sacos"], 1)
-        tendencia = np.poly1d(coef)
-
-        projecoes = []
-        for i in range(12, 15):  # Projeta 3 meses extras
-            valor = int(tendencia(i))
-            projecoes.append({"Mes Proj": i - 11, "Total Projetado": valor})
-
-        st.write(pd.DataFrame(projecoes))
-
-        # Plot
-        fig_proj = go.Figure()
-
-        fig_proj.add_trace(
-            go.Scatter(
-                x=df_proj["Mes_idx"],
-                y=df_proj["Total de Sacos"],
-                mode="markers+lines",
-                name="Histórico",
-                marker=dict(size=10,color="#FF6B35"),
-                line=dict(color="#FF6B35", width=3)
-            )
-        )
-
-        fig_proj.add_trace(
-            go.Scatter(
-                x=[p["Mes Proj"] for p in projecoes],
-                y=[p["Total Projetado"] for p in projecoes],
-                mode="markers+lines",
-                name="Projetado",
-                marker=dict(size=10,color="#00D4FF"),
-                line=dict(color="#00D4FF", dash="dash", width=3)
-            )
-        )
-
-        fig_proj.update_layout(
-            plot_bgcolor="rgba(0,0,0,0)",
-            paper_bgcolor="rgba(0,0,0,0)",
-            font_color="white",
-            font_family="Inter",
-            height=400,
-            legend=dict(
-                orientation="h",
-                yanchor="top",
-                y=-0.15,
-                xanchor="center",
-                x=0.5,
-                bgcolor="rgba(0,0,0,0.6)"
-            )
-        )
-        st.plotly_chart(fig_proj, use_container_width=True)
-
-    except Exception as e:
-        st.warning("Não foi possível calcular projeção.")
-        st.text(str(e))
-
-# ==========================================================
-# 💬 Comentários automáticos sobre desempenho
-# ==========================================================
-st.markdown("## 📝 Interpretação Automática")
-
-interpret = ""
-
-if variacao > 15:
-    interpret = "Crescimento expressivo! Atenção para capacidade logística."
-elif variacao > 5:
-    interpret = "Crescimento leve, mas consistente. Monitoramento recomendado."
-elif variacao < -15:
-    interpret = "Queda forte no volume. Investigar razões e ajustar rotas."
-elif variacao < -5:
-    interpret = "Pequena queda. Tendência pode se normalizar."
-else:
-    interpret = "Estabilidade. Sem grandes mudanças demandadas."
-
-st.success(f"📌 **Resumo Inteligente:** {interpret}")
-# ==========================================================
-# 📦 DOWNLOAD DOS GRÁFICOS EM PNG
-# ==========================================================
-st.markdown("## 📥 Exportação de Gráficos")
-
-col_png1, col_png2 = st.columns(2)
-
-with col_png1:
-    try:
-        btn1 = st.download_button(
-            "⬇️ Baixar Gráfico Principal",
-            data=fig_main.to_image(format="png"),
-            file_name=f"coleta_{mes_selecionado}_{display_year}_principal.png",
-            mime="image/png"
-        )
-    except:
-        st.info("⚠️ Instale 'kaleido' se quiser baixar imagens em PNG.")
-
-with col_png2:
-    try:
-        btn2 = st.download_button(
-            "⬇️ Baixar Evolução Mensal",
-            data=fig_evolucao.to_image(format="png"),
-            file_name=f"coleta_{mes_selecionado}_{display_year}_evolucao.png",
-            mime="image/png"
-        )
-    except:
-        st.info("⚠️ Instale 'kaleido' se quiser baixar imagens em PNG.")
-
-
-# ==========================================================
-# 💾 SALVAR CONFIGURAÇÃO ATUAL
-# ==========================================================
-st.markdown("---")
-st.markdown("### 💾 Salvar Configuração")
-
-config = {
-    "mes": mes_selecionado,
-    "ano": display_year,
-    "comparativo": mostrar_comparativo,
-    "tipo_grafico": tipo_grafico
-}
-
-st.json(config)
-
-
-# ==========================================================
-# 🛑 PREVENÇÃO CONTRA CRASHES
-# ==========================================================
-try:
-    st.write("")
-except:
-    pass
-
-
-# ==========================================================
-# 📌 FOOTER FINAL DE IDENTIFICAÇÃO
-# ==========================================================
+# ?? Footer
 st.markdown("---")
 st.markdown(
-    f"""
-<div style='text-align: center; padding: 25px;'>
-    <div style='font-size: 2em; margin-bottom: 5px; font-weight: bold;
-                background: linear-gradient(90deg, #00FFFF, #9b30ff);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;'>
-        Coleta Centro
+    """
+<div style='text-align: center; padding: 20px;'>
+    <div style='font-size: 2em; margin-bottom: 10px;'>
+        ?? <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>Coleta Centro</span> ??
     </div>
     <div style='color: #00FFFF; font-size: 1.1em;'>
-        Relatório Executivo {display_year}
+        ?? Monitoramento para Otimização da Frota
     </div>
-    <br>
-    <span style='font-size:0.8em;color:rgba(255,255,255,0.5);'>
-        Desenvolvido para operação e tomada de decisão
-    </span>
+    <small style='color: rgba(255,255,255,0.7);'>Sistema de apoio à decisão para expansão da coleta urbana</small>
 </div>
-""",
+    """,
     unsafe_allow_html=True,
 )
-
-# ==========================================================
-# 🔚 FIM DO PROJETO
-# ==========================================================

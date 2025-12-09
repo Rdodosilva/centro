@@ -168,6 +168,18 @@ st.markdown(
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
+        
+        /* Manter o estilo vermelho no hover do botão selecionado */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover,
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"]:hover {
+            background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
+            border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
+            box-shadow:
+                0 0 20px rgba(255, 0, 0, 0.7), /* Brilho mais forte no hover */
+                0 6px 20px rgba(255, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3) !important;
+            transform: scale(1.05) !important; /* Manter o scale */
+        }
 
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
@@ -233,6 +245,18 @@ st.markdown(
             background: rgba(0,255,255,0.15) !important;
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
+        }
+        
+        /* Manter o estilo vermelho no hover do botão selecionado */
+        .stRadio > div > div > div > label[aria-checked="true"]:hover,
+        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"]:hover {
+            background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
+            border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
+            box-shadow:
+                0 0 20px rgba(255, 0, 0, 0.7), /* Brilho mais forte no hover */
+                0 6px 20px rgba(255, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3) !important;
+            transform: scale(1.05) !important; /* Manter o scale */
         }
 
         .stRadio > div > div > div > label[aria-checked="true"],

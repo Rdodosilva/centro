@@ -170,7 +170,6 @@ st.markdown(
         }
         
         /* Manter o estilo vermelho no hover do botão selecionado */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover,
         section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"]:hover {
             background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
             border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
@@ -183,11 +182,9 @@ st.markdown(
 
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"],
-        /* Seletor mais robusto para o mês selecionado */
-        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"],
+        /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
         /* Seletor de altíssima especificidade para garantir a aplicação */
-        section[data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             color: white !important;
             font-weight: 700 !important;
@@ -248,7 +245,6 @@ st.markdown(
         }
         
         /* Manter o estilo vermelho no hover do botão selecionado */
-        .stRadio > div > div > div > label[aria-checked="true"]:hover,
         .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"]:hover {
             background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
             border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
@@ -259,11 +255,7 @@ st.markdown(
             transform: scale(1.05) !important; /* Manter o scale */
         }
 
-        .stRadio > div > div > div > label[aria-checked="true"],
-        /* Seletor mais robusto para o ano selecionado */
-        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"],
-        /* Seletor de altíssima especificidade para garantir a aplicação */
-        div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] {
+        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:

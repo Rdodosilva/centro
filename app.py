@@ -173,7 +173,9 @@ st.markdown(
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"],
         /* Seletor mais robusto para o mês selecionado */
-        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"],
+        /* Seletor de altíssima especificidade para garantir a aplicação */
+        section[data-testid="stSidebar"] div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             color: white !important;
             font-weight: 700 !important;
@@ -235,7 +237,9 @@ st.markdown(
 
         .stRadio > div > div > div > label[aria-checked="true"],
         /* Seletor mais robusto para o ano selecionado */
-        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"] {
+        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"],
+        /* Seletor de altíssima especificidade para garantir a aplicação */
+        div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:

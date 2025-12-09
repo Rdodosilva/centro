@@ -170,7 +170,7 @@ st.markdown(
         }
         
         /* Manter o estilo vermelho no hover do botão selecionado */
-        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"]:hover {
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][data-selected="true"]:hover {
             background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
             border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
             box-shadow:
@@ -184,7 +184,7 @@ st.markdown(
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
         /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO (Mês) */
         /* Seletor de altíssima especificidade para garantir a aplicação */
-        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][aria-checked="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] label[data-baseweb="radio"][data-selected="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             color: white !important;
             font-weight: 700 !important;
@@ -199,7 +199,7 @@ st.markdown(
 
         /* Fallback para alguns renderers que usam role="option" */
         /* Fallback para alguns renderers que usam role="option" */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][data-selected="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important; /* Brilho vermelho */
@@ -245,7 +245,7 @@ st.markdown(
         }
         
         /* Manter o estilo vermelho no hover do botão selecionado */
-        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"]:hover {
+        .stRadio > div > div > div label[data-baseweb="radio"][data-selected="true"]:hover {
             background: rgba(255, 0, 0, 0.2) !important; /* Um pouco mais escuro no hover */
             border: 2px solid rgba(255, 0, 0, 0.9) !important; /* Contorno mais forte no hover */
             box-shadow:
@@ -255,7 +255,7 @@ st.markdown(
             transform: scale(1.05) !important; /* Manter o scale */
         }
 
-        .stRadio > div > div > div label[data-baseweb="radio"][aria-checked="true"] {
+        .stRadio > div > div > div label[data-baseweb="radio"][data-selected="true"] {
             background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:

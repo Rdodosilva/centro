@@ -471,6 +471,8 @@ st.markdown(
 
         h1, h2, h3, label, span, div {
             color: white !important;
+            }
+            
        /* PRIORIDADE ABSOLUTA PARA O MÊS SELECIONADO */
 div[role="radiogroup"] label[aria-checked="true"],
 div[role="radiogroup"] label[role="option"][aria-checked="true"] {
@@ -484,7 +486,6 @@ div[role="radiogroup"] label[role="option"][aria-checked="true"] {
     color: white !important;
 }
 
-        }
     </style>
     """,
     unsafe_allow_html=True,

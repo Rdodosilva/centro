@@ -159,16 +159,16 @@ st.markdown("""
             max-height: 32px !important;
         }
         
-        /* Hover especial para botão já selecionado - vermelho translúcido */
+        /* HOVER ESPECIAL APENAS QUANDO O BOTÃO ESTÁ SELECIONADO */
 section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover {
-    background: linear-gradient(135deg, rgba(255,0,0,0.45), rgba(255,0,0,0.25)) !important;
-    border: 2px solid rgba(255,0,0,0.55) !important;
+    background: linear-gradient(135deg, rgba(255,0,0,0.35), rgba(155,0,0,0.20)) !important;
+    border: 2px solid rgba(255,0,0,0.45) !important;
     box-shadow:
-        0 0 18px rgba(255,0,0,0.45),
-        0 0 25px rgba(255,0,0,0.45),
-        inset 0 0 10px rgba(255,0,0,0.25) !important;
-    transform: scale(1.06) !important;
+        0 0 18px rgba(255,0,0,0.40),
+        0 0 30px rgba(155,0,0,0.40),
+        inset 0 0 6px rgba(255,0,0,0.25) !important;
 }
+
         
         /* BOTÃO SELECIONADO - EFEITO ESPECIAL (USANDO aria-checked) */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {

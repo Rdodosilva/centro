@@ -427,6 +427,11 @@ st.markdown(
         h1, h2, h3, label, span, div {
             color: white !important;
         }
+    /* GARANTE QUE TÍTULOS COM GRADIENTE APAREÇAM */
+.gradient-title {
+    -webkit-text-fill-color: transparent !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -583,11 +588,13 @@ display_year = year_selected if year_selected else (sheet_names[0] if sheet_name
 st.markdown(
     f"""
 <div style='text-align: center; padding: 20px 0;'>
-    <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
-        ?? <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> ??
+    <div class="gradient-title" style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;
+         background: linear-gradient(90deg, #00FFFF, #9b30ff);
+         -webkit-background-clip: text;'>
+        🗑️ Coleta Centro 🗑️
     </div>
     <div style='color: #00FFFF; font-size: 1.1em; opacity: 0.9;'>
-        ?? Monitoramento de Crescimento de Resíduos | {display_year}
+        📊 Monitoramento de Crescimento de Resíduos | {display_year}
     </div>
 </div>
 """,

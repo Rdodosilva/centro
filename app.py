@@ -159,32 +159,42 @@ st.markdown("""
             max-height: 32px !important;
         }
         
-        /* HOVER ESPECIAL APENAS QUANDO O BOTÃO ESTÁ SELECIONADO */
-section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover {
-    background: linear-gradient(135deg, rgba(255,0,0,0.35), rgba(155,0,0,0.20)) !important;
-    border: 2px solid rgba(255,0,0,0.45) !important;
+        /* ======= STATUS SELECIONADO (PADRÃO: ROXO) ======= */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"],
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
+    background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 2px solid #9b30ff !important;
     box-shadow:
-        0 0 18px rgba(255,0,0,0.40),
-        0 0 30px rgba(155,0,0,0.40),
-        inset 0 0 6px rgba(255,0,0,0.25) !important;
+        0 0 20px rgba(155,48,255,0.5),
+        0 4px 15px rgba(155,48,255,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    transform: scale(1.00) !important; /* estado normal do selecionado */
 }
 
-        
-        /* BOTÃO SELECIONADO - EFEITO ESPECIAL (USANDO aria-checked) */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
-            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            border: 2px solid #9b30ff !important;
-            box-shadow: 
-                0 0 20px rgba(155,48,255,0.5),
-                0 4px 15px rgba(155,48,255,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.2),
-                /* contorno vermelho translúcido */
-                0 0 0 6px rgba(255, 40, 40, 0.08) !important;
-            transform: scale(1.05) !important;
-            animation: pulse-glow 2s infinite !important;
-        }
+/* ======= HOVER para BOTÃO NÃO-SELECIONADO (mantém seu azul atual) ======= */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label:not([aria-checked="true"]):hover,
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"]:not([aria-checked="true"]):hover {
+    /* preserve seu efeito azul existente — ajuste se quiser */
+    background: rgba(0,212,255,0.12) !important;
+    border: 1px solid #00FFFF !important;
+    box-shadow: 0 4px 12px rgba(0,212,255,0.18) !important;
+    transform: translateY(-1px) scale(1.02) !important;
+}
+
+/* ======= HOVER ESPECIAL APENAS QUANDO O BOTÃO ESTÁ SELECIONADO (VERMELHO TRANSLÚCIDO) ======= */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"]:hover,
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"]:hover {
+    background: linear-gradient(135deg, rgba(255,40,40,0.36), rgba(255,40,40,0.18)) !important;
+    border: 2px solid rgba(255,40,40,0.50) !important;
+    box-shadow:
+        0 0 18px rgba(255,40,40,0.38),
+        0 6px 22px rgba(155,20,20,0.28),
+        inset 0 0 8px rgba(255,255,255,0.06) !important;
+    transform: scale(1.06) !important;
+}
+
 
         /* Fallback para alguns renderers que usam role="option" */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {

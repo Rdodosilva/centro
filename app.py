@@ -427,6 +427,18 @@ st.markdown(
         h1, h2, h3, label, span, div {
             color: white !important;
         }
+    /* ---- FIXA DE VEZ: SELECIONADO = VERMELHO ---- */
+section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
+    background: linear-gradient(135deg, rgba(255,60,60,0.45), rgba(180,0,0,0.28)) !important;
+    color: white !important;
+    border: 2px solid rgba(255,60,60,0.55) !important;
+    box-shadow:
+        0 0 18px rgba(255,60,60,0.42),
+        0 0 25px rgba(255,60,60,0.35),
+        inset 0 0 6px rgba(255,60,60,0.25) !important;
+    transform: scale(1.04) !important;
+}
+
     </style>
     """,
     unsafe_allow_html=True,

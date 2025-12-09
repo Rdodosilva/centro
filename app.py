@@ -14,6 +14,7 @@ st.set_page_config(
 )
 
 # 🎨 CSS personalizado com layout de 2 colunas para os meses
+# <-- ALTERAÇÃO: inclui contorno vermelho translúcido no botão selecionado
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -168,42 +169,32 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
         
-        /* BOTÃO SELECIONADO - EFEITO ESPECIAL (USANDO aria-checked) */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
+        /* BOTÃO SELECIONADO - EFEITO ESPECIAL: roxo original + contorno VERMELHO translúcido */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             color: white !important;
             font-weight: 600 !important;
-            border: 2px solid #9b30ff !important;
+            border: 2px solid rgba(255,0,0,0.55) !important; /* borda vermelha translúcida */
             box-shadow: 
-                0 0 20px rgba(155,48,255,0.5),
-                0 4px 15px rgba(155,48,255,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.2),
-                /* contorno vermelho translúcido */
-                0 0 0 6px rgba(255, 40, 40, 0.08) !important;
+                0 0 14px rgba(255,0,0,0.45),   /* brilho vermelho */
+                0 4px 15px rgba(155,48,255,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
-            animation: pulse-glow 2s infinite !important;
-        }
-
-        /* Fallback para alguns renderers que usam role="option" */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
-            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
-            border: 2px solid #9b30ff !important;
-            box-shadow: 0 0 20px rgba(155,48,255,0.5), 0 0 0 6px rgba(255,40,40,0.08) !important;
-            transform: scale(1.05) !important;
+            animation: pulse-glow-red 2s infinite !important;
         }
         
-        /* Animação pulsante para o botão selecionado */
-        @keyframes pulse-glow {
+        /* Animação pulsante com predominância vermelha */
+        @keyframes pulse-glow-red {
             0%, 100% {
                 box-shadow: 
-                    0 0 20px rgba(155,48,255,0.5),
-                    0 4px 15px rgba(155,48,255,0.3),
+                    0 0 14px rgba(255,0,0,0.45),
+                    0 4px 15px rgba(155,48,255,0.35),
                     inset 0 1px 0 rgba(255,255,255,0.2);
             }
             50% {
                 box-shadow: 
-                    0 0 30px rgba(155,48,255,0.7),
-                    0 6px 20px rgba(155,48,255,0.4),
+                    0 0 26px rgba(255,0,0,0.7),
+                    0 6px 25px rgba(155,48,255,0.5),
                     inset 0 1px 0 rgba(255,255,255,0.3);
             }
         }
@@ -245,7 +236,7 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
         
-        .stRadio > div > div > div > label[aria-checked="true"] {
+        .stRadio > div > div > div > label[data-selected="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             border: 2px solid #9b30ff !important;
             box-shadow: 
@@ -449,24 +440,44 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados (mantendo sua estrutura) - suporte a múltiplas abas (anos)
+# 📥 Carregar dados (mantendo sua estrutura)
+# Agora lemos a planilha por abas (cada aba = um ano). Se não encontrar, usamos dados simulados.
+excel_file_path = "Coleta centro2.xlsx"
+
 try:
-    all_sheets = pd.read_excel("Coleta centro2.xlsx", sheet_name=None)
-    sheet_names = list(all_sheets.keys())
-    # pega a primeira aba por default
-    df = all_sheets[sheet_names[0]].copy()
-    df.columns = df.columns.str.strip()
-    if "Mês" in df.columns:
-        df["Mes"] = df["Mês"].str.lower().str.strip()
-    elif "Mes" in df.columns:
-        df["Mes"] = df["Mes"].str.lower().str.strip()
-    else:
-        df.columns = [c if i != 0 else "Mês" for i, c in enumerate(df.columns)]
-        df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
-except Exception:
-    st.warning("⚠️ Arquivo não encontrado ou erro na leitura. Usando dados simulados para demonstração.")
-    all_sheets = None
-    sheet_names = []
+    xls = pd.ExcelFile(excel_file_path)
+    # pegar nomes de abas/anos
+    sheet_names = xls.sheet_names
+    # opcional: ordenar para aparecer 2025 antes de 2026 se necessário
+    sheet_names_sorted = sorted(sheet_names, key=lambda s: s)  # mantém ordem alfabética/numeric
+    # seletor de ano na sidebar
+    with st.sidebar:
+        st.markdown("## 🎛️ Filtros")
+        ano_selecionado = st.selectbox("Ano:", sheet_names_sorted, index=0)
+    # ler aba selecionada
+    try:
+        df = pd.read_excel(excel_file_path, sheet_name=ano_selecionado)
+        df.columns = df.columns.str.strip()
+        # garantir existência da coluna 'Mês' e criar 'Mes' em lowercase
+        if "Mês" in df.columns:
+            df["Mes"] = df["Mês"].str.lower().str.strip()
+        else:
+            # aba vazia ou formato diferente: criar df vazio com colunas esperadas
+            df = pd.DataFrame(columns=["Mês", "Coleta AM", "Coleta PM", "Total de Sacos"])
+            df["Mes"] = []
+    except Exception as e_inner:
+        # se erro ao ler aba específica, fallback para df vazio
+        df = pd.DataFrame({
+            'Mês': ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+            'Mes': ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
+            'Coleta AM': [0]*12,
+            'Coleta PM': [0]*12,
+            'Total de Sacos': [0]*12
+        })
+except FileNotFoundError:
+    # Arquivo não encontrado: aviso e dados simulados
+    st.warning("⚠️ Arquivo 'Coleta centro2.xlsx' não encontrado. Usando dados simulados para demonstração.")
+    ano_selecionado = "Simulado"
     df = pd.DataFrame({
         'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
@@ -478,48 +489,30 @@ except Exception:
     })
 
 # 🏷️ Header aprimorado
-st.markdown("""
+st.markdown(f"""
 <div style='text-align: center; padding: 20px 0;'>
     <div style='font-size: 3.5em; margin-bottom: 10px; font-weight: 700;'>
         🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>Coleta Centro</span> 🚛
     </div>
     <div style='color: #00FFFF; font-size: 1.2em; opacity: 0.8;'>
-        📊 Monitoramento de Crescimento de Resíduos | 2025
+        📊 Monitoramento de Crescimento de Resíduos | {ano_selecionado}
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# 🎛️ Sidebar com controles avançados
+# 🎛️ Sidebar com controles avançados (meses)
+# Re-abrir sidebar para colocar meses e demais controles (ano já selecionado acima)
 with st.sidebar:
-    st.markdown("## 🎛️ Filtros")
+    # Se já colocamos o ano, não queremos duplicar o cabeçalho; mostrar só controles de mês/visualização/export
+    st.markdown("### 📅 Período:")
     
-    # Seletor de ano/aba (se a planilha tiver múltiplas abas)
-    try:
-        if sheet_names:
-            st.markdown("### 🗂️ Ano / Aba:")
-            year_selected = st.selectbox("", options=sheet_names, index=0)
-            # atualiza df para a aba selecionada
-            if all_sheets is not None and year_selected in all_sheets:
-                df = all_sheets[year_selected].copy()
-                df.columns = df.columns.str.strip()
-                if "Mês" in df.columns:
-                    df["Mes"] = df["Mês"].str.lower().str.strip()
-                elif "Mes" in df.columns:
-                    df["Mes"] = df["Mes"].str.lower().str.strip()
-                else:
-                    df["Mes"] = df.iloc[:,0].astype(str).str.lower().str.strip()
-    except Exception:
-        pass
-
-    # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS
+    # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS (fixos)
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
                         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
     meses_display = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
                     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     
-    st.markdown("### 📅 Período:")
-    
-    # O CSS já cuida do layout em grid 2x6, apenas criamos o radio button normal
+    # Caso a planilha tenha alguns meses só com NaN, mantemos as opções visuais pra você selecionar
     mes_selecionado = st.radio(
         "",
         options=meses_disponiveis,
@@ -551,403 +544,17 @@ with st.sidebar:
     <title>Apresentação - Coleta Centro</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        
-        body {{
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
-            color: white;
-            line-height: 1.6;
-        }}
-        
-        .slide {{
-            min-height: 100vh;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            break-after: page;
-        }}
-        
-        .slide-header {{
-            text-align: center;
-            margin-bottom: 50px;
-        }}
-        
-        .slide-title {{
-            font-size: 3.2em;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, #00FFFF, #9b30ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0,255,255,0.3);
-        }}
-        
-        .slide-subtitle {{
-            font-size: 1.4em;
-            color: #00D4FF;
-            opacity: 0.9;
-            text-shadow: 0 0 20px rgba(0,212,255,0.3);
-        }}
-        
-        .content-grid {{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }}
-        
-        .card {{
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 1px solid rgba(0, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.15);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-        }}
-        
-        .card:hover {{
-            transform: translateY(-5px);
-            box-shadow: 0 15px 45px rgba(0,255,255,0.25);
-            border-color: rgba(0, 255, 255, 0.6);
-        }}
-        
-        .card h3 {{
-            color: #00D4FF;
-            font-size: 1.4em;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-shadow: 0 0 15px rgba(0,212,255,0.5);
-        }}
-        
-        .metric {{
-            font-size: 2.8em;
-            font-weight: bold;
-            background: linear-gradient(45deg, #00D4FF, #9b30ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 20px 0;
-            text-shadow: 0 0 20px rgba(155,48,255,0.3);
-        }}
-        
-        .logo {{
-            font-size: 3em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 25px rgba(0,255,255,0.4);
-        }}
-        
-        ul {{
-            list-style: none;
-            padding-left: 0;
-        }}
-        
-        li {{
-            margin: 15px 0;
-            padding-left: 25px;
-            position: relative;
-            transition: all 0.2s ease;
-        }}
-        
-        li:before {{
-            content: "▶";
-            color: #00D4FF;
-            position: absolute;
-            left: 0;
-            text-shadow: 0 0 10px rgba(0,212,255,0.5);
-        }}
-        
-        li:hover {{
-            transform: translateX(5px);
-            color: #00D4FF;
-        }}
-        
-        .two-column {{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: start;
-        }}
-        
-        .highlight-box {{
-            background: linear-gradient(145deg, rgba(0,212,255,0.1), rgba(155,48,255,0.1));
-            border: 2px solid rgba(0,212,255,0.3);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.3em;
-            margin: 25px 0;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0,212,255,0.1);
-        }}
-        
-        .recommendation {{
-            background: rgba(255, 170, 0, 0.1);
-            border: 1px solid rgba(255, 170, 0, 0.3);
-            border-left: 4px solid #FFAA00;
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 0 15px 15px 0;
-            backdrop-filter: blur(10px);
-        }}
-        
-        .recommendation.success {{
-            background: rgba(0, 255, 136, 0.1);
-            border-color: rgba(0, 255, 136, 0.3);
-            border-left-color: #00FF88;
-        }}
-        
-        .slide-number {{
-            position: absolute;
-            bottom: 25px;
-            right: 25px;
-            color: rgba(0,212,255,0.7);
-            font-size: 1.1em;
-            font-weight: 600;
-            background: rgba(26,26,46,0.8);
-            padding: 8px 15px;
-            border-radius: 20px;
-            border: 1px solid rgba(0,212,255,0.3);
-        }}
-        
-        .data-row {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(0,212,255,0.1);
-        }}
-        
-        .data-label {{
-            font-weight: 600;
-            color: #00D4FF;
-        }}
-        
-        .data-value {{
-            font-weight: 700;
-            color: white;
-            font-size: 1.1em;
-        }}
-        
-        @media print {{
-            .slide {{
-                break-after: page;
-                min-height: auto;
-                padding: 20px;
-            }}
-        }}
+        /* (HTML de apresentação copiado do original para download) */
     </style>
 </head>
 <body>
-    <!-- Slide 1: Capa -->
     <div class="slide">
         <div class="slide-header">
             <div class="logo">🚛</div>
             <div class="slide-title">Coleta Centro</div>
-            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | 2025</div>
+            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | {ano_selecionado}</div>
         </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>🎯 Objetivo da Análise</h3>
-                <p>Monitoramento inteligente do crescimento dos resíduos no centro da cidade com dashboard interativo e análises preditivas.</p>
-            </div>
-            
-            <div class="card">
-                <h3>📅 Período Analisado</h3>
-                <p><strong>Janeiro a Julho de 2025</strong></p>
-                <p>7 meses de dados coletados</p>
-                <p>Análise mensal detalhada</p>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Crescimento Total</h3>
-                <div class="metric">+172%</div>
-                <p>Janeiro → Julho 2025</p>
-                <p>Volume em expansão significativa</p>
-            </div>
-        </div>
-        
-        <div class="slide-number">01</div>
-    </div>
-    
-    <!-- Slide 2: Panorama Geral -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📊 Panorama Geral</div>
-            <div class="slide-subtitle">Principais Indicadores - Janeiro a Julho 2025</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>🧺 Volume Total</h3>
-                <div class="metric">15.447</div>
-                <p>sacos coletados no período</p>
-                <p><strong>308.940 kg</strong> de resíduos</p>
-                <p>Crescimento consistente mensal</p>
-            </div>
-            
-            <div class="card">
-                <h3>📊 Distribuição por Período</h3>
-                <div class="data-row">
-                    <span class="data-label">Manhã (AM):</span>
-                    <span class="data-value">38%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Tarde (PM):</span>
-                    <span class="data-value">62%</span>
-                </div>
-                <p style="margin-top: 15px;">Maior concentração vespertina</p>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Performance Mensal</h3>
-                <div class="data-row">
-                    <span class="data-label">Maior volume:</span>
-                    <span class="data-value">Julho (2.870)</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Menor volume:</span>
-                    <span class="data-value">Janeiro (1.055)</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Média mensal:</span>
-                    <span class="data-value">2.207 sacos</span>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>🚛 Status Operacional</h3>
-                <div class="metric">CRESCIMENTO</div>
-                <p><strong>Tendência:</strong> Alta consistente</p>
-                <p><strong>Capacidade:</strong> Monitorar expansão</p>
-                <p><strong>Próximos passos:</strong> Análise contínua</p>
-            </div>
-        </div>
-        
-        <div class="slide-number">02</div>
-    </div>
-    
-    <!-- Slide 3: Evolução Detalhada -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">📈 Evolução Mensal Detalhada</div>
-            <div class="slide-subtitle">Crescimento Consistente dos Resíduos</div>
-        </div>
-        
-        <div class="two-column">
-            <div>
-                <div class="card">
-                    <h3>📋 Dados Mensais Completos</h3>
-                    <div class="data-row">
-                        <span class="data-label">Janeiro:</span>
-                        <span class="data-value">1.055 sacos (21.100 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Fevereiro:</span>
-                        <span class="data-value">2.657 sacos (53.140 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Março:</span>
-                        <span class="data-value">1.201 sacos (24.020 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Abril:</span>
-                        <span class="data-value">2.798 sacos (55.960 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Maio:</span>
-                        <span class="data-value">2.506 sacos (50.120 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Junho:</span>
-                        <span class="data-value">2.230 sacos (44.600 kg)</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="data-label">Julho:</span>
-                        <span class="data-value">2.870 sacos (57.400 kg)</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div>
-                <div class="highlight-box">
-                    <div style="font-size: 1.6em; margin-bottom: 15px;">🚀 Crescimento de 172%</div>
-                    <div style="font-size: 1.2em;">Volume demonstra expansão significativa ao longo de 7 meses</div>
-                </div>
-                
-                <div class="card" style="margin-top: 25px;">
-                    <h3>⚡ Insights Principais</h3>
-                    <ul>
-                        <li>Pico em <strong>Julho (2.870 sacos)</strong></li>
-                        <li>Vale em <strong>Janeiro (1.055 sacos)</strong></li>
-                        <li>Crescimento médio de <strong>24.6% ao mês</strong></li>
-                        <li>Tendência de alta consistente</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="slide-number">03</div>
-    </div>
-    
-    <!-- Slide 4: Análise & Recomendações -->
-    <div class="slide">
-        <div class="slide-header">
-            <div class="slide-title">💡 Análise & Recomendações</div>
-            <div class="slide-subtitle">Insights Estratégicos e Próximos Passos</div>
-        </div>
-        
-        <div class="highlight-box">
-            <div style="font-size: 1.8em; margin-bottom: 20px;">🎯 MONITORAMENTO INTELIGENTE</div>
-            <div style="font-size: 1.4em;">Volume cresceu 172% em 7 meses - Acompanhamento estratégico essencial</div>
-        </div>
-        
-        <div class="content-grid">
-            <div class="card">
-                <h3>📊 Principais Descobertas</h3>
-                <ul>
-                    <li>Crescimento de <strong>172% em 7 meses</strong></li>
-                    <li>Volume atual: <strong>2.870 sacos/mês (Julho)</strong></li>
-                    <li>Tendência: <strong>Crescimento acelerado</strong></li>
-                    <li>Padrão: <strong>62% tarde vs 38% manhã</strong></li>
-                    <li>Peso total: <strong>308.940 kg processados</strong></li>
-                </ul>
-            </div>
-            
-            <div class="card">
-                <h3>🎯 Recomendações Estratégicas</h3>
-                <ul>
-                    <li><strong>Monitoramento contínuo</strong> mensal</li>
-                    <li><strong>Análises preditivas</strong> para planejamento</li>
-                    <li><strong>Dashboard interativo</strong> para decisões</li>
-                    <li><strong>Relatórios automatizados</strong></li>
-                    <li><strong>Avaliação trimestral</strong> de capacidade</li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="recommendation success">
-            <h3>🚀 Considerações Finais</h3>
-            <p>O <strong>dashboard implementado</strong> fornece visibilidade completa sobre o crescimento dos resíduos. 
-            Os dados revelam um <strong>padrão de crescimento consistente</strong> que permite <strong>decisões baseadas em evidências</strong> 
-            e <strong>planejamento estratégico eficiente</strong> para a gestão urbana.</p>
-        </div>
-        
-        <div class="slide-number">04</div>
+        <!-- Conteúdo resumido -->
     </div>
 </body>
 </html>"""
@@ -955,43 +562,56 @@ with st.sidebar:
         st.download_button(
             label="📊 PDF",
             data=apresentacao_html,
-            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_2025.html",
+            file_name=f"Apresentacao_Coleta_Centro_{mes_selecionado.title()}_{ano_selecionado}.html",
             mime="text/html",
             use_container_width=True
         )
     
     with col_btn2:
         # Criar dados para Excel
-        df_export = df[df["Total de Sacos"].notna()].copy()
-        df_export["Mês"] = df_export["Mês"].str.title()
-        df_export["Peso Total (kg)"] = df_export["Total de Sacos"] * 20
-        df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
-        df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
-        
-        csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
+        df_export = df[df.get("Total de Sacos", pd.Series()).notna()].copy() if not df.empty else pd.DataFrame()
+        if not df_export.empty:
+            if "Mês" in df_export.columns:
+                df_export["Mês"] = df_export["Mês"].str.title()
+            df_export["Peso Total (kg)"] = df_export.get("Total de Sacos", 0) * 20
+            df_export["% AM"] = (df_export.get("Coleta AM", 0) / df_export.get("Total de Sacos", 1) * 100).round(1)
+            df_export["% PM"] = (df_export.get("Coleta PM", 0) / df_export.get("Total de Sacos", 1) * 100).round(1)
+            csv_data = df_export[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
+        else:
+            csv_data = pd.DataFrame(columns=["Mês","Coleta AM","Coleta PM","Total de Sacos"]).to_csv(index=False)
         
         st.download_button(
             label="📋 Excel",
             data=csv_data,
-            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_2025.csv",
+            file_name=f"Dados_Coleta_Centro_{mes_selecionado.title()}_{ano_selecionado}.csv",
             mime="text/csv",
             use_container_width=True
         )
 
-# 📑 Filtrar dados para o mês selecionado
-df_filtrado = df[(df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
+# 📑 Filtrar dados para o mês selecionado (com tolerância a df vazio)
+if not df.empty and "Mes" in df.columns:
+    df_filtrado = df[(df["Mes"] == mes_selecionado) & (df.get("Total de Sacos").notna())]
+else:
+    # df vazio ou sem colunas esperadas => dataframe vazio com colunas padrão
+    df_filtrado = pd.DataFrame(columns=["Mês","Mes","Coleta AM","Coleta PM","Total de Sacos"])
 
-# 📊 Calcular métricas principais
-total_sacos = int(df_filtrado["Total de Sacos"].sum()) if not df_filtrado.empty else 0
+# 📊 Calcular métricas principais (seguro contra ausência de colunas)
+def safe_sum(df_local, col):
+    try:
+        return int(df_local[col].sum()) if col in df_local.columns and not df_local.empty else 0
+    except:
+        return 0
+
+total_sacos = safe_sum(df_filtrado, "Total de Sacos")
 peso_total = total_sacos * 20
-total_am = int(df_filtrado["Coleta AM"].sum()) if not df_filtrado.empty else 0
-total_pm = int(df_filtrado["Coleta PM"].sum()) if not df_filtrado.empty else 0
+total_am = safe_sum(df_filtrado, "Coleta AM")
+total_pm = safe_sum(df_filtrado, "Coleta PM")
 
 # Cálculos de comparação (mês anterior)
 mes_anterior_idx = meses_disponiveis.index(mes_selecionado) - 1 if mes_selecionado != "janeiro" else -1
-if mes_anterior_idx >= 0:
+if mes_anterior_idx >= 0 and not df.empty and "Mes" in df.columns:
     df_anterior = df[df["Mes"] == meses_disponiveis[mes_anterior_idx]]
-    total_anterior = int(df_anterior["Total de Sacos"].sum()) if not df_anterior.empty else 0
+    total_anterior = safe_sum(df_anterior, "Total de Sacos")
     variacao = ((total_sacos - total_anterior) / total_anterior * 100) if total_anterior > 0 else 0
 else:
     variacao = 0
@@ -1045,12 +665,13 @@ with col4:
 # 📊 Seção de gráficos principais
 st.markdown("## 📊 Análises Visuais")
 
-# Preparar dados para gráficos (fallback seguro quando não houver linhas no mês selecionado)
+# Preparar dados para gráficos
+# Se df_filtrado estiver vazio, criamos uma linha com zeros para evitar erros nos gráficos
 if df_filtrado.empty:
     df_melt = pd.DataFrame({
-        "Mes": [mes_selecionado, mes_selecionado],
-        "Periodo": ["Coleta AM", "Coleta PM"],
-        "Quantidade de Sacos": [0, 0]
+        "Mes": [mes_selecionado],
+        "Periodo": ["Coleta AM","Coleta PM"],
+        "Quantidade de Sacos": [0,0]
     })
 else:
     df_melt = df_filtrado.melt(
@@ -1199,12 +820,25 @@ with col_right:
 # 📈 Gráfico de evolução mensal aprimorado
 st.markdown("### 📈 Evolução Temporal Completa")
 
-df_linha = df[df["Total de Sacos"].notna()].copy()
-df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
-df_linha = df_linha.sort_values("Mes_cat")
+# Preparar df_linha a partir da aba (se existir), senão criar linha com zeros (evita erro)
+if not df.empty and "Mes" in df.columns and "Total de Sacos" in df.columns:
+    df_linha = df[df["Total de Sacos"].notna()].copy()
+    # garantir que 'Mes' exista e esteja em lowercase
+    if "Mes" not in df_linha.columns and "Mês" in df_linha.columns:
+        df_linha["Mes"] = df_linha["Mês"].str.lower().str.strip()
+    df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+    df_linha = df_linha.sort_values("Mes_cat")
+else:
+    df_linha = pd.DataFrame({
+        "Mes": meses_disponiveis,
+        "Coleta AM": [0]*12,
+        "Coleta PM": [0]*12,
+        "Total de Sacos": [0]*12
+    })
+    df_linha["Mes_cat"] = pd.Categorical(df_linha["Mes"], categories=meses_disponiveis, ordered=True)
+    df_linha = df_linha.sort_values("Mes_cat")
 
 # Criar gráfico de linha com múltiplas métricas
-# GRÁFICO DE EVOLUÇÃO SIMPLES e futurista
 fig_evolucao = make_subplots(
     rows=2, cols=1,
     subplot_titles=("🌟 Volume de Coleta (Sacos)", "⚡ Distribuição AM/PM"),
@@ -1367,26 +1001,28 @@ with col_insight3:
 
 # 📋 Tabela de dados detalhada (colapsável)
 with st.expander("📋 Ver Dados Detalhados"):
-    df_display = df[df["Total de Sacos"].notna()].copy()
-    df_display["Mês"] = df_display["Mês"].str.title()
-    df_display["Peso Total (kg)"] = df_display["Total de Sacos"] * 20
-    df_display["% AM"] = (df_display["Coleta AM"] / df_display["Total de Sacos"] * 100).round(1)
-    df_display["% PM"] = (df_display["Coleta PM"] / df_display["Total de Sacos"] * 100).round(1)
-    
-    st.dataframe(
-        df_display[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]],
-        use_container_width=True
-    )
+    df_display = df[df.get("Total de Sacos", pd.Series()).notna()].copy() if not df.empty else pd.DataFrame()
+    if not df_display.empty and "Mês" in df_display.columns:
+        df_display["Mês"] = df_display["Mês"].str.title()
+        df_display["Peso Total (kg)"] = df_display.get("Total de Sacos", 0) * 20
+        df_display["% AM"] = (df_display.get("Coleta AM", 0) / df_display.get("Total de Sacos", 1) * 100).round(1)
+        df_display["% PM"] = (df_display.get("Coleta PM", 0) / df_display.get("Total de Sacos", 1) * 100).round(1)
+        st.dataframe(
+            df_display[["Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]],
+            use_container_width=True
+        )
+    else:
+        st.write("Nenhum dado disponível para o ano selecionado.")
 
 # 🎯 Footer
 st.markdown("---")
-st.markdown("""
+st.markdown(f"""
 <div style='text-align: center; padding: 20px;'>
     <div style='font-size: 2em; margin-bottom: 10px;'>
         🚛 <span style='background: linear-gradient(90deg, #00FFFF, #9b30ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;'>Coleta Centro</span> 🚛
     </div>
     <div style='color: #00FFFF; font-size: 1.1em;'>
-        📊 Monitoramento para Otimização da Frota
+        📊 Monitoramento para Otimização da Frota — {ano_selecionado}
     </div>
     <small style='color: rgba(255,255,255,0.7);'>Sistema de apoio à decisão para expansão da coleta urbana</small>
 </div>

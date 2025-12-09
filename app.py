@@ -168,8 +168,8 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
         
-        /* BOTÃO SELECIONADO - EFEITO ESPECIAL */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"] {
+        /* BOTÃO SELECIONADO - EFEITO ESPECIAL (USANDO aria-checked) */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             color: white !important;
             font-weight: 600 !important;
@@ -177,9 +177,19 @@ st.markdown("""
             box-shadow: 
                 0 0 20px rgba(155,48,255,0.5),
                 0 4px 15px rgba(155,48,255,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.2) !important;
+                inset 0 1px 0 rgba(255,255,255,0.2),
+                /* contorno vermelho translúcido */
+                0 0 0 6px rgba(255, 40, 40, 0.08) !important;
             transform: scale(1.05) !important;
             animation: pulse-glow 2s infinite !important;
+        }
+
+        /* Fallback para alguns renderers que usam role="option" */
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
+            background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
+            border: 2px solid #9b30ff !important;
+            box-shadow: 0 0 20px rgba(155,48,255,0.5), 0 0 0 6px rgba(255,40,40,0.08) !important;
+            transform: scale(1.05) !important;
         }
         
         /* Animação pulsante para o botão selecionado */
@@ -235,7 +245,7 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
         
-        .stRadio > div > div > div > label[data-selected="true"] {
+        .stRadio > div > div > div > label[aria-checked="true"] {
             background: linear-gradient(135deg, #9b30ff, #6a1b9a) !important;
             border: 2px solid #9b30ff !important;
             box-shadow: 
@@ -439,14 +449,24 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados (mantendo sua estrutura)
+# 📥 Carregar dados (mantendo sua estrutura) - suporte a múltiplas abas (anos)
 try:
-    df = pd.read_excel("Coleta centro2.xlsx")
+    all_sheets = pd.read_excel("Coleta centro2.xlsx", sheet_name=None)
+    sheet_names = list(all_sheets.keys())
+    # pega a primeira aba por default
+    df = all_sheets[sheet_names[0]].copy()
     df.columns = df.columns.str.strip()
-    df["Mes"] = df["Mês"].str.lower().str.strip()
-except:
-    # Dados simulados - TODOS OS 12 MESES
-    st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
+    if "Mês" in df.columns:
+        df["Mes"] = df["Mês"].str.lower().str.strip()
+    elif "Mes" in df.columns:
+        df["Mes"] = df["Mes"].str.lower().str.strip()
+    else:
+        df.columns = [c if i != 0 else "Mês" for i, c in enumerate(df.columns)]
+        df["Mes"] = df["Mês"].astype(str).str.lower().str.strip()
+except Exception:
+    st.warning("⚠️ Arquivo não encontrado ou erro na leitura. Usando dados simulados para demonstração.")
+    all_sheets = None
+    sheet_names = []
     df = pd.DataFrame({
         'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 
                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
@@ -473,6 +493,24 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
     
+    # Seletor de ano/aba (se a planilha tiver múltiplas abas)
+    try:
+        if sheet_names:
+            st.markdown("### 🗂️ Ano / Aba:")
+            year_selected = st.selectbox("", options=sheet_names, index=0)
+            # atualiza df para a aba selecionada
+            if all_sheets is not None and year_selected in all_sheets:
+                df = all_sheets[year_selected].copy()
+                df.columns = df.columns.str.strip()
+                if "Mês" in df.columns:
+                    df["Mes"] = df["Mês"].str.lower().str.strip()
+                elif "Mes" in df.columns:
+                    df["Mes"] = df["Mes"].str.lower().str.strip()
+                else:
+                    df["Mes"] = df.iloc[:,0].astype(str).str.lower().str.strip()
+    except Exception:
+        pass
+
     # Filtro de período - TODOS OS 12 MESES EM 2 COLUNAS
     meses_disponiveis = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", 
                         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
@@ -1007,13 +1045,20 @@ with col4:
 # 📊 Seção de gráficos principais
 st.markdown("## 📊 Análises Visuais")
 
-# Preparar dados para gráficos
-df_melt = df_filtrado.melt(
-    id_vars="Mes",
-    value_vars=["Coleta AM", "Coleta PM"],
-    var_name="Periodo",
-    value_name="Quantidade de Sacos"
-)
+# Preparar dados para gráficos (fallback seguro quando não houver linhas no mês selecionado)
+if df_filtrado.empty:
+    df_melt = pd.DataFrame({
+        "Mes": [mes_selecionado, mes_selecionado],
+        "Periodo": ["Coleta AM", "Coleta PM"],
+        "Quantidade de Sacos": [0, 0]
+    })
+else:
+    df_melt = df_filtrado.melt(
+        id_vars="Mes",
+        value_vars=["Coleta AM", "Coleta PM"],
+        var_name="Periodo",
+        value_name="Quantidade de Sacos"
+    )
 
 # Cores futuristas simples e limpas
 cores_futuristas = {

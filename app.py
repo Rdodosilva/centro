@@ -169,25 +169,27 @@ st.markdown(
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
 
-        /* BOTÃO SELECIONADO AGORA VERMELHO TRANSLÚCIDO */
+        /* BOTÃO SELECIONADO - EFEITO VERMELHO TRANSLÚCIDO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[aria-checked="true"] {
-            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
+            background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
             color: white !important;
             font-weight: 700 !important;
-            border: 2px solid rgba(255,60,60,0.55) !important;
+            border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:
-                0 0 20px rgba(255,40,40,0.50),
-                0 4px 15px rgba(220,0,0,0.30),
-                inset 0 1px 0 rgba(255,40,40,0.20) !important;
+                0 0 15px rgba(255, 0, 0, 0.5), /* Brilho vermelho */
+                0 4px 15px rgba(255, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
+            animation: pulse-glow-red 2s infinite !important; /* Adiciona animação de brilho */
         }
 
         /* Fallback para alguns renderers que usam role="option" */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[role="option"][aria-checked="true"] {
-            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
-            border: 2px solid rgba(255,60,60,0.55) !important;
-            box-shadow: 0 0 20px rgba(255,40,40,0.50) !important;
+            background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
+            border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5) !important; /* Brilho vermelho */
             transform: scale(1.05) !important;
+            animation: pulse-glow-red 2s infinite !important; /* Adiciona animação de brilho */
         }
 
         /* Esconder círculos dos radio buttons */
@@ -228,13 +230,30 @@ st.markdown(
         }
 
         .stRadio > div > div > div > label[aria-checked="true"] {
-            background: linear-gradient(135deg, rgba(255,40,40,0.45), rgba(180,0,0,0.25)) !important;
-            border: 2px solid rgba(255,60,60,0.55) !important;
+            background: rgba(255, 0, 0, 0.1) !important; /* Fundo vermelho translúcido */
+            border: 2px solid rgba(255, 0, 0, 0.7) !important; /* Contorno vermelho */
             box-shadow:
-                0 0 20px rgba(255,40,40,0.50),
-                0 4px 15px rgba(220,0,0,0.30),
-                inset 0 1px 0 rgba(255,40,40,0.20) !important;
+                0 0 15px rgba(255, 0, 0, 0.5), /* Brilho vermelho */
+                0 4px 15px rgba(255, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
+            animation: pulse-glow-red 2s infinite !important; /* Adiciona animação de brilho */
+        }
+
+        /* Animação pulsante para o botão selecionado (Vermelho) */
+        @keyframes pulse-glow-red {
+            0%, 100% {
+                box-shadow:
+                    0 0 15px rgba(255, 0, 0, 0.5),
+                    0 4px 15px rgba(255, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255,255,255,0.2);
+            }
+            50% {
+                box-shadow:
+                    0 0 25px rgba(255, 0, 0, 0.7),
+                    0 6px 20px rgba(255, 0, 0, 0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.3);
+            }
         }
 
         /* Métricas AINDA MENORES */

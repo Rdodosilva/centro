@@ -7,8 +7,8 @@ import numpy as np
 
 # 🎯 Configuração da página
 st.set_page_config(
-    page_title="Coleta Centro - Dashboard Executivo", 
-    page_icon="🚛", 
+    page_title="Coleta Centro - Dashboard Executivo",
+    page_icon="🚛",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -107,7 +107,7 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
-        /* radios em grid */
+        /* LAYOUT DE 2 COLUNAS PARA OS MESES */
         section[data-testid="stSidebar"] div[role="radiogroup"] {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
@@ -115,6 +115,7 @@ st.markdown("""
             width: 100% !important;
         }
         
+        /* BOTÕES DOS MESES */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label,
         .stRadio > div > div > div > label {
             background: #1a1a2e !important;
@@ -193,23 +194,21 @@ st.markdown("""
             }
         }
 
-        /* ===== CARDS st.metric AJUSTADOS E BONITOS ===== */
+        /* ===== CARDS st.metric AJUSTADOS ===== */
         div[data-testid="stMetric"] {
-            min-height: 112px !important;
+            min-height: 114px !important;
         }
 
         .stMetric {
             background: linear-gradient(135deg,
-                rgba(0, 212, 255, 0.78),
-                rgba(155, 48, 255, 0.78)) !important;
-            border: 1px solid rgba(255,255,255,0.16) !important;
+                rgba(0, 212, 255, 0.94),
+                rgba(155, 48, 255, 0.94)) !important;
+            border: 1px solid rgba(255,255,255,0.14) !important;
             border-radius: 16px !important;
             padding: 8px 10px !important;
-            box-shadow: 
-                0 8px 22px rgba(0,0,0,0.22),
+            box-shadow:
+                0 8px 18px rgba(0,0,0,0.20),
                 inset 0 1px 0 rgba(255,255,255,0.10) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
             overflow: hidden !important;
         }
 
@@ -235,7 +234,7 @@ st.markdown("""
         /* título */
         div[data-testid="metric-container"] label,
         div[data-testid="metric-container"] p {
-            font-size: 0.60rem !important;
+            font-size: 0.56rem !important;
             line-height: 1.00 !important;
             font-weight: 600 !important;
             margin-bottom: 2px !important;
@@ -243,8 +242,8 @@ st.markdown("""
 
         /* valor principal */
         div[data-testid="metric-container"] [data-testid="stMetricValue"] {
-            font-size: 0.92rem !important;
-            line-height: 0.95 !important;
+            font-size: 0.76rem !important;
+            line-height: 0.92 !important;
             font-weight: 700 !important;
             margin-top: 2px !important;
             margin-bottom: 2px !important;
@@ -262,9 +261,9 @@ st.markdown("""
             display: block !important;
         }
 
-        /* delta */
+        /* delta / informação complementar */
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
-            font-size: 0.54rem !important;
+            font-size: 0.48rem !important;
             line-height: 1.00 !important;
             font-weight: 600 !important;
             margin-top: 2px !important;
@@ -592,7 +591,8 @@ else:
 # 🎯 Exibir métricas
 st.markdown(f"## 📈 Indicadores Principais — {mes_selecionado.title()}")
 
-col1, col2, col3, col4, col5 = st.columns([1.18, 1.28, 1.16, 1.34, 1.14])
+# dei mais largura justamente para os cards que cortam mais
+col1, col2, col3, col4, col5 = st.columns([1.12, 1.34, 1.10, 1.42, 1.14])
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None

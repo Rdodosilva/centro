@@ -7,17 +7,17 @@ import numpy as np
 
 # 🎯 Configuração da página
 st.set_page_config(
-    page_title="Coleta Centro - Dashboard Executivo",
-    page_icon="🚛",
+    page_title="Coleta Centro - Dashboard Executivo", 
+    page_icon="🚛", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# 🎨 CSS personalizado
+# 🎨 CSS personalizado com layout de 2 colunas para os meses
 st.markdown("""
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-
+        
         html, body, .stApp {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
             color: white;
@@ -25,7 +25,7 @@ st.markdown("""
             margin: 0;
             padding: 0;
         }
-
+        
         .main .block-container {
             padding-top: 0rem;
             padding-bottom: 0rem;
@@ -33,21 +33,21 @@ st.markdown("""
             padding-right: 1rem;
             max-width: none;
         }
-
+        
         .main {
             padding: 0;
         }
-
+        
         header[data-testid="stHeader"] {
             height: 2.875rem;
             background: transparent;
         }
-
+        
         .css-14xtw13 {
             display: block !important;
             visibility: visible !important;
         }
-
+        
         .css-14xtw13 > button {
             background: rgba(26, 26, 46, 0.9) !important;
             border: 1px solid rgba(255,255,255,0.3) !important;
@@ -55,7 +55,7 @@ st.markdown("""
             color: white !important;
             padding: 6px 8px !important;
         }
-
+        
         button[data-testid="baseButton-header"] {
             display: block !important;
             visibility: visible !important;
@@ -64,41 +64,41 @@ st.markdown("""
             border-radius: 6px !important;
             color: white !important;
         }
-
+        
         .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
             fill: white !important;
             color: white !important;
         }
-
+        
         header[data-testid="stHeader"] > div {
             background: transparent;
         }
-
+        
         .stApp {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
         }
-
+        
         .css-1d391kg {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
-
+        
         .sidebar .sidebar-content {
             color: white !important;
         }
-
+        
         .css-1v0mbdj {
             color: white !important;
         }
-
+        
         section[data-testid="stSidebar"] {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
-
+        
         section[data-testid="stSidebar"] > div > div > div > div {
             color: white !important;
         }
-
-        section[data-testid="stSidebar"] h2,
+        
+        section[data-testid="stSidebar"] h2, 
         section[data-testid="stSidebar"] h3 {
             color: white !important;
             font-weight: normal !important;
@@ -106,15 +106,16 @@ st.markdown("""
             padding-bottom: 8px;
             margin-bottom: 16px;
         }
-
-        /* radios em grid */
+        
+        /* LAYOUT DE 2 COLUNAS PARA OS MESES */
         section[data-testid="stSidebar"] div[role="radiogroup"] {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
             gap: 6px !important;
             width: 100% !important;
         }
-
+        
+        /* BOTÕES DOS MESES */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label,
         .stRadio > div > div > div > label {
             background: #1a1a2e !important;
@@ -122,7 +123,7 @@ st.markdown("""
             border-radius: 6px !important;
             border: 1px solid #00FFFF !important;
             margin: 0 !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition: all 0.3s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: 500 !important;
@@ -137,7 +138,7 @@ st.markdown("""
             max-height: 32px !important;
             height: 32px !important;
         }
-
+        
         section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
         .stRadio > div > div > div > label:hover {
             background: rgba(0,255,255,0.15) !important;
@@ -158,7 +159,7 @@ st.markdown("""
             gap: 6px !important;
         }
 
-        /* mês selecionado mais aceso */
+        /* MÊS/ANO SELECIONADO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"],
         .stRadio > div > div > div > label[data-selected="true"],
         section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked),
@@ -193,13 +194,13 @@ st.markdown("""
             }
         }
 
-        /* cards st.metric */
+        /* CARDS st.metric */
         div[data-testid="stMetric"] {
-            min-height: 112px !important;
+            min-height: 122px !important;
         }
 
         div[data-testid="metric-container"] {
-            padding: 6px 8px !important;
+            padding: 8px 10px !important;
         }
 
         div[data-testid="metric-container"],
@@ -212,21 +213,22 @@ st.markdown("""
 
         div[data-testid="metric-container"] label,
         div[data-testid="metric-container"] p {
-            font-size: 0.64rem !important;
+            font-size: 0.60rem !important;
             line-height: 1.05 !important;
             font-weight: 600 !important;
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricValue"] {
-            font-size: 0.92rem !important;
-            line-height: 1.00 !important;
+            font-size: 0.84rem !important;
+            line-height: 0.98 !important;
             font-weight: 700 !important;
         }
 
-        div[data-testid="metric-container"] [data-testid="stMetricValue"] > div,
-        div[data-testid="metric-container"] [data-testid="stMetricValue"] > label,
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] *,
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] span,
         div[data-testid="metric-container"] [data-testid="stMetricValue"] p,
-        div[data-testid="metric-container"] [data-testid="stMetricValue"] span {
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] label,
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] div {
             overflow: visible !important;
             text-overflow: unset !important;
             white-space: normal !important;
@@ -235,14 +237,16 @@ st.markdown("""
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
-            font-size: 0.58rem !important;
-            line-height: 1.05 !important;
+            font-size: 0.54rem !important;
+            line-height: 1.03 !important;
             font-weight: 600 !important;
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] *,
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] span,
-        div[data-testid="metric-container"] [data-testid="stMetricDelta"] p {
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] p,
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] label,
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] div {
             overflow: visible !important;
             text-overflow: unset !important;
             white-space: normal !important;
@@ -254,12 +258,12 @@ st.markdown("""
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
             border-radius: 15px;
-            padding: 6px 8px !important;
+            padding: 8px 10px !important;
             box-shadow: 0 8px 32px rgba(0,255,255,0.1);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            min-height: 112px !important;
+            min-height: 122px !important;
         }
 
         .stMetric::before {
@@ -274,22 +278,22 @@ st.markdown("""
             margin: -2px;
             border-radius: inherit;
         }
-
+        
         .stCheckbox {
             color: white !important;
         }
-
+        
         .stCheckbox > label {
             color: white !important;
             font-weight: normal;
         }
-
+        
         .stCheckbox:hover > label {
             color: #00FFFF !important;
         }
-
-        .stButton > button, .stDownloadButton > button,
-        button[data-testid*="stDownloadButton"],
+        
+        .stButton > button, .stDownloadButton > button, 
+        button[data-testid*="stDownloadButton"], 
         div[data-testid="stDownloadButton"] button {
             background: #00FFFF !important;
             border: none !important;
@@ -301,7 +305,7 @@ st.markdown("""
             height: 36px !important;
             font-size: 0.85em !important;
         }
-
+        
         .stButton > button:hover, .stDownloadButton > button:hover,
         button[data-testid*="stDownloadButton"]:hover,
         div[data-testid="stDownloadButton"] button:hover {
@@ -310,7 +314,7 @@ st.markdown("""
             transform: translateY(-1px) !important;
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
-
+        
         section[data-testid="stSidebar"] button {
             background: #00FFFF !important;
             border: none !important;
@@ -322,20 +326,20 @@ st.markdown("""
             height: 36px !important;
             font-size: 0.85em !important;
         }
-
+        
         section[data-testid="stSidebar"] button:hover {
             background: #0080FF !important;
             color: black !important;
             transform: translateY(-1px) !important;
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
-
+        
         .stSelectbox > div > div {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid #00FFFF;
             border-radius: 10px;
         }
-
+        
         .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
             background: #2c2c54 !important;
             border: 1px solid rgba(255,255,255,0.2) !important;
@@ -343,12 +347,12 @@ st.markdown("""
             color: white !important;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
-
+        
         .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
             background: #2c2c54 !important;
             color: white !important;
         }
-
+        
         .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
         .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
             color: white !important;
@@ -358,33 +362,33 @@ st.markdown("""
             border-radius: 6px !important;
             transition: all 0.2s ease !important;
         }
-
+        
         .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
             background: #00FFFF !important;
             color: black !important;
             border-radius: 6px !important;
         }
-
+        
         .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
             color: white !important;
             background: transparent !important;
         }
-
+        
         div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
             background: #2c2c54 !important;
             color: white !important;
         }
-
+        
         div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
             background: transparent !important;
             color: white !important;
         }
-
+        
         div[role="menu"] button:hover, div[role="listbox"] button:hover {
             background: #00FFFF !important;
             color: black !important;
         }
-
+        
         .insight-card {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 1px solid #00FFFF;
@@ -393,30 +397,48 @@ st.markdown("""
             margin: 10px 0;
             box-shadow: 0 8px 32px rgba(0,255,255,0.1);
         }
-
+        
         .trend-up { color: #00FF88; }
         .trend-down { color: #FF4444; }
         .trend-neutral { color: #FFAA00; }
-
+        
         .stPlotlyChart {
             animation: fadeIn 0.8s ease-in;
         }
-
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+        
         h1, h2, h3, label, span, div {
             color: white !important;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados (mantendo sua estrutura)
+# 📥 Carregar dados - lendo TODAS as abas
 try:
-    df = pd.read_excel("Coleta centro2.xlsx")
-    df.columns = df.columns.str.strip()
+    xls = pd.ExcelFile("Coleta centro2.xlsx")
+    lista_dfs = []
+
+    for aba in xls.sheet_names:
+        df_aba = pd.read_excel("Coleta centro2.xlsx", sheet_name=aba)
+        df_aba.columns = df_aba.columns.str.strip()
+
+        # usa o nome da aba como ano quando ela for 2025/2026 etc.
+        try:
+            ano_aba = int(str(aba).strip())
+        except:
+            ano_aba = None
+
+        if "Ano" not in df_aba.columns:
+            df_aba["Ano"] = ano_aba
+
+        lista_dfs.append(df_aba)
+
+    df = pd.concat(lista_dfs, ignore_index=True)
+
 except:
     st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
     df = pd.DataFrame({
@@ -424,55 +446,22 @@ except:
         "Mês": ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] * 2,
         'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320,
-                      410, 980, 760, 1340, 1180, 990, 1230, 1110, 1290, 1360, 1210, 1450],
+                      2132, 2724, 2214, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100,
-                      890, 1580, 1210, 1760, 1610, 1490, 1810, 1670, 1930, 2010, 1880, 2250],
+                      4759, 6850, 4726, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420,
-                           1300, 2560, 1970, 3100, 2790, 2480, 3040, 2780, 3220, 3370, 3090, 3700]
+                           6891, 9574, 6940, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     })
 
-# 🏷️ Ordem dos meses
+# ✅ Normalização
+df["Ano"] = pd.to_numeric(df["Ano"], errors="coerce")
+df["Mês"] = df["Mês"].astype(str).str.strip()
+df["Mes"] = df["Mês"].str.lower().str.strip()
+
 ordem_meses = [
     "janeiro", "fevereiro", "março", "abril", "maio", "junho",
     "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
 ]
-mes_para_indice = {mes: i for i, mes in enumerate(ordem_meses)}
-
-# ✅ Detectar / preservar Ano
-if "Ano" in df.columns:
-    df["Ano"] = pd.to_numeric(df["Ano"], errors="coerce")
-else:
-    coluna_data = None
-    for c in ["Data", "DATA", "data", "Competência", "Competencia", "competencia"]:
-        if c in df.columns:
-            coluna_data = c
-            break
-
-    if coluna_data is not None:
-        datas = pd.to_datetime(df[coluna_data], errors="coerce", dayfirst=True)
-        df["Ano"] = datas.dt.year
-        if "Mês" not in df.columns:
-            df["Mês"] = datas.dt.month_name()
-    else:
-        if "Mês" not in df.columns:
-            df["Mês"] = "Janeiro"
-
-        meses_norm = df["Mês"].astype(str).str.lower().str.strip()
-        anos = []
-        ano_atual = 2025
-        indice_anterior = None
-
-        for mes in meses_norm:
-            indice_atual = mes_para_indice.get(mes, 0)
-            if indice_anterior is not None and indice_atual < indice_anterior:
-                ano_atual += 1
-            anos.append(ano_atual)
-            indice_anterior = indice_atual
-
-        df["Ano"] = anos
-
-df["Mês"] = df["Mês"].astype(str).str.strip()
-df["Mes"] = df["Mês"].str.lower().str.strip()
 
 # 🏷️ Header aprimorado
 st.markdown("""
@@ -504,11 +493,8 @@ with st.sidebar:
         index=ano_default
     )
 
-    # Filtro por ano
-    df_ano = df[df["Ano"] == ano_selecionado].copy()
-    df_ano = df_ano[df_ano["Total de Sacos"].notna()].copy()
+    df_ano = df[(df["Ano"] == ano_selecionado) & (df["Total de Sacos"].notna())].copy()
 
-    # Filtro de período - meses existentes no ano selecionado
     meses_disponiveis = [m for m in ordem_meses if m in df_ano["Mes"].dropna().unique().tolist()]
     meses_display = [m.title() for m in meses_disponiveis]
 
@@ -600,10 +586,11 @@ if mes_anterior_idx >= 0:
 else:
     variacao = 0
 
-# 🎯 Exibir métricas com design aprimorado
+# 🎯 Exibir métricas
 st.markdown(f"## 📈 Indicadores Principais — {mes_selecionado.title()}")
 
-col1, col2, col3, col4, col5 = st.columns([1.10, 1.20, 1.15, 1.30, 1.10])
+# colunas um pouco mais largas
+col1, col2, col3, col4, col5 = st.columns([1.15, 1.22, 1.15, 1.28, 1.12])
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
@@ -793,7 +780,7 @@ with col_right:
 
     st.plotly_chart(fig_pie, use_container_width=True)
 
-# 📈 Evolução
+# 📈 Gráfico de evolução mensal aprimorado
 st.markdown("### 📈 Evolução Temporal Completa")
 
 df_linha = df_ano.copy()
@@ -902,7 +889,7 @@ fig_evolucao.update_annotations(
 
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
-# 💡 Insights
+# 💡 Seção de Insights Inteligentes
 st.markdown("## 💡 Insights e Recomendações")
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
@@ -945,7 +932,7 @@ with col_insight3:
     </div>
     """, unsafe_allow_html=True)
 
-# 📋 Tabela
+# 📋 Tabela de dados detalhada (colapsável)
 with st.expander("📋 Ver Dados Detalhados"):
     df_display = df_ano.copy()
     df_display["Mês"] = df_display["Mês"].str.title()

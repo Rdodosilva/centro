@@ -255,28 +255,24 @@ st.markdown("""
         }
 
         .stMetric {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 2px solid transparent;
-            border-radius: 15px;
+            background: linear-gradient(135deg,
+                rgba(0, 212, 255, 0.68),
+                rgba(155, 48, 255, 0.68)) !important;
+            border: 1px solid rgba(255,255,255,0.10) !important;
+            border-radius: 16px !important;
             padding: 8px 10px !important;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-            backdrop-filter: blur(10px);
+            box-shadow:
+                0 8px 18px rgba(0,0,0,0.16),
+                inset 0 1px 0 rgba(255,255,255,0.06) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
             position: relative;
             overflow: hidden;
             min-height: 122px !important;
         }
 
         .stMetric::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #00FFFF, #9b30ff);
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
+            display: none !important;
         }
         
         .stCheckbox {
@@ -417,7 +413,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados - lendo TODAS as abas
+# 📥 Carregar dados - lendo TODAS as abas da planilha
 try:
     xls = pd.ExcelFile("Coleta centro2.xlsx")
     lista_dfs = []
@@ -426,7 +422,6 @@ try:
         df_aba = pd.read_excel("Coleta centro2.xlsx", sheet_name=aba)
         df_aba.columns = df_aba.columns.str.strip()
 
-        # usa o nome da aba como ano quando ela for 2025/2026 etc.
         try:
             ano_aba = int(str(aba).strip())
         except:
@@ -453,7 +448,7 @@ except:
                            6891, 9574, 6940, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     })
 
-# ✅ Normalização
+# ✅ Normalização dos dados
 df["Ano"] = pd.to_numeric(df["Ano"], errors="coerce")
 df["Mês"] = df["Mês"].astype(str).str.strip()
 df["Mes"] = df["Mês"].str.lower().str.strip()
@@ -528,6 +523,7 @@ with st.sidebar:
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação - Coleta Centro</title>
 </head>
 <body style="font-family: Arial, sans-serif; background:#111; color:white; padding:40px;">
@@ -589,8 +585,7 @@ else:
 # 🎯 Exibir métricas
 st.markdown(f"## 📈 Indicadores Principais — {mes_selecionado.title()}")
 
-# colunas um pouco mais largas
-col1, col2, col3, col4, col5 = st.columns([1.15, 1.22, 1.15, 1.28, 1.12])
+col1, col2, col3, col4, col5 = st.columns([1.12, 1.34, 1.10, 1.42, 1.14])
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
@@ -780,7 +775,7 @@ with col_right:
 
     st.plotly_chart(fig_pie, use_container_width=True)
 
-# 📈 Gráfico de evolução mensal aprimorado
+# 📈 Evolução
 st.markdown("### 📈 Evolução Temporal Completa")
 
 df_linha = df_ano.copy()
@@ -889,7 +884,7 @@ fig_evolucao.update_annotations(
 
 st.plotly_chart(fig_evolucao, use_container_width=True)
 
-# 💡 Seção de Insights Inteligentes
+# 💡 Insights
 st.markdown("## 💡 Insights e Recomendações")
 
 col_insight1, col_insight2, col_insight3 = st.columns(3)
@@ -932,7 +927,7 @@ with col_insight3:
     </div>
     """, unsafe_allow_html=True)
 
-# 📋 Tabela de dados detalhada (colapsável)
+# 📋 Tabela
 with st.expander("📋 Ver Dados Detalhados"):
     df_display = df_ano.copy()
     df_display["Mês"] = df_display["Mês"].str.title()

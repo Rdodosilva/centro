@@ -171,32 +171,31 @@ st.markdown("""
         /* BOTÃO SELECIONADO - MAIS ACESO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"],
         section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked) {
-            background: rgba(255, 0, 0, 0.35) !important;
+            background: rgba(255, 0, 0, 0.38) !important;
             color: white !important;
             font-weight: 700 !important;
-            border: 2px solid rgba(255, 70, 70, 1) !important;
+            border: 2px solid rgba(255, 80, 80, 1) !important;
             box-shadow: 
                 0 0 12px rgba(255, 0, 0, 0.65),
-                0 0 24px rgba(255, 0, 0, 0.45),
+                0 0 28px rgba(255, 0, 0, 0.50),
                 0 4px 15px rgba(255, 0, 0, 0.30),
                 inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
             animation: pulse-glow-red 1.8s infinite !important;
         }
         
-        /* Animação pulsante vermelha para o botão selecionado */
         @keyframes pulse-glow-red {
             0%, 100% {
                 box-shadow: 
                     0 0 12px rgba(255, 0, 0, 0.65),
-                    0 0 24px rgba(255, 0, 0, 0.45),
+                    0 0 28px rgba(255, 0, 0, 0.50),
                     0 4px 15px rgba(255, 0, 0, 0.30),
                     inset 0 1px 0 rgba(255,255,255,0.2);
             }
             50% {
                 box-shadow: 
                     0 0 18px rgba(255, 0, 0, 0.85),
-                    0 0 32px rgba(255, 0, 0, 0.60),
+                    0 0 36px rgba(255, 0, 0, 0.65),
                     0 6px 20px rgba(255, 0, 0, 0.40),
                     inset 0 1px 0 rgba(255,255,255,0.3);
             }
@@ -241,60 +240,82 @@ st.markdown("""
         
         .stRadio > div > div > div > label[data-selected="true"],
         .stRadio > div > div > div > label:has(input:checked) {
-            background: rgba(255, 0, 0, 0.35) !important;
-            border: 2px solid rgba(255, 70, 70, 1) !important;
+            background: rgba(255, 0, 0, 0.38) !important;
+            border: 2px solid rgba(255, 80, 80, 1) !important;
             box-shadow: 
                 0 0 12px rgba(255, 0, 0, 0.65),
-                0 0 24px rgba(255, 0, 0, 0.45),
+                0 0 28px rgba(255, 0, 0, 0.50),
                 0 4px 15px rgba(255, 0, 0, 0.30),
                 inset 0 1px 0 rgba(255,255,255,0.2) !important;
             transform: scale(1.05) !important;
             animation: pulse-glow-red 1.8s infinite !important;
         }
         
-        /* Métricas menores, mantendo st.metric */
+        /* Mantendo st.metric, só reduzindo fonte e removendo corte */
+        div[data-testid="stMetric"] {
+            min-height: 108px !important;
+        }
+
+        div[data-testid="metric-container"] {
+            padding: 6px 8px !important;
+        }
+
+        div[data-testid="metric-container"] * {
+            white-space: normal !important;
+            overflow: visible !important;
+            text-overflow: clip !important;
+            word-break: break-word !important;
+        }
+
+        div[data-testid="metric-container"] label {
+            font-size: 0.62rem !important;
+            line-height: 1.05 !important;
+            font-weight: 600 !important;
+        }
+
+        div[data-testid="metric-container"] [data-testid="stMetricValue"] {
+            font-size: 0.95rem !important;
+            line-height: 1.00 !important;
+            font-weight: 700 !important;
+        }
+
+        div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
+            font-size: 0.58rem !important;
+            line-height: 1.05 !important;
+            font-weight: 600 !important;
+        }
+
+        /* fallback adicional */
         .stMetric {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid transparent;
             border-radius: 15px;
-            padding: 8px 10px !important;
+            padding: 6px 8px !important;
             box-shadow: 0 8px 32px rgba(0,255,255,0.1);
             backdrop-filter: blur(10px);
             position: relative;
             overflow: hidden;
-            min-height: 106px !important;
+            min-height: 108px !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:first-child {
-            font-size: 0.65em !important;
+            font-size: 0.62em !important;
             font-weight: 600 !important;
-            margin-bottom: 2px !important;
-            line-height: 1.1 !important;
-            white-space: normal !important;
-            overflow: visible !important;
-            text-overflow: unset !important;
-            word-break: break-word !important;
+            margin-bottom: 1px !important;
+            line-height: 1.05 !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:nth-child(2) {
-            font-size: 1.05em !important;
+            font-size: 0.95em !important;
             font-weight: 700 !important;
-            margin: 2px 0 !important;
-            line-height: 1.05 !important;
-            white-space: normal !important;
-            overflow: visible !important;
-            text-overflow: unset !important;
-            word-break: break-word !important;
+            margin: 1px 0 !important;
+            line-height: 1.00 !important;
         }
         
         .stMetric [data-testid="metric-container"] > div:last-child {
-            font-size: 0.60em !important;
-            margin-top: 2px !important;
-            line-height: 1.1 !important;
-            white-space: normal !important;
-            overflow: visible !important;
-            text-overflow: unset !important;
-            word-break: break-word !important;
+            font-size: 0.58em !important;
+            margin-top: 1px !important;
+            line-height: 1.05 !important;
         }
         
         .stMetric::before {
@@ -460,31 +481,14 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 📥 Carregar dados (mantendo sua estrutura)
-try:
-    df = pd.read_excel("Coleta centro2.xlsx")
-    df.columns = df.columns.str.strip()
-except:
-    # Dados simulados - TODOS OS 12 MESES / 2 ANOS
-    st.warning("⚠️ Arquivo não encontrado. Usando dados simulados para demonstração.")
-    df = pd.DataFrame({
-        'Mês': ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'] * 2,
-        'Coleta AM': [295, 1021, 408, 1192, 1045, 850, 1150, 980, 1240, 1080, 950, 1320,
-                      410, 980, 760, 1340, 1180, 990, 1230, 1110, 1290, 1360, 1210, 1450],
-        'Coleta PM': [760, 1636, 793, 1606, 1461, 1380, 1720, 1520, 1890, 1640, 1480, 2100,
-                      890, 1580, 1210, 1760, 1610, 1490, 1810, 1670, 1930, 2010, 1880, 2250],
-        'Total de Sacos': [1055, 2657, 1201, 2798, 2506, 2230, 2870, 2500, 3130, 2720, 2430, 3420,
-                           1300, 2560, 1970, 3100, 2790, 2480, 3040, 2780, 3220, 3370, 3090, 3700]
-    })
-
-# ✅ Tratamento de ano para aparecer 2026 quando houver na planilha
+# 🏷️ Ordem dos meses
 ordem_meses = [
     "janeiro", "fevereiro", "março", "abril", "maio", "junho",
     "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
 ]
 mes_para_indice = {mes: i for i, mes in enumerate(ordem_meses)}
 
+# ✅ Detectar / preservar Ano
 if "Ano" in df.columns:
     df["Ano"] = pd.to_numeric(df["Ano"], errors="coerce")
 else:
@@ -536,37 +540,42 @@ st.markdown("""
 # 🎛️ Sidebar com controles avançados
 with st.sidebar:
     st.markdown("## 🎛️ Filtros")
-
+    
     anos_disponiveis = sorted([int(a) for a in df["Ano"].dropna().unique()])
     if not anos_disponiveis:
         anos_disponiveis = [2025]
-
+    
     st.markdown("### 🗓️ Ano:")
+    ano_default = anos_disponiveis.index(2026) if 2026 in anos_disponiveis else 0
     ano_selecionado = st.radio(
         "",
         options=anos_disponiveis,
         format_func=lambda x: str(x),
         horizontal=False,
-        index=0
+        index=ano_default
     )
 
-    # Filtro por ano
-    df_ano = df[df["Ano"] == ano_selecionado].copy()
+    # filtra ano primeiro
+    df_ano = df[(df["Ano"] == ano_selecionado) & (df["Total de Sacos"].notna())].copy()
 
-    # Filtro de período - meses existentes no ano selecionado
+    # meses válidos do ano
     meses_disponiveis = [m for m in ordem_meses if m in df_ano["Mes"].dropna().unique().tolist()]
     meses_display = [m.title() for m in meses_disponiveis]
-
+    
     st.markdown("### 📅 Período:")
 
+    if not meses_disponiveis:
+        st.error("Sem meses disponíveis para este ano.")
+        st.stop()
+    
     mes_selecionado = st.radio(
         "",
         options=meses_disponiveis,
         format_func=lambda x: meses_display[meses_disponiveis.index(x)],
         horizontal=False,
-        index=0 if meses_disponiveis else None
+        index=0
     )
-
+    
     # Opções de visualização
     st.markdown("### 📊 Visualização")
     mostrar_comparativo = st.checkbox("Comparar com mês anterior", True)
@@ -575,10 +584,10 @@ with st.sidebar:
         ["Barras"],
         horizontal=False
     )
-
+    
     # Configurações de export
     st.markdown("### 📤 Exportar")
-
+    
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
         apresentacao_html = f"""<!DOCTYPE html>
@@ -587,15 +596,219 @@ with st.sidebar:
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação - Coleta Centro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        
+        * {{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }}
+        
+        body {{
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            line-height: 1.6;
+        }}
+        
+        .slide {{
+            min-height: 100vh;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            break-after: page;
+        }}
+        
+        .slide-header {{
+            text-align: center;
+            margin-bottom: 50px;
+        }}
+        
+        .slide-title {{
+            font-size: 3.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #00FFFF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0,255,255,0.3);
+        }}
+        
+        .slide-subtitle {{
+            font-size: 1.4em;
+            color: #00D4FF;
+            opacity: 0.9;
+            text-shadow: 0 0 20px rgba(0,212,255,0.3);
+        }}
+        
+        .content-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }}
+        
+        .card {{
+            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,255,255,0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }}
+        
+        .card:hover {{
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0,255,255,0.25);
+            border-color: rgba(0, 255, 255, 0.6);
+        }}
+        
+        .card h3 {{
+            color: #00D4FF;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 0 15px rgba(0,212,255,0.5);
+        }}
+        
+        .metric {{
+            font-size: 2.8em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00D4FF, #9b30ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            text-shadow: 0 0 20px rgba(155,48,255,0.3);
+        }}
+        
+        .logo {{
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 25px rgba(0,255,255,0.4);
+        }}
+        
+        ul {{
+            list-style: none;
+            padding-left: 0;
+        }}
+        
+        li {{
+            margin: 15px 0;
+            padding-left: 25px;
+            position: relative;
+            transition: all 0.2s ease;
+        }}
+        
+        li:before {{
+            content: "▶";
+            color: #00D4FF;
+            position: absolute;
+            left: 0;
+            text-shadow: 0 0 10px rgba(0,212,255,0.5);
+        }}
+        
+        li:hover {{
+            transform: translateX(5px);
+            color: #00D4FF;
+        }}
+        
+        .two-column {{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }}
+        
+        .highlight-box {{
+            background: linear-gradient(145deg, rgba(0,212,255,0.1), rgba(155,48,255,0.1));
+            border: 2px solid rgba(0,212,255,0.3);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3em;
+            margin: 25px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,212,255,0.1);
+        }}
+        
+        .recommendation {{
+            background: rgba(255, 170, 0, 0.1);
+            border: 1px solid rgba(255, 170, 0, 0.3);
+            border-left: 4px solid #FFAA00;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 0 15px 15px 0;
+            backdrop-filter: blur(10px);
+        }}
+        
+        .recommendation.success {{
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+            border-left-color: #00FF88;
+        }}
+        
+        .slide-number {{
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            color: rgba(0,212,255,0.7);
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(26,26,46,0.8);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,212,255,0.3);
+        }}
+        
+        .data-row {{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,212,255,0.1);
+        }}
+        
+        .data-label {{
+            font-weight: 600;
+            color: #00D4FF;
+        }}
+        
+        .data-value {{
+            font-weight: 700;
+            color: white;
+            font-size: 1.1em;
+        }}
+        
+        @media print {{
+            .slide {{
+                break-after: page;
+                min-height: auto;
+                padding: 20px;
+            }}
+        }}
+    </style>
 </head>
-<body style="font-family: Arial, sans-serif; background:#111; color:white; padding:40px;">
-    <h1>Coleta Centro</h1>
-    <h2>{mes_selecionado.title()}</h2>
-    <h3>Ano: {ano_selecionado}</h3>
-    <p>Apresentação exportada do dashboard.</p>
+<body>
+    <div class="slide">
+        <div class="slide-header">
+            <div class="logo">🚛</div>
+            <div class="slide-title">Coleta Centro</div>
+            <div class="slide-subtitle">Dashboard Executivo de Monitoramento | {ano_selecionado}</div>
+        </div>
+    </div>
 </body>
 </html>"""
-
+        
         st.download_button(
             label="📊 PDF",
             data=apresentacao_html,
@@ -603,17 +816,17 @@ with st.sidebar:
             mime="text/html",
             use_container_width=True
         )
-
+    
     with col_btn2:
-        df_export = df_ano[df_ano["Total de Sacos"].notna()].copy()
+        # Criar dados para Excel
+        df_export = df_ano.copy()
         df_export["Mês"] = df_export["Mês"].str.title()
         df_export["Peso Total (kg)"] = df_export["Total de Sacos"] * 20
         df_export["% AM"] = (df_export["Coleta AM"] / df_export["Total de Sacos"] * 100).round(1)
         df_export["% PM"] = (df_export["Coleta PM"] / df_export["Total de Sacos"] * 100).round(1)
-
-        colunas_export = ["Ano", "Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]
-        csv_data = df_export[colunas_export].to_csv(index=False)
-
+        
+        csv_data = df_export[["Ano", "Mês", "Coleta AM", "Coleta PM", "Total de Sacos", "Peso Total (kg)", "% AM", "% PM"]].to_csv(index=False)
+        
         st.download_button(
             label="📋 Excel",
             data=csv_data,
@@ -622,9 +835,8 @@ with st.sidebar:
             use_container_width=True
         )
 
-# 📑 Filtrar dados para o mês selecionado dentro do ano selecionado
+# 📑 Filtrar dados para o mês selecionado
 df_filtrado = df[(df["Ano"] == ano_selecionado) & (df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
-df_ano = df[(df["Ano"] == ano_selecionado) & (df["Total de Sacos"].notna())].copy()
 
 # 📊 Calcular métricas principais
 total_sacos = int(df_filtrado["Total de Sacos"].sum()) if not df_filtrado.empty else 0
@@ -632,11 +844,11 @@ peso_total = total_sacos * 20
 total_am = int(df_filtrado["Coleta AM"].sum()) if not df_filtrado.empty else 0
 total_pm = int(df_filtrado["Coleta PM"].sum()) if not df_filtrado.empty else 0
 
-# 🆕 Total anual respeitando o ano selecionado
+# 🆕 Total anual
 total_anual_sacos = int(df_ano["Total de Sacos"].sum()) if not df_ano.empty else 0
 peso_anual = total_anual_sacos * 20
 
-# Cálculos de comparação (mês anterior no mesmo ano)
+# Cálculos de comparação (mês anterior)
 mes_anterior_idx = meses_disponiveis.index(mes_selecionado) - 1 if mes_selecionado != meses_disponiveis[0] else -1
 if mes_anterior_idx >= 0:
     df_anterior = df_ano[df_ano["Mes"] == meses_disponiveis[mes_anterior_idx]]
@@ -648,7 +860,8 @@ else:
 # 🎯 Exibir métricas com design aprimorado
 st.markdown(f"## 📈 Indicadores Principais — {mes_selecionado.title()}")
 
-col1, col2, col3, col4, col5 = st.columns(5)
+# larguras melhores para caber tudo
+col1, col2, col3, col4, col5 = st.columns([1.10, 1.20, 1.15, 1.30, 1.10])
 
 with col1:
     delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
@@ -683,7 +896,7 @@ with col4:
     else:
         status = "NORMAL"
         info = "Dentro do esperado"
-
+    
     st.metric(
         "📊 Status Operacional", 
         status,

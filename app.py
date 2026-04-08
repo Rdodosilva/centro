@@ -199,166 +199,47 @@ st.markdown("""
             gap: 6px !important;
         }
 
-        /* Cards menores */
-        .stMetric {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 2px solid transparent;
-            border-radius: 15px;
-            padding: 5px 7px !important;
-            box-shadow: 0 8px 32px rgba(0,255,255,0.1);
-            backdrop-filter: blur(10px);
-            position: relative;
+        /* CARDS CUSTOMIZADOS */
+        .metric-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.92), rgba(155, 48, 255, 0.92));
+            border-radius: 16px;
+            padding: 12px 14px;
+            min-height: 112px;
+            height: 112px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.28);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             overflow: hidden;
-            min-height: 84px !important;
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
-        .stMetric [data-testid="metric-container"] > div:first-child {
-            font-size: 0.55em !important;
-            font-weight: 600 !important;
-            margin-bottom: 1px !important;
-            line-height: 1.05 !important;
-            white-space: normal !important;
-            word-break: break-word !important;
+        .metric-title {
+            font-size: 0.90rem;
+            font-weight: 600;
+            line-height: 1.1;
+            color: rgba(255,255,255,0.96);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .stMetric [data-testid="metric-container"] > div:nth-child(2) {
-            font-size: 0.82em !important;
-            font-weight: 700 !important;
-            margin: 1px 0 !important;
-            line-height: 1.0 !important;
-            white-space: normal !important;
-            word-break: break-word !important;
+        .metric-value {
+            font-size: 1.30rem;
+            font-weight: 700;
+            line-height: 1.05;
+            color: white;
+            word-break: break-word;
+            white-space: normal;
         }
 
-        .stMetric [data-testid="metric-container"] > div:last-child {
-            font-size: 0.50em !important;
-            margin-top: 1px !important;
-            line-height: 1.0 !important;
-            white-space: normal !important;
-            word-break: break-word !important;
-        }
-
-        .stMetric::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, #00FFFF, #9b30ff);
-            z-index: -1;
-            margin: -2px;
-            border-radius: inherit;
-        }
-
-        .stCheckbox {
-            color: white !important;
-        }
-
-        .stCheckbox > label {
-            color: white !important;
-            font-weight: normal;
-        }
-
-        .stCheckbox:hover > label {
-            color: #00FFFF !important;
-        }
-
-        .stButton > button, .stDownloadButton > button,
-        button[data-testid*="stDownloadButton"],
-        div[data-testid="stDownloadButton"] button {
-            background: #00FFFF !important;
-            border: none !important;
-            border-radius: 6px !important;
-            color: black !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            padding: 8px 16px !important;
-            height: 36px !important;
-            font-size: 0.85em !important;
-        }
-
-        .stButton > button:hover, .stDownloadButton > button:hover,
-        button[data-testid*="stDownloadButton"]:hover,
-        div[data-testid="stDownloadButton"] button:hover {
-            background: #0080FF !important;
-            color: black !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
-        }
-
-        section[data-testid="stSidebar"] button {
-            background: #00FFFF !important;
-            border: none !important;
-            border-radius: 6px !important;
-            color: black !important;
-            font-weight: bold !important;
-            transition: all 0.3s ease !important;
-            padding: 8px 16px !important;
-            height: 36px !important;
-            font-size: 0.85em !important;
-        }
-
-        section[data-testid="stSidebar"] button:hover {
-            background: #0080FF !important;
-            color: black !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
-        }
-
-        .stSelectbox > div > div {
-            background: linear-gradient(145deg, #1a1a2e, #0f0f23);
-            border: 2px solid #00FFFF;
-            border-radius: 10px;
-        }
-
-        .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
-            background: #2c2c54 !important;
-            border: 1px solid rgba(255,255,255,0.2) !important;
-            border-radius: 8px !important;
-            color: white !important;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-        }
-
-        .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
-            background: #2c2c54 !important;
-            color: white !important;
-        }
-
-        .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
-        .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
-            color: white !important;
-            background: transparent !important;
-            font-weight: normal !important;
-            padding: 10px 15px !important;
-            border-radius: 6px !important;
-            transition: all 0.2s ease !important;
-        }
-
-        .css-1rs6os button:hover, .css-17lntkn button:hover, [data-testid="stPopover"] button:hover {
-            background: #00FFFF !important;
-            color: black !important;
-            border-radius: 6px !important;
-        }
-
-        .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
-            color: white !important;
-            background: transparent !important;
-        }
-
-        div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
-            background: #2c2c54 !important;
-            color: white !important;
-        }
-
-        div[role="menu"] *, div[role="listbox"] *, .css-1n76uvr *, .css-1d391kg * {
-            background: transparent !important;
-            color: white !important;
-        }
-
-        div[role="menu"] button:hover, div[role="listbox"] button:hover {
-            background: #00FFFF !important;
-            color: black !important;
+        .metric-delta {
+            font-size: 0.74rem;
+            font-weight: 600;
+            line-height: 1.1;
+            color: rgba(255,255,255,0.95);
+            word-break: break-word;
+            white-space: normal;
         }
 
         .insight-card {
@@ -413,12 +294,9 @@ ordem_meses = [
 ]
 mes_para_indice = {mes: i for i, mes in enumerate(ordem_meses)}
 
-# Se já existir coluna Ano, usa ela
 if "Ano" in df.columns:
     df["Ano"] = pd.to_numeric(df["Ano"], errors="coerce")
-
 else:
-    # tenta derivar por coluna de data
     coluna_data = None
     for c in ["Data", "DATA", "data", "Competência", "Competencia", "competencia"]:
         if c in df.columns:
@@ -430,9 +308,7 @@ else:
         df["Ano"] = datas.dt.year
         if "Mês" not in df.columns:
             df["Mês"] = datas.dt.month_name()
-
     else:
-        # se não houver ano nem data, detecta mudança de ano quando o mês reinicia
         if "Mês" not in df.columns:
             df["Mês"] = "Janeiro"
 
@@ -584,33 +460,34 @@ if mes_anterior_idx >= 0:
 else:
     variacao = 0
 
+# Função para cards customizados
+def render_metric_card(title, value, delta=""):
+    st.markdown(
+        f"""
+        <div class="metric-card">
+            <div class="metric-title">{title}</div>
+            <div class="metric-value">{value}</div>
+            <div class="metric-delta">{delta}</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
 # 🎯 Indicadores
 st.markdown(f"## 📈 Indicadores Principais — {mes_selecionado.title()}")
 
 col1, col2, col3, col4, col5 = st.columns(5)
 
 with col1:
-    delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else None
-    st.metric(
-        "🧺 Total de Sacos",
-        f"{total_sacos:,}".replace(',', '.'),
-        delta=delta_value
-    )
+    delta_value = f"{variacao:+.1f}%" if mostrar_comparativo and variacao != 0 else ""
+    render_metric_card("🧺 Total de Sacos", f"{total_sacos:,}".replace(',', '.'), delta_value)
 
 with col2:
-    st.metric(
-        "⚖️ Peso Total",
-        f"{peso_total:,} kg".replace(',', '.'),
-        delta=None
-    )
+    render_metric_card("⚖️ Peso Total", f"{peso_total:,} kg".replace(',', '.'), "")
 
 with col3:
     eficiencia = (total_am / (total_am + total_pm) * 100) if (total_am + total_pm) > 0 else 0
-    st.metric(
-        "📊 Eficiência AM",
-        f"{eficiencia:.1f}%",
-        delta="Ótima" if eficiencia > 25 else "Baixa"
-    )
+    render_metric_card("📊 Eficiência AM", f"{eficiencia:.1f}%", "Ótima" if eficiencia > 25 else "Baixa")
 
 with col4:
     if total_sacos > 2500:
@@ -622,19 +499,10 @@ with col4:
     else:
         status = "NORMAL"
         info = "Dentro do esperado"
-
-    st.metric(
-        "📊 Status Operacional",
-        status,
-        delta=info
-    )
+    render_metric_card("📊 Status Operacional", status, info)
 
 with col5:
-    st.metric(
-        "📦 Total Anual",
-        f"{total_anual_sacos:,}".replace(',', '.'),
-        delta=f"{peso_anual:,} kg".replace(',', '.')
-    )
+    render_metric_card("📦 Total Anual", f"{total_anual_sacos:,}".replace(',', '.'), f"{peso_anual:,} kg".replace(',', '.'))
 
 # 📊 Seção de gráficos principais
 st.markdown("## 📊 Análises Visuais")

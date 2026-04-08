@@ -493,7 +493,12 @@ with st.sidebar:
         index=ano_default
     )
 
-    df_ano = df[(df["Ano"] == ano_selecionado) & (df["Total de Sacos"].notna())].copy()
+    # ✅ CORREÇÃO: ignora a linha "Total"
+    df_ano = df[
+        (df["Ano"] == ano_selecionado) &
+        (df["Total de Sacos"].notna()) &
+        (df["Mes"].isin(ordem_meses))
+    ].copy()
 
     meses_disponiveis = [m for m in ordem_meses if m in df_ano["Mes"].dropna().unique().tolist()]
     meses_display = [m.title() for m in meses_disponiveis]
@@ -564,8 +569,18 @@ with st.sidebar:
         )
 
 # 📑 Filtrar dados para o mês selecionado dentro do ano selecionado
-df_filtrado = df[(df["Ano"] == ano_selecionado) & (df["Mes"] == mes_selecionado) & (df["Total de Sacos"].notna())]
-df_ano = df[(df["Ano"] == ano_selecionado) & (df["Total de Sacos"].notna())].copy()
+df_filtrado = df[
+    (df["Ano"] == ano_selecionado) &
+    (df["Mes"] == mes_selecionado) &
+    (df["Total de Sacos"].notna())
+]
+
+# ✅ CORREÇÃO: ignora a linha "Total"
+df_ano = df[
+    (df["Ano"] == ano_selecionado) &
+    (df["Total de Sacos"].notna()) &
+    (df["Mes"].isin(ordem_meses))
+].copy()
 
 # 📊 Calcular métricas principais
 total_sacos = int(df_filtrado["Total de Sacos"].sum()) if not df_filtrado.empty else 0

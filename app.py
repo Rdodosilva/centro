@@ -26,7 +26,6 @@ st.markdown("""
             padding: 0;
         }
         
-        /* Remove white borders and padding */
         .main .block-container {
             padding-top: 0rem;
             padding-bottom: 0rem;
@@ -35,24 +34,20 @@ st.markdown("""
             max-width: none;
         }
         
-        /* Remove default streamlit padding */
         .main {
             padding: 0;
         }
         
-        /* Hide streamlit header but keep sidebar toggle */
         header[data-testid="stHeader"] {
             height: 2.875rem;
             background: transparent;
         }
         
-        /* Show sidebar toggle button - force visibility */
         .css-14xtw13 {
             display: block !important;
             visibility: visible !important;
         }
         
-        /* Style sidebar toggle button */
         .css-14xtw13 > button {
             background: rgba(26, 26, 46, 0.9) !important;
             border: 1px solid rgba(255,255,255,0.3) !important;
@@ -61,7 +56,6 @@ st.markdown("""
             padding: 6px 8px !important;
         }
         
-        /* Alternative selector for sidebar button */
         button[data-testid="baseButton-header"] {
             display: block !important;
             visibility: visible !important;
@@ -71,23 +65,19 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Make sure sidebar toggle icon is white */
         .css-14xtw13 svg, button[data-testid="baseButton-header"] svg {
             fill: white !important;
             color: white !important;
         }
         
-        /* Hide other header elements but keep functionality */
         header[data-testid="stHeader"] > div {
             background: transparent;
         }
         
-        /* Force full background */
         .stApp {
             background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%) !important;
         }
         
-        /* Sidebar styling - clean theme */
         .css-1d391kg {
             background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
         }
@@ -96,7 +86,6 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Sidebar text color - clean and simple */
         .css-1v0mbdj {
             color: white !important;
         }
@@ -109,7 +98,6 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Sidebar headers styling */
         section[data-testid="stSidebar"] h2, 
         section[data-testid="stSidebar"] h3 {
             color: white !important;
@@ -119,16 +107,7 @@ st.markdown("""
             margin-bottom: 16px;
         }
         
-        /* LAYOUT DE 2 COLUNAS PARA OS MESES */
-        .month-selector-grid {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 6px !important;
-            width: 100% !important;
-            margin: 10px 0 !important;
-        }
-        
-        /* Forçar grid layout no container dos radio buttons */
+        /* radios em grid */
         section[data-testid="stSidebar"] div[role="radiogroup"] {
             display: grid !important;
             grid-template-columns: 1fr 1fr !important;
@@ -136,14 +115,14 @@ st.markdown("""
             width: 100% !important;
         }
         
-        /* BOTÕES DOS MESES - TAMANHO PADRONIZADO E COMPACTO */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label {
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label,
+        .stRadio > div > div > div > label {
             background: #1a1a2e !important;
             padding: 8px 6px !important;
             border-radius: 6px !important;
             border: 1px solid #00FFFF !important;
             margin: 0 !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            transition: all 0.3s ease !important;
             cursor: pointer !important;
             color: white !important;
             font-weight: 500 !important;
@@ -154,24 +133,35 @@ st.markdown("""
             text-align: center !important;
             width: 100% !important;
             box-sizing: border-box !important;
-            height: 32px !important;
             min-height: 32px !important;
             max-height: 32px !important;
+            height: 32px !important;
         }
         
-        /* Hover dos botões dos meses com efeito suave */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover {
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label:hover,
+        .stRadio > div > div > div > label:hover {
             background: rgba(0,255,255,0.15) !important;
             color: white !important;
             border: 1px solid #00FFFF !important;
             transform: translateY(-1px) scale(1.02) !important;
             box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
         }
-        
-        /* BOTÃO SELECIONADO */
+
+        section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child,
+        .stRadio > div > div > div > label > div:first-child {
+            display: none !important;
+        }
+
+        .stRadio > div > div > div {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 6px !important;
+        }
+
+        /* MÊS/ANO SELECIONADO */
         section[data-testid="stSidebar"] div[role="radiogroup"] > label[data-selected="true"],
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label:has(input:checked),
         .stRadio > div > div > div > label[data-selected="true"],
+        section[data-testid="stSidebar"] div[role="radiogroup"] label:has(input:checked),
         .stRadio > div > div > div > label:has(input:checked) {
             background: rgba(255, 0, 0, 0.40) !important;
             color: white !important;
@@ -202,73 +192,36 @@ st.markdown("""
                     inset 0 1px 0 rgba(255,255,255,0.25);
             }
         }
-        
-        /* Esconder círculos dos radio buttons */
-        section[data-testid="stSidebar"] div[role="radiogroup"] > label > div:first-child,
-        .stRadio > div > div > div > label > div:first-child {
-            display: none !important;
-        }
-        
-        /* Forçar aplicação em todos os elementos de radio */
-        .stRadio > div > div > div {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 6px !important;
-        }
-        
-        .stRadio > div > div > div > label {
-            background: #1a1a2e !important;
-            padding: 8px 6px !important;
-            border-radius: 6px !important;
-            border: 1px solid #00FFFF !important;
-            margin: 0 !important;
-            color: white !important;
-            font-weight: 500 !important;
-            font-size: 0.75em !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-align: center !important;
-            height: 32px !important;
-            min-height: 32px !important;
-            max-height: 32px !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        }
-        
-        .stRadio > div > div > div > label:hover {
-            background: rgba(0,255,255,0.15) !important;
-            transform: translateY(-1px) scale(1.02) !important;
-            box-shadow: 0 4px 12px rgba(0,255,255,0.25) !important;
-        }
 
-        /* ===== CARDS st.metric AJUSTADOS ===== */
+        /* ===== CARDS st.metric AJUSTADOS E BONITOS ===== */
         div[data-testid="stMetric"] {
-            min-height: 118px !important;
+            min-height: 112px !important;
         }
 
-        div[data-testid="metric-container"] {
-            padding: 7px 9px !important;
-            background: linear-gradient(135deg,
-                rgba(0, 212, 255, 0.72),
-                rgba(155, 48, 255, 0.72)) !important;
-            border: 1px solid rgba(255,255,255,0.14) !important;
-            border-radius: 15px !important;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.22) !important;
-            backdrop-filter: blur(9px) !important;
-            -webkit-backdrop-filter: blur(9px) !important;
-        }
-
-        /* remove fundo antigo do wrapper */
         .stMetric {
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            min-height: 118px !important;
+            background: linear-gradient(135deg,
+                rgba(0, 212, 255, 0.78),
+                rgba(155, 48, 255, 0.78)) !important;
+            border: 1px solid rgba(255,255,255,0.16) !important;
+            border-radius: 16px !important;
+            padding: 8px 10px !important;
+            box-shadow: 
+                0 8px 22px rgba(0,0,0,0.22),
+                inset 0 1px 0 rgba(255,255,255,0.10) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            overflow: hidden !important;
         }
 
         .stMetric::before {
             display: none !important;
+        }
+
+        div[data-testid="metric-container"] {
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         div[data-testid="metric-container"],
@@ -279,10 +232,10 @@ st.markdown("""
             word-break: break-word !important;
         }
 
-        /* título do card */
+        /* título */
         div[data-testid="metric-container"] label,
         div[data-testid="metric-container"] p {
-            font-size: 0.56rem !important;
+            font-size: 0.60rem !important;
             line-height: 1.00 !important;
             font-weight: 600 !important;
             margin-bottom: 2px !important;
@@ -290,11 +243,11 @@ st.markdown("""
 
         /* valor principal */
         div[data-testid="metric-container"] [data-testid="stMetricValue"] {
-            font-size: 0.74rem !important;
+            font-size: 0.92rem !important;
             line-height: 0.95 !important;
             font-weight: 700 !important;
-            margin-top: 1px !important;
-            margin-bottom: 1px !important;
+            margin-top: 2px !important;
+            margin-bottom: 2px !important;
         }
 
         div[data-testid="metric-container"] [data-testid="stMetricValue"] *,
@@ -309,9 +262,9 @@ st.markdown("""
             display: block !important;
         }
 
-        /* delta / informação complementar */
+        /* delta */
         div[data-testid="metric-container"] [data-testid="stMetricDelta"] {
-            font-size: 0.50rem !important;
+            font-size: 0.54rem !important;
             line-height: 1.00 !important;
             font-weight: 600 !important;
             margin-top: 2px !important;
@@ -329,7 +282,6 @@ st.markdown("""
             display: block !important;
         }
         
-        /* Checkbox styling */
         .stCheckbox {
             color: white !important;
         }
@@ -343,7 +295,6 @@ st.markdown("""
             color: #00FFFF !important;
         }
         
-        /* BOTÕES SIDEBAR PADRONIZADOS */
         .stButton > button, .stDownloadButton > button, 
         button[data-testid*="stDownloadButton"], 
         div[data-testid="stDownloadButton"] button {
@@ -367,7 +318,6 @@ st.markdown("""
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
         
-        /* Force styling on all buttons in sidebar */
         section[data-testid="stSidebar"] button {
             background: #00FFFF !important;
             border: none !important;
@@ -387,14 +337,12 @@ st.markdown("""
             box-shadow: 0 2px 8px rgba(0,255,255,0.3) !important;
         }
         
-        /* Selectbox styling */
         .stSelectbox > div > div {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 2px solid #00FFFF;
             border-radius: 10px;
         }
         
-        /* Style the menu dropdown - clean dark background */
         .css-1rs6os, .css-17lntkn, [data-testid="stPopover"], div[data-baseweb="popover"] {
             background: #2c2c54 !important;
             border: 1px solid rgba(255,255,255,0.2) !important;
@@ -403,13 +351,11 @@ st.markdown("""
             box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         }
         
-        /* Force dark background on all menu containers */
         .css-1rs6os > div, .css-17lntkn > div, [data-testid="stPopover"] > div {
             background: #2c2c54 !important;
             color: white !important;
         }
         
-        /* Style dropdown items with white text and hover effect */
         .css-1rs6os button, .css-17lntkn button, [data-testid="stPopover"] button,
         .css-1rs6os div, .css-17lntkn div, [data-testid="stPopover"] div {
             color: white !important;
@@ -426,13 +372,11 @@ st.markdown("""
             border-radius: 6px !important;
         }
         
-        /* Force white text on all menu elements */
         .css-1rs6os *, .css-17lntkn *, [data-testid="stPopover"] *, div[data-baseweb="popover"] * {
             color: white !important;
             background: transparent !important;
         }
         
-        /* Override any white backgrounds in dropdowns */
         div[role="menu"], div[role="listbox"], .css-1n76uvr, .css-1d391kg {
             background: #2c2c54 !important;
             color: white !important;
@@ -443,13 +387,11 @@ st.markdown("""
             color: white !important;
         }
         
-        /* Hover effect for menu items */
         div[role="menu"] button:hover, div[role="listbox"] button:hover {
             background: #00FFFF !important;
             color: black !important;
         }
         
-        /* Cards para insights */
         .insight-card {
             background: linear-gradient(145deg, #1a1a2e, #0f0f23);
             border: 1px solid #00FFFF;
@@ -463,7 +405,6 @@ st.markdown("""
         .trend-down { color: #FF4444; }
         .trend-neutral { color: #FFAA00; }
         
-        /* Animation for charts */
         .stPlotlyChart {
             animation: fadeIn 0.8s ease-in;
         }
